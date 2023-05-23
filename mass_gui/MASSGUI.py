@@ -9,4 +9,3 @@ def main():
     #button.clicked.connect(on_button_clicked)
 
     app.exec_()
-main()
