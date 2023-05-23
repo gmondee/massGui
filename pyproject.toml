@@ -19,7 +19,7 @@ dependencies = [
 ]
 
 [project.gui-scripts]
-mass_gui = "mass_gui.MASSGUI:main"
+mass_gui = "mass_gui_run.MASSGUI:main"
 
 [project.entry-points]
 
