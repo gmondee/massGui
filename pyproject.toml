@@ -1,0 +1,28 @@
+[project]
+name = "mass_gui"
+version = "0.0.1"
+authors = [
+  { name="Grant Mondeel", email="gmondee@g.clemson.edu" },
+]
+description = "Mass GUI for Boulder 2023"
+readme = "README.md"
+requires-python = ">=3.7"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+dependencies = [
+  "numpy",
+  "PyQt5"
+]
+
+[project.gui-scripts]
+mass_gui = "mass_gui.MASSGUI:main"
+
+[project.entry-points]
+
+
+[project.urls]
+"Homepage" = "https://github.com/gmondee/mass_gui"
