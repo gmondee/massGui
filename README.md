@@ -1,0 +1,1 @@
+Installation: pip install -e git+https://github.com/gmondee/massGui.git#egg=massGui
