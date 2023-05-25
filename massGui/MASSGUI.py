@@ -5,7 +5,10 @@ from PyQt5.QtCore import QSettings, pyqtSlot
 from PyQt5.QtWidgets import QFileDialog
 import sys
 import os
-
+#from . import nomass
+#from . import massless
+import massGui.massless
+import mass
 
 from mass.off import ChannelGroup, Channel, getOffFileListFromOneFile
 
@@ -35,7 +38,7 @@ class MainWindow(QtWidgets.QWidget):
 
     def connect(self):
         self.selectFileButton.clicked.connect(self.handle_choose_file)
-        # self.pushButton_manualCal.clicked.connect(self.handle_manual_cal)
+        self.openChannelBrowserButton.clicked.connect(self.handle_manual_cal)
         # self.pushButton_align.clicked.connect(self.handle_align)
         # self.pushButton_calibrate.clicked.connect(self.handle_calibrate)
         # self.pushButton_plotEnergy.clicked.connect(self.handle_plot)
@@ -70,7 +73,33 @@ class MainWindow(QtWidgets.QWidget):
         for ds in self.data.values():
             ds.stdDevResThreshold = 1000
 
+    def handle_manual_cal(self):
+        # log.debug("handle_manual_cal")
+        channum = int(self.refChannelComboBox.currentText())
+        self.launch_channel(self.data[channum])
 
+    def launch_channel(self, ds):
+        hc = massless.HistCalibrator(self, ds, "filtValue", ds.stateLabels) 
+        hc.exec_()
+        # cal_info = hc.getTableRows()
+        # # log.debug(f"hc dict {cal_info}")
+        # self.label_calStatus.setText("{}".format(cal_info))
+        # ds.calibrationPlanInit("filtValue")
+        # for (states, fv, line, energy) in cal_info: 
+        #     # # log.debug(f"states {states}, fv {fv}, line {line}, energy {energy}")
+        #     if line and not energy:
+        #         ds.calibrationPlanAddPoint(float(fv), line, states=states)
+        #     elif energy and not line:  
+        #         ds.calibrationPlanAddPoint(float(fv), energy, states=states, energy=float(energy))
+        #     elif line and energy:
+        #         ds.calibrationPlanAddPoint(float(fv), line, states=states, energy=float(energy))
+        # self.data.referenceDs = ds
+        # # log.debug(f"{ds.calibrationPlan}")
+
+    def get_line_names(self):
+        if self.HCvar.get() == 1:       #optional import of highly charged ions to the dropdown
+            from mass.calibration import _highly_charged_ion_lines
+        self.LinesDict=list(mass.spectra.keys()) 
 
 def main(test=False):
     app = QtWidgets.QApplication(sys.argv)

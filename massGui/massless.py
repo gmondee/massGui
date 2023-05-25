@@ -3,7 +3,7 @@
 import sys
 import os
 import logging  
-log = logging.getLogger("nomass")
+log = logging.getLogger("massless")
 #qt imports
 import PyQt5.uic
 from PyQt5 import QtCore, QtGui, QtWidgets
@@ -14,71 +14,33 @@ from PyQt5.QtWidgets import QFileDialog
 import numpy as np
 import pylab as plt
 from canvas import MplCanvas
-
+import mass
 
 
 MPL_DEFAULT_COLORS = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728',
               '#9467bd', '#8c564b', '#e377c2', '#7f7f7f',
               '#bcbd22', '#17becf']
+
 DEFAULT_LINES = ["MnKAlpha", "TiKAlpha", "O H-Like 2p"]
 
-class HistCalibrator(QtWidgets.QDialog):
-    def __init__(self, parent, s, attr, state_labels, colors=MPL_DEFAULT_COLORS[:6], lines=DEFAULT_LINES):
-        QtWidgets.QDialog.__init__(self, parent)
-        self.build(s, attr, state_labels, colors)
-        self.connect() 
-        self.lines = lines
+class HistCalibrator(QtWidgets.QMainWindow):
+    def __init__(self, parent, attr, state_labels, colors=MPL_DEFAULT_COLORS[:6], lines=DEFAULT_LINES):
+        QtWidgets.QMainWindow.__init__(self, parent)
+        self.build(attr, state_labels, colors)
+        self.connect()
 
-    def build(self, s, attr, state_labels, colors):
-        self.histViewer = HistViewer(self, s, attr, state_labels, colors)
-        self.table = QtWidgets.QTableWidget(0,4)
-        layout = QtWidgets.QVBoxLayout()
-        layout.addWidget(self.histViewer)
-        layout.addWidget(self.table)
-        self.setLayout(layout)
-        self.table.setHorizontalHeaderItem(0, QtWidgets.QTableWidgetItem("states"))
-        self.table.setHorizontalHeaderItem(1, QtWidgets.QTableWidgetItem("filtValue"))    
-        self.table.setHorizontalHeaderItem(2, QtWidgets.QTableWidgetItem("line"))     
-        self.table.setHorizontalHeaderItem(3, QtWidgets.QTableWidgetItem("energy"))
-
-    def clear_table(self):
-        # for i in range(self.table.columnCount()):
-        #     for j in range(self.table.rowCount()):
-        #         self.table.setHorizontalHeaderItem(j, QtWidgets.QTableWidgetItem())
-        self.table.setRowCount(0)
+    def build(self, attr, state_labels, colors):
+        PyQt5.uic.loadUi(os.path.join(os.path.dirname(__file__), "ui/ChannelBrowser.ui"), self)
+        #self.histViewer = HistViewer(self, s, attr, state_labels, colors)
 
     def connect(self):
-        self.histViewer.plotted.connect(self.handle_plotted)
-        self.histViewer.markered.connect(self.handle_markered)
+        pass
+        #self.histViewer.plotted.connect(self.handle_plotted)
 
-    def handle_plotted(self):
-        # log.debug("handle_plotted")
-        self.clear_table()
 
-    def handle_markered(self, x, states):
-        n = self.table.rowCount()
-        self.table.setRowCount(n+1)
-        # log.debug(f"handle_markered, x {x}, states {states}, n {n}")   
-        self.table.setItem(n, 0, QtWidgets.QTableWidgetItem(",".join(states)))
-        self.table.setItem(n, 1, QtWidgets.QTableWidgetItem("{}".format(x)))
-        self.table.setItem(n, 3, QtWidgets.QTableWidgetItem(""))
-        cbox = QtWidgets.QComboBox()
-        cbox.addItem("")
-        cbox.addItems(self.lines) 
-        self.table.setCellWidget(n, 2, cbox)
-        self.table.resizeColumnsToContents()
-        # log.debug(f"{self.getTableRows()}")
 
-    def getTableRows(self):
-        rows = []
-        for i in range(self.table.rowCount()):
-            row = []
-            row.append(self.table.item(i, 0).text())
-            row.append(self.table.item(i, 1).text())
-            row.append(self.table.cellWidget(i, 2).currentText()) # this is a combobos
-            row.append(self.table.item(i, 3).text())
-            rows.append(row)
-        return rows
+
+
 
 class HistViewer(QtWidgets.QWidget): #widget. plots clickable hist.
     min_marker_ind_diff = 12
@@ -265,40 +227,3 @@ class StatesGrid(QtWidgets.QWidget):
                 colors.append(color)
                 states_list.append(states)
         return colors, states_list
-
-class HistFaker():
-    def hist(self, bin_edges, attr, states):
-        bin_centers = 0.5*(bin_edges[1:]+bin_edges[:-1])
-        a,b,c = np.random.rand(3)
-        y = a*np.sin(np.linspace(0, 6*np.pi*b, len(bin_centers)))+c
-        y/=y.sum()
-        return bin_centers, y
-def test_state_grid():
-    app = QtWidgets.QApplication(sys.argv)
-    w = StatesGrid(None, [c for c in "ABCDEFG"], MPL_DEFAULT_COLORS[:6]) 
-    print(w.get_colors_and_states_list())
-    w.show()
-    retval = app.exec_() 
-
-def test_HistViewer(): 
-    app = QtWidgets.QApplication(sys.argv)
-    w = HistCalibrator(None, HistFaker(), "filtValue", [c for c in "ABCDEFG"], MPL_DEFAULT_COLORS[:6]) 
-    w.show()
-    retval = app.exec_()     
-
-def test_HistCalibrator():
-    app = QtWidgets.QApplication(sys.argv)
-    w = HistCalibrator(None, HistFaker(), "filtValue", [c for c in "ABCDEFG"], MPL_DEFAULT_COLORS[:6]) 
-    w.show()
-    retval = app.exec_()    
-    # log.debug(f"histCalibrator retval {retval}") 
-    # log.debug(f"{w.getTableRows()}")
-
-if __name__ == "__main__":
-    # python -m realtime_gui.nomass
-    # or
-    # ipython --pdb -m realtime_gui.nomass
-    # test_state_grid()
-    # test_HistViewer()
-    test_HistCalibrator()
-

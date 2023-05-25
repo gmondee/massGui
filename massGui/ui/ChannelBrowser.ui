@@ -25,7 +25,7 @@
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
-        <widget class="MplCanvas" name="MplPlotArea" native="true"/>
+        <widget class="HistViewer" name="MplPlotArea" native="true"/>
        </item>
        <item>
         <widget class="StatesGrid" name="statesGridWidget" native="true"/>
@@ -110,9 +110,9 @@
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>MplCanvas</class>
+   <class>HistViewer</class>
    <extends>QWidget</extends>
-   <header location="global">canvas.py</header>
+   <header location="global">massless.py</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
