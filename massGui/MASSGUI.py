@@ -69,3 +69,15 @@ class MainWindow(QtWidgets.QWidget):
     def set_std_dev_threshold(self):
         for ds in self.data.values():
             ds.stdDevResThreshold = 1000
+
+
+
+def main(test=False):
+    app = QtWidgets.QApplication(sys.argv)
+    mw = MainWindow()
+    mw.show()
+    # if test:
+    #     mw.load_file("/Users/oneilg/mass/src/mass/off/data_for_test/20181205_BCDEFGHI/20181205_BCDEFGHI_chan1.off")
+    #     mw.set_std_dev_threshold()
+    #     mw.launch_channel(mw.data.firstGoodChannel())
+    retval = app.exec_() 
