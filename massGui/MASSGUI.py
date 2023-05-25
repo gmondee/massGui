@@ -6,6 +6,7 @@ from PyQt5.QtWidgets import QFileDialog
 import sys
 import os
 #from . import nomass
+from massGui import massless
 from massless import HistCalibrator
 # import massGui.massless
 import mass
