@@ -32,7 +32,7 @@ class HistCalibrator(QtWidgets.QMainWindow):
         self.connect()
 
     def build(self, s, attr, state_labels, colors):
-        PyQt5.uic.loadUi(os.path.join(os.path.dirname(__file__), "ui/ChannelBrowser.ui"), massGui.massless)
+        PyQt5.uic.loadUi(os.path.join(os.path.dirname(__file__), "ui/ChannelBrowser.ui"), self)
         self.histViewer = HistViewer(self, s, attr, state_labels, colors)
 
     def connect(self):
