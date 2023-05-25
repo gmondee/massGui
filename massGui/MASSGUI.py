@@ -74,9 +74,7 @@ class MainWindow(QtWidgets.QWidget):
 
 def main(test=False):
     app = QtWidgets.QApplication(sys.argv)
-    print('aa')
     mw = MainWindow()
-    print('aa')
     mw.show()
     # if test:
     #     mw.load_file("/Users/oneilg/mass/src/mass/off/data_for_test/20181205_BCDEFGHI/20181205_BCDEFGHI_chan1.off")
