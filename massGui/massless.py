@@ -24,14 +24,14 @@ MPL_DEFAULT_COLORS = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728',
 DEFAULT_LINES = ["MnKAlpha", "TiKAlpha", "O H-Like 2p"]
 
 class HistCalibrator(QtWidgets.QMainWindow):
-    def __init__(self, parent, attr, state_labels, colors=MPL_DEFAULT_COLORS[:6], lines=DEFAULT_LINES):
+    def __init__(self, parent, s, attr, state_labels, colors=MPL_DEFAULT_COLORS[:6], lines=DEFAULT_LINES):
         QtWidgets.QMainWindow.__init__(self, parent)
-        self.build(attr, state_labels, colors)
+        self.build(s, attr, state_labels, colors)
         self.connect()
 
-    def build(self, attr, state_labels, colors):
-        PyQt5.uic.loadUi(os.path.join(os.path.dirname(__file__), "ui/ChannelBrowser.ui"), self)
-        #self.histViewer = HistViewer(self, s, attr, state_labels, colors)
+    def build(self, s, attr, state_labels, colors):
+        PyQt5.uic.loadUi(os.path.join(os.path.dirname(__file__), "ui/ChannelBrowser.ui"),massGui)
+        self.histViewer = HistViewer(self, s, attr, state_labels, colors)
 
     def connect(self):
         pass

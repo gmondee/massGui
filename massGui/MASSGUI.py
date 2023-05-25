@@ -6,8 +6,8 @@ from PyQt5.QtWidgets import QFileDialog
 import sys
 import os
 #from . import nomass
-#from . import massless
-import massGui.massless
+from massless import HistCalibrator
+# import massGui.massless
 import mass
 
 from mass.off import ChannelGroup, Channel, getOffFileListFromOneFile
@@ -79,7 +79,7 @@ class MainWindow(QtWidgets.QWidget):
         self.launch_channel(self.data[channum])
 
     def launch_channel(self, ds):
-        hc = massless.HistCalibrator(self, ds, "filtValue", ds.stateLabels) 
+        hc = HistCalibrator(self, ds, "filtValue", ds.stateLabels) 
         hc.exec_()
         # cal_info = hc.getTableRows()
         # # log.debug(f"hc dict {cal_info}")
