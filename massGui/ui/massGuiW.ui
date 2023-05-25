@@ -1,21 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Main</class>
- <widget class="QDialog" name="Main">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>417</width>
-    <height>603</height>
+    <width>1000</width>
+    <height>752</height>
    </rect>
   </property>
+  <property name="minimumSize">
+   <size>
+    <width>1000</width>
+    <height>0</height>
+   </size>
+  </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Form</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="QTextBrowser" name="Title">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>30</height>
+      </size>
+     </property>
      <property name="maximumSize">
       <size>
        <width>16777215</width>
@@ -33,6 +45,12 @@ p, li { white-space: pre-wrap; }
    </item>
    <item>
     <widget class="QGroupBox" name="fileSelectionGroup">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>80</height>
+      </size>
+     </property>
      <property name="maximumSize">
       <size>
        <width>16777215</width>
@@ -48,7 +66,7 @@ p, li { white-space: pre-wrap; }
         <property name="minimumSize">
          <size>
           <width>80</width>
-          <height>0</height>
+          <height>30</height>
          </size>
         </property>
         <property name="text">
@@ -61,6 +79,12 @@ p, li { white-space: pre-wrap; }
         <property name="enabled">
          <bool>false</bool>
         </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>30</height>
+         </size>
+        </property>
         <property name="maximumSize">
          <size>
           <width>16777215</width>
@@ -71,6 +95,12 @@ p, li { white-space: pre-wrap; }
       </item>
       <item>
        <widget class="QLabel" name="label_4">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>30</height>
+         </size>
+        </property>
         <property name="text">
          <string>Max Channels</string>
         </property>
@@ -78,11 +108,20 @@ p, li { white-space: pre-wrap; }
       </item>
       <item>
        <widget class="QSpinBox" name="maxChansSpinBox">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>30</height>
+         </size>
+        </property>
         <property name="minimum">
          <number>1</number>
         </property>
         <property name="maximum">
          <number>99999</number>
+        </property>
+        <property name="value">
+         <number>999</number>
         </property>
        </widget>
       </item>
@@ -91,6 +130,12 @@ p, li { white-space: pre-wrap; }
    </item>
    <item>
     <widget class="QGroupBox" name="channelGroup">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>80</height>
+      </size>
+     </property>
      <property name="maximumSize">
       <size>
        <width>16777215</width>
@@ -103,6 +148,12 @@ p, li { white-space: pre-wrap; }
      <layout class="QHBoxLayout" name="horizontalLayout_2">
       <item>
        <widget class="QPushButton" name="openChannelBrowserButton">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>30</height>
+         </size>
+        </property>
         <property name="text">
          <string>Click to open the channel browser</string>
         </property>
@@ -110,6 +161,12 @@ p, li { white-space: pre-wrap; }
       </item>
       <item>
        <widget class="QLabel" name="label">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>30</height>
+         </size>
+        </property>
         <property name="text">
          <string>Currently selected reference channel:</string>
         </property>
@@ -126,7 +183,7 @@ p, li { white-space: pre-wrap; }
      <property name="minimumSize">
       <size>
        <width>0</width>
-       <height>250</height>
+       <height>300</height>
       </size>
      </property>
      <property name="maximumSize">
@@ -138,176 +195,166 @@ p, li { white-space: pre-wrap; }
      <property name="title">
       <string>Calibration</string>
      </property>
-     <widget class="QGroupBox" name="calibrationStepsBox">
-      <property name="geometry">
-       <rect>
-        <x>300</x>
-        <y>30</y>
-        <width>106</width>
-        <height>74</height>
-       </rect>
-      </property>
-      <property name="title">
-       <string>Calibration Steps</string>
-      </property>
-      <layout class="QVBoxLayout" name="verticalLayout_2">
-       <item>
-        <widget class="QCheckBox" name="DCcheckbox">
-         <property name="text">
-          <string>Drift Correction</string>
-         </property>
-         <property name="checked">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QCheckBox" name="PCcheckbox">
-         <property name="text">
-          <string>Phase Correction</string>
-         </property>
-         <property name="checked">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QCheckBox" name="TDCcheckbox">
-         <property name="text">
-          <string>Time Drift Correction</string>
-         </property>
-         <property name="checked">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QFrame" name="runCalFrame">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>190</y>
-        <width>391</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
-      </property>
-      <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
-      </property>
-      <layout class="QHBoxLayout" name="horizontalLayout_3">
-       <item>
-        <widget class="QPushButton" name="oneChanCalButton">
-         <property name="text">
-          <string>Calibrate reference channel and view plots</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="allChanCalButton">
-         <property name="text">
-          <string>Calibrate all channels</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QPushButton" name="lineIDButton">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>20</y>
-        <width>171</width>
-        <height>17</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Click to begin line identification</string>
-      </property>
-     </widget>
-     <widget class="QTableWidget" name="calPlanTable">
-      <property name="enabled">
-       <bool>false</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>40</y>
-        <width>281</width>
-        <height>141</height>
-       </rect>
-      </property>
-      <row>
-       <property name="text">
-        <string>1</string>
-       </property>
-      </row>
-      <column>
-       <property name="text">
-        <string>Line Name</string>
-       </property>
-      </column>
-      <column>
-       <property name="text">
-        <string>filtValue</string>
-       </property>
-      </column>
-      <column>
-       <property name="text">
-        <string>State</string>
-       </property>
-      </column>
-      <item row="0" column="0">
-       <property name="text">
-        <string>MgKAlpha</string>
-       </property>
-      </item>
-      <item row="0" column="1">
-       <property name="text">
-        <string>6000</string>
-       </property>
-      </item>
+     <layout class="QGridLayout" name="gridLayout_2">
       <item row="0" column="2">
-       <property name="text">
-        <string>A</string>
-       </property>
+       <widget class="QCheckBox" name="HCIonCheckbox">
+        <property name="text">
+         <string>Highly-Charged Ions</string>
+        </property>
+       </widget>
       </item>
-     </widget>
-     <widget class="QCheckBox" name="HCIonCheckbox">
-      <property name="geometry">
-       <rect>
-        <x>200</x>
-        <y>20</y>
-        <width>101</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Highly-Charged Ions</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="resetCalButton">
-      <property name="geometry">
-       <rect>
-        <x>0</x>
-        <y>230</y>
-        <width>411</width>
-        <height>17</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Reset Calibration</string>
-      </property>
-     </widget>
+      <item row="0" column="0" colspan="2">
+       <widget class="QPushButton" name="lineIDButton">
+        <property name="text">
+         <string>Click to begin line identification</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3" rowspan="2">
+       <widget class="QGroupBox" name="calibrationStepsBox">
+        <property name="title">
+         <string>Calibration Steps</string>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_2">
+         <item>
+          <widget class="QCheckBox" name="DCcheckbox">
+           <property name="text">
+            <string>Drift Correcction</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="PCcheckbox">
+           <property name="text">
+            <string>Phase Correction</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="TDCcheckbox">
+           <property name="text">
+            <string>Time Drift Correction</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item row="1" column="0" rowspan="2" colspan="3">
+       <widget class="QTableWidget" name="calPlanTable">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <row>
+         <property name="text">
+          <string>1</string>
+         </property>
+        </row>
+        <column>
+         <property name="text">
+          <string>Line Name</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>filtValue</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>State</string>
+         </property>
+        </column>
+        <item row="0" column="0">
+         <property name="text">
+          <string>MgKAlpha</string>
+         </property>
+        </item>
+        <item row="0" column="1">
+         <property name="text">
+          <string>6000</string>
+         </property>
+        </item>
+        <item row="0" column="2">
+         <property name="text">
+          <string>A</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="2" column="3">
+       <widget class="QWidget" name="widget" native="true">
+        <property name="minimumSize">
+         <size>
+          <width>180</width>
+          <height>120</height>
+         </size>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_6">
+         <item>
+          <widget class="QPushButton" name="oneChanCalButton">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Calibrate reference channel and view plots</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="allChanCalButton">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Calibrate all channels</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="resetCalButton">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="baseSize">
+            <size>
+             <width>0</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Reset Calibration</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
     </widget>
    </item>
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="plotsTab">
       <attribute name="title">
@@ -331,6 +378,12 @@ p, li { white-space: pre-wrap; }
             <layout class="QGridLayout" name="gridLayout">
              <item row="0" column="0">
               <widget class="QPushButton" name="energyHistButton">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>30</height>
+                </size>
+               </property>
                <property name="text">
                 <string>Energy Histogram</string>
                </property>
@@ -338,6 +391,12 @@ p, li { white-space: pre-wrap; }
              </item>
              <item row="0" column="3">
               <widget class="QPushButton" name="AvsBbutton">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>30</height>
+                </size>
+               </property>
                <property name="text">
                 <string>AvsB Viewer</string>
                </property>
@@ -345,6 +404,12 @@ p, li { white-space: pre-wrap; }
              </item>
              <item row="0" column="1">
               <widget class="QPushButton" name="diagCalButton">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>30</height>
+                </size>
+               </property>
                <property name="text">
                 <string>Diagnose Calibration</string>
                </property>
@@ -352,6 +417,12 @@ p, li { white-space: pre-wrap; }
              </item>
              <item row="1" column="3">
               <widget class="QPushButton" name="AvsB2Dbutton">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>30</height>
+                </size>
+               </property>
                <property name="text">
                 <string>AvsB 2D Viewer</string>
                </property>
@@ -359,6 +430,12 @@ p, li { white-space: pre-wrap; }
              </item>
              <item row="1" column="1">
               <widget class="QPushButton" name="ptmButton">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>30</height>
+                </size>
+               </property>
                <property name="text">
                 <string>Pretrigger Mean</string>
                </property>
@@ -378,6 +455,12 @@ p, li { white-space: pre-wrap; }
             <layout class="QHBoxLayout" name="horizontalLayout_4">
              <item>
               <widget class="QLabel" name="label_2">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>30</height>
+                </size>
+               </property>
                <property name="text">
                 <string>View Line Fit</string>
                </property>
@@ -385,6 +468,12 @@ p, li { white-space: pre-wrap; }
              </item>
              <item>
               <widget class="QComboBox" name="lineFitComboBox">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>30</height>
+                </size>
+               </property>
                <item>
                 <property name="text">
                  <string>MgKAlpha</string>
@@ -394,6 +483,12 @@ p, li { white-space: pre-wrap; }
              </item>
              <item>
               <widget class="QPushButton" name="lineFitComboButton">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>30</height>
+                </size>
+               </property>
                <property name="maximumSize">
                 <size>
                  <width>30</width>
@@ -420,6 +515,12 @@ p, li { white-space: pre-wrap; }
              </item>
              <item>
               <widget class="QLabel" name="label_3">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>30</height>
+                </size>
+               </property>
                <property name="text">
                 <string>Manual Line Fit</string>
                </property>
@@ -427,6 +528,12 @@ p, li { white-space: pre-wrap; }
              </item>
              <item>
               <widget class="QLineEdit" name="lineFitTextBox">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>30</height>
+                </size>
+               </property>
                <property name="text">
                 <string>AlKAlpha</string>
                </property>
@@ -434,6 +541,12 @@ p, li { white-space: pre-wrap; }
              </item>
              <item>
               <widget class="QPushButton" name="lineFitTextButton">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>30</height>
+                </size>
+               </property>
                <property name="maximumSize">
                 <size>
                  <width>30</width>
@@ -468,21 +581,14 @@ p, li { white-space: pre-wrap; }
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout_6">
           <item>
-           <widget class="QPushButton" name="startRTP2DButton">
+           <widget class="QPushButton" name="pushButton_2">
             <property name="text">
-             <string>Start RTP 2D</string>
+             <string>Start RTP</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="startRTPButton">
-            <property name="text">
-             <string>Start RTP Histogram</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="stopRTPButton">
+           <widget class="QPushButton" name="pushButton">
             <property name="text">
              <string>Stop RTP</string>
             </property>
@@ -506,6 +612,12 @@ p, li { white-space: pre-wrap; }
      <layout class="QHBoxLayout" name="horizontalLayout_5">
       <item>
        <widget class="QPushButton" name="saveCalButton">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>30</height>
+         </size>
+        </property>
         <property name="text">
          <string>Save Calibration Settings</string>
         </property>
@@ -513,6 +625,12 @@ p, li { white-space: pre-wrap; }
       </item>
       <item>
        <widget class="QPushButton" name="loadCalButton">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>30</height>
+         </size>
+        </property>
         <property name="text">
          <string>Load Calibration Settings</string>
         </property>

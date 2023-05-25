@@ -31,15 +31,15 @@ class MainWindow(QtWidgets.QWidget):
         self.connect()
 
     def build(self):
-        PyQt5.uic.loadUi(os.path.join(os.path.dirname(__file__), "ui/massGui.ui"), self)
+        PyQt5.uic.loadUi(os.path.join(os.path.dirname(__file__), "ui/massGuiW.ui"), self)
 
     def connect(self):
         self.selectFileButton.clicked.connect(self.handle_choose_file)
-        self.pushButton_manualCal.clicked.connect(self.handle_manual_cal)
-        self.pushButton_align.clicked.connect(self.handle_align)
-        self.pushButton_calibrate.clicked.connect(self.handle_calibrate)
-        self.pushButton_plotEnergy.clicked.connect(self.handle_plot)
-        self.pushButton_refresh.clicked.connect(self.handle_refresh)
+        # self.pushButton_manualCal.clicked.connect(self.handle_manual_cal)
+        # self.pushButton_align.clicked.connect(self.handle_align)
+        # self.pushButton_calibrate.clicked.connect(self.handle_calibrate)
+        # self.pushButton_plotEnergy.clicked.connect(self.handle_plot)
+        # self.pushButton_refresh.clicked.connect(self.handle_refresh)
 
     def load_file(self, filename, maxChans = None):
         self._choose_file_lastdir = os.path.dirname(filename)
@@ -74,10 +74,15 @@ class MainWindow(QtWidgets.QWidget):
 
 def main(test=False):
     app = QtWidgets.QApplication(sys.argv)
+    print('aa')
     mw = MainWindow()
+    print('aa')
     mw.show()
     # if test:
     #     mw.load_file("/Users/oneilg/mass/src/mass/off/data_for_test/20181205_BCDEFGHI/20181205_BCDEFGHI_chan1.off")
     #     mw.set_std_dev_threshold()
     #     mw.launch_channel(mw.data.firstGoodChannel())
     retval = app.exec_() 
+
+if __name__ == '__main__':
+    main()

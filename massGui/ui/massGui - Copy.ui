@@ -116,7 +116,14 @@ p, li { white-space: pre-wrap; }
        </widget>
       </item>
       <item>
-       <widget class="QComboBox" name="refChannelComboBox"/>
+       <widget class="QSpinBox" name="channelSpinBox">
+        <property name="minimum">
+         <number>1</number>
+        </property>
+        <property name="maximum">
+         <number>99999</number>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>
@@ -154,7 +161,7 @@ p, li { white-space: pre-wrap; }
        <item>
         <widget class="QCheckBox" name="DCcheckbox">
          <property name="text">
-          <string>Drift Correction</string>
+          <string>Drift Correcction</string>
          </property>
          <property name="checked">
           <bool>true</bool>
@@ -307,7 +314,7 @@ p, li { white-space: pre-wrap; }
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="plotsTab">
       <attribute name="title">
@@ -468,21 +475,14 @@ p, li { white-space: pre-wrap; }
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout_6">
           <item>
-           <widget class="QPushButton" name="startRTP2DButton">
+           <widget class="QPushButton" name="pushButton_2">
             <property name="text">
-             <string>Start RTP 2D</string>
+             <string>Start RTP</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="startRTPButton">
-            <property name="text">
-             <string>Start RTP Histogram</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="stopRTPButton">
+           <widget class="QPushButton" name="pushButton">
             <property name="text">
              <string>Stop RTP</string>
             </property>
