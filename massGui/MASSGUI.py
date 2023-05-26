@@ -5,11 +5,15 @@ from PyQt5.QtCore import QSettings, pyqtSlot
 from PyQt5.QtWidgets import QFileDialog
 import sys
 import os
+
 #from . import nomass
 from massGui import massless
 from massless import HistCalibrator
 # import massGui.massless
+import massGui.massless
+
 import mass
+
 
 from mass.off import ChannelGroup, Channel, getOffFileListFromOneFile
 

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>430</width>
-    <height>365</height>
+    <height>385</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -106,13 +106,13 @@
   <customwidget>
    <class>StatesGrid</class>
    <extends>QWidget</extends>
-   <header location="global">nomass.py</header>
+   <header location="global">massGui.massless</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>HistViewer</class>
    <extends>QWidget</extends>
-   <header location="global">massless.py</header>
+   <header location="global">massGui.massless</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

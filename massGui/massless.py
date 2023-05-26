@@ -26,14 +26,15 @@ DEFAULT_LINES = ["MnKAlpha", "TiKAlpha", "O H-Like 2p"]
 
 class HistCalibrator(QtWidgets.QMainWindow):
     def __init__(self, parent, s, attr, state_labels, colors=MPL_DEFAULT_COLORS[:6], lines=DEFAULT_LINES):
-        super(HistCalibrator, self).__init__()
+        #super(HistCalibrator, self).__init__()
         QtWidgets.QMainWindow.__init__(self, parent)
         self.build(s, attr, state_labels, colors)
         self.connect()
 
     def build(self, s, attr, state_labels, colors):
-        PyQt5.uic.loadUi(os.path.join(os.path.dirname(__file__), "ui/ChannelBrowser.ui"), self)
-        self.histViewer = HistViewer(self, s, attr, state_labels, colors)
+        PyQt5.uic.loadUi(os.path.join(os.path.dirname(__file__), "ui/ChannelBrowser.ui"), self) #,  s, attr, state_labels, colors)
+        self.histViewer.setParams(self, s, attr, state_labels, colors)
+        #self.histViewer = HistViewer(self, s, attr, state_labels, colors)
 
     def connect(self):
         pass
@@ -48,9 +49,11 @@ class HistViewer(QtWidgets.QWidget): #widget. plots clickable hist.
     min_marker_ind_diff = 12
     plotted = QtCore.pyqtSignal()
     markered = QtCore.pyqtSignal(float, list)
-    def __init__(self, parent, s, attr, state_labels, colors):
+    def __init__(self, parent):#, s, attr, state_labels, colors):
         QtWidgets.QWidget.__init__(self, parent)
         # PyQt5.uic.loadUi(os.path.join(os.path.dirname(__file__), "ui/channel.ui"), self) 
+
+    def setParams(self, s, attr, state_labels, colors):
         self.s = s
         self.attr = attr
         self.build(state_labels, colors) 
