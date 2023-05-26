@@ -7,10 +7,8 @@ import sys
 import os
 
 #from . import nomass
-from massGui import massless
-from massless import HistCalibrator
+from .massless import HistCalibrator
 # import massGui.massless
-import massGui.massless
 
 import mass
 
@@ -110,6 +108,7 @@ class MainWindow(QtWidgets.QWidget):
         self.LinesDict=list(mass.spectra.keys()) 
 
 def main(test=False):
+    print("a")
     app = QtWidgets.QApplication(sys.argv)
     mw = MainWindow()
     mw.show()
@@ -119,5 +118,5 @@ def main(test=False):
     #     mw.launch_channel(mw.data.firstGoodChannel())
     retval = app.exec_() 
 
-if __name__ == '__main__':
-    main()
+# if __name__ == '__main__':
+#     main()
