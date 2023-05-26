@@ -28,6 +28,8 @@ class HistCalibrator(QtWidgets.QMainWindow):
     def __init__(self, parent, s=None, attr=None, state_labels=None, colors=MPL_DEFAULT_COLORS[:6], lines=DEFAULT_LINES):
         #super(HistCalibrator, self).__init__()
         QtWidgets.QMainWindow.__init__(self, parent)
+
+    def setParams(self, s, attr, state_labels, colors=MPL_DEFAULT_COLORS[:6], lines=DEFAULT_LINES):
         self.build(s, attr, state_labels, colors)
         self.connect()
 
@@ -50,7 +52,7 @@ class HistViewer(QtWidgets.QWidget): #widget. plots clickable hist.
     plotted = QtCore.pyqtSignal()
     markered = QtCore.pyqtSignal(float, list)
     def __init__(self, parent, s=None, attr=None, state_labels=None, colors=None):
-        QtWidgets.QWidget.__init__(self, parent=None, s=None, attr=None, state_labels=None, colors=None)
+        QtWidgets.QWidget.__init__(self, parent)#, s, attr, state_labels, colors)
         # PyQt5.uic.loadUi(os.path.join(os.path.dirname(__file__), "ui/channel.ui"), self) 
 
     def setParams(self, s, attr, state_labels, colors):
@@ -64,7 +66,8 @@ class HistViewer(QtWidgets.QWidget): #widget. plots clickable hist.
     def build(self, state_labels, colors):
         layout = QtWidgets.QVBoxLayout()
         self.canvas = MplCanvas()
-        self.statesGrid = StatesGrid(self, state_labels, colors)
+        self.statesGrid = StatesGrid(self)
+        self.statesGrid.setParams(state_labels, colors)
         self.plotButton = QtWidgets.QPushButton("Plot/Reset", self)
         layout.addWidget(self.canvas)
         layout.addWidget(self.plotButton)
@@ -172,6 +175,8 @@ class StatesGrid(QtWidgets.QWidget):
     def __init__(self, parent=None, state_labels=None, colors=None, one_state_per_line=True):
         QtWidgets.QWidget.__init__(self, parent)
         self.one_state_per_line = one_state_per_line
+
+    def setParams(self, state_labels=None, colors=None, one_state_per_line=True):
         self.build(state_labels, colors)
         self.connect()
 

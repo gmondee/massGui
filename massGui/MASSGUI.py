@@ -85,6 +85,7 @@ class MainWindow(QtWidgets.QWidget):
 
     def launch_channel(self, ds):
         hc = HistCalibrator(self, ds, "filtValue", ds.stateLabels) 
+        hc.setParams(ds, "filtValue", ds.stateLabels)
         hc.exec_()
         # cal_info = hc.getTableRows()
         # # log.debug(f"hc dict {cal_info}")
