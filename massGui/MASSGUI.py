@@ -44,6 +44,7 @@ class MainWindow(QtWidgets.QWidget):
     def connect(self):
         self.selectFileButton.clicked.connect(self.handle_choose_file)
         self.openChannelBrowserButton.clicked.connect(self.handle_manual_cal)
+        self.lineIDButton.clicked.connect(self.handle_manual_cal)
         # self.pushButton_align.clicked.connect(self.handle_align)
         # self.pushButton_calibrate.clicked.connect(self.handle_calibrate)
         # self.pushButton_plotEnergy.clicked.connect(self.handle_plot)
@@ -86,6 +87,7 @@ class MainWindow(QtWidgets.QWidget):
     def launch_channel(self, ds):
         hc = HistCalibrator(self, ds, "filtValue", ds.stateLabels) 
         hc.setParams(ds, "filtValue", ds.stateLabels)
+        #hc.setWindowModality(.ApplicationModal)
         hc.show()
         cal_info = hc.getTableRows()
         # log.debug(f"hc dict {cal_info}")

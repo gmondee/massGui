@@ -109,6 +109,30 @@
         </widget>
        </item>
        <item>
+        <widget class="QTableWidget" name="table">
+         <column>
+          <property name="text">
+           <string>States</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>filtValue</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Line</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Energy</string>
+          </property>
+         </column>
+        </widget>
+       </item>
+       <item>
         <widget class="QPushButton" name="selectedChannelButton">
          <property name="text">
           <string>Use this channel as the reference channel</string>
