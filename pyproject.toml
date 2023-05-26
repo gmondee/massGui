@@ -18,7 +18,7 @@ dependencies = [
   "PyQt5"
 ]
 
-[project.gui-scripts]
+[project.scripts]
 massGui = "massGui:main"
 
 [project.entry-points]

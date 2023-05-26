@@ -6,9 +6,9 @@ from PyQt5.QtWidgets import QFileDialog
 import sys
 import os
 
-#from . import nomass
+
 from .massless import HistCalibrator
-# import massGui.massless
+
 
 import mass
 
@@ -41,7 +41,6 @@ class MainWindow(QtWidgets.QWidget):
 
     def connect(self):
         self.selectFileButton.clicked.connect(self.handle_choose_file)
-        self.openChannelBrowserButton.clicked.connect(self.handle_manual_cal)
         self.lineIDButton.clicked.connect(self.handle_manual_cal)
         # self.pushButton_align.clicked.connect(self.handle_align)
         # self.pushButton_calibrate.clicked.connect(self.handle_calibrate)
