@@ -5,7 +5,7 @@ from PyQt5.QtCore import QSettings, pyqtSlot
 from PyQt5.QtWidgets import QFileDialog
 import sys
 import os
-
+from pytestqt import qtbot
 
 from .massless import HistCalibrator
 
@@ -84,8 +84,9 @@ class MainWindow(QtWidgets.QWidget):
     def launch_channel(self, ds):
         hc = HistCalibrator(self, ds, "filtValue", ds.stateLabels) 
         hc.setParams(ds, "filtValue", ds.stateLabels)
-        #hc.setWindowModality(.ApplicationModal)
-        hc.show()
+        #hc.setWindowModality(self, QtCore.Qt.ApplicationModal)
+        hc.exec_()
+
         cal_info = hc.getTableRows()
         # log.debug(f"hc dict {cal_info}")
         self.label_calStatus.setText("{}".format(cal_info))
@@ -106,8 +107,24 @@ class MainWindow(QtWidgets.QWidget):
             from mass.calibration import _highly_charged_ion_lines
         self.LinesDict=list(mass.spectra.keys()) 
 
+    def clear_table(self):
+        # for i in range(self.table.columnCount()):
+        #     for j in range(self.table.rowCount()):
+        #         self.table.setHorizontalHeaderItem(j, QtWidgets.QTableWidgetItem())
+        self.table.setRowCount(0)
+
+    def getTableRows(self):
+        rows = []
+        for i in range(self.table.rowCount()):
+            row = []
+            row.append(self.table.item(i, 0).text())
+            row.append(self.table.item(i, 1).text())
+            row.append(self.table.cellWidget(i, 2).currentText()) # this is a combobos
+            row.append(self.table.item(i, 3).text())
+            rows.append(row)
+        return rows
+
 def main(test=False):
-    print("a")
     app = QtWidgets.QApplication(sys.argv)
     mw = MainWindow()
     mw.show()
@@ -116,6 +133,12 @@ def main(test=False):
     #     mw.set_std_dev_threshold()
     #     mw.launch_channel(mw.data.firstGoodChannel())
     retval = app.exec_() 
+
+def test(qtbot):
+    widget = MainWindow()
+    qtbot.addWidget(widget)
+    qtbot.mouseClick(widget.selectFileButton, QtCore.Qt.LeftButton)
+
 
 # if __name__ == '__main__':
 #     main()
