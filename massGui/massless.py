@@ -25,15 +25,15 @@ MPL_DEFAULT_COLORS = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728',
 DEFAULT_LINES = ["MnKAlpha", "TiKAlpha", "O H-Like 2p"]
 
 class HistCalibrator(QtWidgets.QMainWindow):
-    def __init__(self, parent, s, attr, state_labels, colors=MPL_DEFAULT_COLORS[:6], lines=DEFAULT_LINES):
+    def __init__(self, parent, s=None, attr=None, state_labels=None, colors=MPL_DEFAULT_COLORS[:6], lines=DEFAULT_LINES):
         #super(HistCalibrator, self).__init__()
         QtWidgets.QMainWindow.__init__(self, parent)
         self.build(s, attr, state_labels, colors)
         self.connect()
 
-    def build(self, s, attr, state_labels, colors):
+    def build(self, s=None, attr=None, state_labels=None, colors=None):
         PyQt5.uic.loadUi(os.path.join(os.path.dirname(__file__), "ui/ChannelBrowser.ui"), self) #,  s, attr, state_labels, colors)
-        self.histViewer.setParams(self, s, attr, state_labels, colors)
+        #self.histViewer.setParams(self, s, attr, state_labels, colors)
         #self.histViewer = HistViewer(self, s, attr, state_labels, colors)
 
     def connect(self):
@@ -49,8 +49,8 @@ class HistViewer(QtWidgets.QWidget): #widget. plots clickable hist.
     min_marker_ind_diff = 12
     plotted = QtCore.pyqtSignal()
     markered = QtCore.pyqtSignal(float, list)
-    def __init__(self, parent):#, s, attr, state_labels, colors):
-        QtWidgets.QWidget.__init__(self, parent)
+    def __init__(self, parent, s=None, attr=None, state_labels=None, colors=None):
+        QtWidgets.QWidget.__init__(self, parent=None, s=None, attr=None, state_labels=None, colors=None)
         # PyQt5.uic.loadUi(os.path.join(os.path.dirname(__file__), "ui/channel.ui"), self) 
 
     def setParams(self, s, attr, state_labels, colors):
@@ -169,7 +169,7 @@ class HistViewer(QtWidgets.QWidget): #widget. plots clickable hist.
 
 
 class StatesGrid(QtWidgets.QWidget):
-    def __init__(self, parent, state_labels, colors, one_state_per_line=True):
+    def __init__(self, parent=None, state_labels=None, colors=None, one_state_per_line=True):
         QtWidgets.QWidget.__init__(self, parent)
         self.one_state_per_line = one_state_per_line
         self.build(state_labels, colors)
