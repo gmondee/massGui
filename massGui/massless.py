@@ -35,12 +35,52 @@ class HistCalibrator(QtWidgets.QMainWindow):
 
     def build(self, s=None, attr=None, state_labels=None, colors=None):
         PyQt5.uic.loadUi(os.path.join(os.path.dirname(__file__), "ui/ChannelBrowser.ui"), self) #,  s, attr, state_labels, colors)
-        #self.histViewer.setParams(self, s, attr, state_labels, colors)
-        #self.histViewer = HistViewer(self, s, attr, state_labels, colors)
+        #self.histHistViewer = HistViewer(self, s, attr, state_labels, colors) #histHistViewer is the name of the widget that plots.
+        self.histHistViewer.setParams(self, s, attr, state_labels, colors)
+
 
     def connect(self):
-        pass
-        #self.histViewer.plotted.connect(self.handle_plotted)
+        self.histHistViewer.plotted.connect(self.handle_plotted)
+        self.histHistViewer.markered.connect(self.handle_markered)
+
+    def clear_table(self):
+        # for i in range(self.table.columnCount()):
+        #     for j in range(self.table.rowCount()):
+        #         self.table.setHorizontalHeaderItem(j, QtWidgets.QTableWidgetItem())
+        self.table.setRowCount(0)
+
+    def connect(self):
+        self.histHistViewer.plotted.connect(self.handle_plotted)
+        self.histHistViewer.markered.connect(self.handle_markered)
+
+    def handle_plotted(self):
+        # log.debug("handle_plotted")
+        self.clear_table()
+
+    def handle_markered(self, x, states):
+        n = self.table.rowCount()
+        self.table.setRowCount(n+1)
+        # log.debug(f"handle_markered, x {x}, states {states}, n {n}")   
+        self.table.setItem(n, 0, QtWidgets.QTableWidgetItem(",".join(states)))
+        self.table.setItem(n, 1, QtWidgets.QTableWidgetItem("{}".format(x)))
+        self.table.setItem(n, 3, QtWidgets.QTableWidgetItem(""))
+        cbox = QtWidgets.QComboBox()
+        cbox.addItem("")
+        cbox.addItems(self.lines) 
+        self.table.setCellWidget(n, 2, cbox)
+        self.table.resizeColumnsToContents()
+        # log.debug(f"{self.getTableRows()}")
+
+    def getTableRows(self):
+        rows = []
+        for i in range(self.table.rowCount()):
+            row = []
+            row.append(self.table.item(i, 0).text())
+            row.append(self.table.item(i, 1).text())
+            row.append(self.table.cellWidget(i, 2).currentText()) # this is a combobos
+            row.append(self.table.item(i, 3).text())
+            rows.append(row)
+        return rows
 
 
 

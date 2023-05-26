@@ -86,21 +86,21 @@ class MainWindow(QtWidgets.QWidget):
     def launch_channel(self, ds):
         hc = HistCalibrator(self, ds, "filtValue", ds.stateLabels) 
         hc.setParams(ds, "filtValue", ds.stateLabels)
-        hc.exec_()
-        # cal_info = hc.getTableRows()
-        # # log.debug(f"hc dict {cal_info}")
-        # self.label_calStatus.setText("{}".format(cal_info))
-        # ds.calibrationPlanInit("filtValue")
-        # for (states, fv, line, energy) in cal_info: 
-        #     # # log.debug(f"states {states}, fv {fv}, line {line}, energy {energy}")
-        #     if line and not energy:
-        #         ds.calibrationPlanAddPoint(float(fv), line, states=states)
-        #     elif energy and not line:  
-        #         ds.calibrationPlanAddPoint(float(fv), energy, states=states, energy=float(energy))
-        #     elif line and energy:
-        #         ds.calibrationPlanAddPoint(float(fv), line, states=states, energy=float(energy))
-        # self.data.referenceDs = ds
-        # # log.debug(f"{ds.calibrationPlan}")
+        hc.show()
+        cal_info = hc.getTableRows()
+        # log.debug(f"hc dict {cal_info}")
+        self.label_calStatus.setText("{}".format(cal_info))
+        ds.calibrationPlanInit("filtValue")
+        for (states, fv, line, energy) in cal_info: 
+            # # log.debug(f"states {states}, fv {fv}, line {line}, energy {energy}")
+            if line and not energy:
+                ds.calibrationPlanAddPoint(float(fv), line, states=states)
+            elif energy and not line:  
+                ds.calibrationPlanAddPoint(float(fv), energy, states=states, energy=float(energy))
+            elif line and energy:
+                ds.calibrationPlanAddPoint(float(fv), line, states=states, energy=float(energy))
+        self.data.referenceDs = ds
+        # log.debug(f"{ds.calibrationPlan}")
 
     def get_line_names(self):
         if self.HCvar.get() == 1:       #optional import of highly charged ions to the dropdown
