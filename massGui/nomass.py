@@ -13,7 +13,7 @@ from PyQt5.QtWidgets import QFileDialog
 # other imports
 import numpy as np
 import pylab as plt
-from canvas import MplCanvas
+from .canvas import MplCanvas
 
 
 
