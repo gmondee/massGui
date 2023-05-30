@@ -20,7 +20,7 @@ dependencies = [
 
 [project.scripts]
 massGui = "massGui:main"
-massGuiTest = "pytest --pyargs massGui"
+massGuiTest = "massGui:test_open"
 
 [project.entry-points]
 
