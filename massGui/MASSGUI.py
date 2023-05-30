@@ -34,6 +34,7 @@ from mass.off import ChannelGroup, Channel, getOffFileListFromOneFile
 class MainWindow(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
+
         QtWidgets.QWidget.__init__(self)
         self.data = None 
         self.build()
@@ -153,7 +154,7 @@ def main(test=False):
 #     QtBot.mouseClick(widget.selectFileButton, QtCore.Qt.LeftButton)
 
 # #https://www.youtube.com/watch?v=WjctCBjHvmA
-
+# http://adambemski.pythonanywhere.com/testing-qt-application-python-and-pytest
 
 # # if __name__ == '__main__':
 # #     main()
