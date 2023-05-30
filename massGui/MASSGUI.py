@@ -5,7 +5,9 @@ from PyQt5.QtCore import QSettings, pyqtSlot
 from PyQt5.QtWidgets import QFileDialog
 import sys
 import os
-from pytestqt import qtbot
+from pytestqt.qtbot import QtBot
+import pytest
+import pytestqt
 
 from .massless import HistCalibrator
 
@@ -31,6 +33,7 @@ from mass.off import ChannelGroup, Channel, getOffFileListFromOneFile
 
 class MainWindow(QtWidgets.QWidget):
     def __init__(self):
+        super().__init__()
         QtWidgets.QWidget.__init__(self)
         self.data = None 
         self.build()
@@ -134,11 +137,23 @@ def main(test=False):
     #     mw.launch_channel(mw.data.firstGoodChannel())
     retval = app.exec_() 
 
-def test(qtbot):
-    widget = MainWindow()
-    qtbot.addWidget(widget)
-    qtbot.mouseClick(widget.selectFileButton, QtCore.Qt.LeftButton)
+
+# @pytest.fixture()
+# def mybot():
+#     pass
+
+# def test():
+#     pytestqt.qt_compat.qt_api.set_qt_api('pyqt5')
+
+#     app=QtWidgets.QApplication(sys.argv)
+#     widget = MainWindow()
+#     widget.show()
+
+#     QtBot.addWidget(, widget)
+#     QtBot.mouseClick(widget.selectFileButton, QtCore.Qt.LeftButton)
+
+# #https://www.youtube.com/watch?v=WjctCBjHvmA
 
 
-# if __name__ == '__main__':
-#     main()
+# # if __name__ == '__main__':
+# #     main()
