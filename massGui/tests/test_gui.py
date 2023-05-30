@@ -5,8 +5,9 @@ import pytest
 # from PyQt5 import QtCore, QtGui, QtWidgets
 # from PyQt5.QtCore import QSettings, pyqtSlot
 # from PyQt5.QtWidgets import QFileDialog
-# import sys
-# import os
+import sys
+import os
+import massGui
 import massGui.MASSGUI
 
 @pytest.fixture
@@ -18,4 +19,7 @@ def app(qtbot):
 
 def test_open(app):
     assert app.selectFileButton.text()=="Select .OFF File"
+
+if __name__=="__main__":
+    sys.exit(pytest.main(["-ra"], massGui.tests))
 
