@@ -15,12 +15,9 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="MplCanvas" name="histCanvasWidget" native="true"/>
-   </item>
-   <item>
-    <widget class="QPushButton" name="histPlotButton">
-     <property name="text">
-      <string>Plot</string>
+    <widget class="HistViewer" name="pHistViewer" native="true">
+     <property name="enabled">
+      <bool>true</bool>
      </property>
     </widget>
    </item>
@@ -60,7 +57,7 @@
     </widget>
    </item>
    <item>
-    <widget class="StatesGrid" name="histStatesGrid" native="true"/>
+    <widget class="StatesGrid" name="pStatesGrid" native="true"/>
    </item>
    <item>
     <widget class="QGroupBox" name="groupBox_2">
@@ -118,9 +115,9 @@
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>MplCanvas</class>
+   <class>HistViewer</class>
    <extends>QWidget</extends>
-   <header location="global">massGui.canvas</header>
+   <header location="global">massGui.massless</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

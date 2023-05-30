@@ -10,7 +10,8 @@ from pytestqt.qtbot import QtBot
 import pytest
 import pytestqt
 
-from .massless import HistCalibrator
+from .massless import HistCalibrator, HistPlotter
+from .canvas import MplCanvas
 
 
 import mass
@@ -96,21 +97,23 @@ class MainWindow(QtWidgets.QWidget):
         self.hc.setParams(data, channum, "filtValue", data[channum].stateLabels)
         #hc.setWindowModality(self, QtCore.Qt.ApplicationModal)
         self.hc.exec_()
-        self.ds = data[channum]
+        self.setChannum()
+        self.ds = data[self.channum]
         self.cal_info = self.hc.getTableRows()
         self.clear_table()
         self.importTableRows()
-        self.setChannum()
+
         # log.debug(f"hc dict {cal_info}")
         #self.label_calStatus.setText("{}".format(self.cal_info))
         self.ds.calibrationPlanInit("filtValue")
         for (states, fv, line, energy) in self.cal_info: 
             # # log.debug(f"states {states}, fv {fv}, line {line}, energy {energy}")
             if line and not energy:
-                try:
-                    self.ds.calibrationPlanAddPoint(float(fv), line, states=states)
-                finally:
-                    self.ds.calibrationPlanAddPoint(float(fv),self.common_models[str(line)], states=states)
+                self.ds.calibrationPlanAddPoint(float(fv), line, states=states)
+                # try:
+                #     self.ds.calibrationPlanAddPoint(float(fv), line, states=states)
+                # finally:
+                #     self.ds.calibrationPlanAddPoint(float(fv),self.common_models[str(line)], states=states)
             elif energy and not line:  
                 self.ds.calibrationPlanAddPoint(float(fv), energy, states=states, energy=float(energy))
             elif line and energy:
@@ -158,8 +161,8 @@ class MainWindow(QtWidgets.QWidget):
         return channum
 
     def setChannum(self):
-        channum = self.getChannum()
-        self.refChannelBox.setText(str(channum))
+        self.channum = int(self.getChannum())
+        self.refChannelBox.setText(str(self.channum))
 
 
     def checkHCI(self):
@@ -172,20 +175,27 @@ class MainWindow(QtWidgets.QWidget):
     def singleChannelCalibration(self):
 
         #self.data.cutAdd("cutForLearnDC", lambda energyRough: np.logical_and(energyRough > 0, energyRough < 10000), setDefault=False) #ideally, user can set the bounds
+        
+        try:    #crashes if user already calibrated (without resetting) and pressed it again. I want it to pull up the same plots again.
+            self.ds.alignToReferenceChannel(referenceChannel=self.ds, binEdges=np.arange(0,35000,10), attr="filtValue", states=self.ds.stateLabels)
+            newestName = "filtValue"
+            if self.PCcheckbox.isChecked():
+                self.ds.learnPhaseCorrection(indicatorName="filtPhase", uncorrectedName=newestName, correctedName = "filtValuePC", states=self.ds.stateLabels)
+                newestName = "filtValuePC"
+            if self.DCcheckbox.isChecked():
+                self.ds.learnDriftCorrection(indicatorName="pretriggerMean", uncorrectedName=newestName, correctedName = "filtValuePCDC", states=self.ds.stateLabels)#, cutRecipeName="cutForLearnDC")
+                newestName = "filtValuePCDC"
+            if self.TDCcheckbox.isChecked():
+                self.ds.learnTimeDriftCorrection(indicatorName="relTimeSec", uncorrectedName=newestName, correctedName = "filtValuePCDCTC", states=self.ds.stateLabels)#,cutRecipeName="cutForLearnDC", _rethrow=True) 
+                newestName = "filtValuePCDCTC"
+            print(f'Calibrated channel {self.ds.channum}')
+        finally:
+            pass
 
-        self.ds.alignToReferenceChannel(referenceChannel=self.ds, binEdges=np.arange(0,35000,10), attr="filtValue", states=self.ds.stateLabels)
-        newestName = "filtValue"
-        if self.PCcheckbox.isChecked():
-            self.ds.learnPhaseCorrection(indicatorName="filtPhase", uncorrectedName=newestName, correctedName = "filtValuePC", states=self.ds.stateLabels)
-            newestName = "filtValuePC"
-        if self.DCcheckbox.isChecked():
-            self.ds.learnDriftCorrection(indicatorName="pretriggerMean", uncorrectedName=newestName, correctedName = "filtValuePCDC", states=self.ds.stateLabels)#, cutRecipeName="cutForLearnDC")
-            newestName = "filtValuePCDC"
-        if self.TDCcheckbox.isChecked():
-            self.ds.learnTimeDriftCorrection(indicatorName="relTimeSec", uncorrectedName=newestName, correctedName = "filtValuePCDCTC", states=self.ds.stateLabels)#,cutRecipeName="cutForLearnDC", _rethrow=True) 
-            newestName = "filtValuePCDCTC"
-        print(f'Calibrated channel {self.ds.channum}')
-        self.ds.plotHist(np.arange(0,35000,10),newestName, states=self.ds.stateLabels)
+        self.plotter = HistPlotter(self) 
+        self.plotter.setParams(self.data, self.ds.channum, newestName, self.ds.stateLabels)
+        self.plotter.exec_()
+        #self.ds.plotHist(np.arange(0,35000,10),newestName, states=self.ds.stateLabels)
 
 
 

@@ -107,7 +107,7 @@ class HistViewer(QtWidgets.QWidget): #widget. plots clickable hist.
         super(HistViewer, self).__init__(parent)
         # PyQt5.uic.loadUi(os.path.join(os.path.dirname(__file__), "ui/channel.ui"), self) 
 
-    def setParams(self, parent, data, channum, attr, state_labels, colors):
+    def setParams(self, parent, data, channum, attr, state_labels, colors, clickable=True):
         # QtWidgets.QWidget.__init__(self, parent)#, s, attr, state_labels, colors)
         # super(HistViewer, self).__init__(parent)
         self.channum = channum
@@ -118,6 +118,7 @@ class HistViewer(QtWidgets.QWidget): #widget. plots clickable hist.
         self.connect()
         self.statesGrid.fill_simple()
         self.handle_plot()
+        self.clickable = clickable
 
     def build(self, state_labels, colors):
         layout = QtWidgets.QVBoxLayout()
@@ -144,6 +145,7 @@ class HistViewer(QtWidgets.QWidget): #widget. plots clickable hist.
 
 
     def plot(self, states_list, bin_edges, attr, colors):
+        print(self.data[int(self.channum)].channum)
         self.canvas.clear()
         self.line2marker = {}
         self.line2states = {}
@@ -161,22 +163,43 @@ class HistViewer(QtWidgets.QWidget): #widget. plots clickable hist.
         self.canvas.mpl_connect('pick_event', self.mpl_click_event)
         self.plotted.emit()
 
+    def plotAll(self, states_list, bin_edges, attr, colors):
+        self.canvas.clear()
+        self.line2marker = {}
+        self.line2states = {}
+        for states, color in zip(states_list, colors):
+            x,y = self.data.hist(bin_edges, attr, states=states)
+            [line2d] = self.canvas.plot(x,y, c=color, ds='steps-mid', lw=2, picker=4) 
+            # # log.debug(f"plot: loop: states={states} color={color}")
+            self.line2marker[line2d] = []
+            self.line2states[line2d] = states
+        self.canvas.legend([",".join(states) for states in states_list])
+        self.canvas.set_xlabel(attr)
+        self.canvas.set_ylabel("counts per bin")
+        # plt.tight_layout()
+        self.canvas.draw()
+        self.canvas.mpl_connect('pick_event', self.mpl_click_event)
+        self.plotted.emit()
+
 
     def mpl_click_event(self, event):
-        x = event.mouseevent.xdata
-        y = event.mouseevent.ydata
-        artist = event.artist
-        # log.info(artist.get_label()+f" was clicked at {x:.2f},{y:.2f}")
-        if artist in self.line2marker.keys():
-            xs, ys = artist.get_data()
-            i = self.local_max_ind(xs, ys, x, y) 
-            if ys[i] > y*0.8:
-                self.add_marker(artist, i)
-            else:
-                # log.debug(f"marker not placed becausel local maximum {ys[i]}<=0.8*mouse_click_height {y}.\nclick closer to the peak")
+        if self.clickable == True:
+            x = event.mouseevent.xdata
+            y = event.mouseevent.ydata
+            artist = event.artist
+            # log.info(artist.get_label()+f" was clicked at {x:.2f},{y:.2f}")
+            if artist in self.line2marker.keys():
+                xs, ys = artist.get_data()
+                i = self.local_max_ind(xs, ys, x, y) 
+                if ys[i] > y*0.8:
+                    self.add_marker(artist, i)
+                else:
+                    # log.debug(f"marker not placed becausel local maximum {ys[i]}<=0.8*mouse_click_height {y}.\nclick closer to the peak")
+                    pass
+            else: 
+                # log.debug(f"arist not in line2marker.keys() {line2marker.keys()}")
                 pass
-        else: 
-            # log.debug(f"arist not in line2marker.keys() {line2marker.keys()}")
+        else:
             pass
 
 
@@ -294,3 +317,37 @@ class StatesGrid(QtWidgets.QWidget):
                 colors.append(color)
                 states_list.append(states)
         return colors, states_list
+    
+
+
+
+class HistPlotter(QtWidgets.QDialog):
+    def __init__(self, parent=None, colors=MPL_DEFAULT_COLORS[:6]):
+        super(HistPlotter, self).__init__(parent)
+        #self.setWindowModality(QtCore.Qt.ApplicationModal)
+        QtWidgets.QDialog.__init__(self)
+
+    def setParams(self, data, channum, attr, state_labels, colors=MPL_DEFAULT_COLORS[:6], lines=DEFAULT_LINES):
+        self.build(data, channum, attr, state_labels, colors)
+        self.connect()
+
+    def build(self, data, channum, attr, state_labels, colors):
+        PyQt5.uic.loadUi(os.path.join(os.path.dirname(__file__), "ui/histPlotter.ui"), self) #,  s, attr, state_labels, colors)
+        #self.pHistViewer = HistViewer(self, s, attr, state_labels, colors) #pHistViewer is the name of the widget that plots.
+        self.data = data
+        self.channum = channum
+        for channum in self.data.keys():
+            self.channelBox.addItem("{}".format(channum))
+        self.channelBox.setCurrentText(str(self.channum))
+        self.pHistViewer.setParams(self, data, int(self.channum), attr, state_labels, colors, clickable=False)
+
+
+    def connect(self):
+        pass
+        # self.histHistViewer.plotted.connect(self.handle_plotted)
+        # self.histHistViewer.markered.connect(self.handle_markered)
+        # self.channelBox.currentTextChanged.connect(self.updateChild)
+
+    def getChannum(self):
+        self.channum = self.channelBox.currentText()
+        return self.channum
