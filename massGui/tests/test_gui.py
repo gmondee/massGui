@@ -20,6 +20,9 @@ def app(qtbot):
 def test_open(app):
     assert app.selectFileButton.text()=="Select .OFF File"
 
+def runTest():
+    sys.exit(pytest.main(["-ra"], massGui.tests))
+
 if __name__=="__main__":
     sys.exit(pytest.main(["-ra"], massGui.tests))
 

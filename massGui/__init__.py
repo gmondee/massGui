@@ -2,5 +2,6 @@
 
 from .MASSGUI import main
 from .tests.test_gui import test_open
+from .tests.test_gui import runTest
 #from massGui import massless
 
