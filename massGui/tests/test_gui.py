@@ -20,9 +20,11 @@ def app(qtbot):
 def test_open(app):
     assert app.selectFileButton.text()=="Select .OFF File"
 
-def runTest():
-    sys.exit(pytest.main(["-ra"], massGui.tests))
+def runOpen():
+    sys.exit(pytest.main(args=massGui.__path__))
+    #sys.exit(pytest.main(['-ra',str(massGui.__path__)]))#, massGui.__path__))
+    #sys.exit(pytest.main(["-ra", massGui.__path__]))#, massGui.__path__))
 
 if __name__=="__main__":
-    sys.exit(pytest.main(["-ra"], massGui.tests))
+    sys.exit(pytest.main(args=massGui.__path__))
 

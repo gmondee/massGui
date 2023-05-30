@@ -20,7 +20,7 @@ dependencies = [
 
 [project.scripts]
 massGui = "massGui:main"
-massGuiTest = "massGui:runTest"
+massGuiTest = "massGui:runOpen"
 
 [project.entry-points]
 
