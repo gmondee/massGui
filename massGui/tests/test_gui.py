@@ -18,4 +18,4 @@ def app(qtbot):
 
 def test_open(app):
     assert app.selectFileButton.text()=="Select .OFF File"
-    
+

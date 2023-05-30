@@ -30,7 +30,7 @@ massGuiTest = "massGui:test_open"
 
 [tool.pytest.ini_options]
 minversion = "6.0"
-addopts = "-ra -q"
+addopts = ["-ra", "--showlocals", "--strict-markers", "--strict-config", "--import-mode=importlib"]
 testpaths = [
-    "tests",
+    "tests"
 ]
