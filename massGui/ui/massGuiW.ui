@@ -169,7 +169,7 @@ p, li { white-space: pre-wrap; }
          <item>
           <widget class="QCheckBox" name="DCcheckbox">
            <property name="text">
-            <string>Drift Correcction</string>
+            <string>Drift Correction</string>
            </property>
            <property name="checked">
             <bool>true</bool>

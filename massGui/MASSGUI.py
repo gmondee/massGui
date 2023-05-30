@@ -96,28 +96,32 @@ class MainWindow(QtWidgets.QWidget):
         self.hc.setParams(data, channum, "filtValue", data[channum].stateLabels)
         #hc.setWindowModality(self, QtCore.Qt.ApplicationModal)
         self.hc.exec_()
-        ds = data[channum]
+        self.ds = data[channum]
         self.cal_info = self.hc.getTableRows()
         self.clear_table()
         self.importTableRows()
         self.setChannum()
         # log.debug(f"hc dict {cal_info}")
         #self.label_calStatus.setText("{}".format(self.cal_info))
-        ds.calibrationPlanInit("filtValue")
+        self.ds.calibrationPlanInit("filtValue")
         for (states, fv, line, energy) in self.cal_info: 
             # # log.debug(f"states {states}, fv {fv}, line {line}, energy {energy}")
             if line and not energy:
-                ds.calibrationPlanAddPoint(float(fv), line, states=states)
+                try:
+                    self.ds.calibrationPlanAddPoint(float(fv), line, states=states)
+                finally:
+                    self.ds.calibrationPlanAddPoint(float(fv),self.common_models[str(line)], states=states)
             elif energy and not line:  
-                ds.calibrationPlanAddPoint(float(fv), energy, states=states, energy=float(energy))
+                self.ds.calibrationPlanAddPoint(float(fv), energy, states=states, energy=float(energy))
             elif line and energy:
-                ds.calibrationPlanAddPoint(float(fv), line, states=states, energy=float(energy))
-        self.data.referenceDs = ds
+                self.ds.calibrationPlanAddPoint(float(fv), line, states=states, energy=float(energy))
+        self.data.referenceDs = self.ds
         # log.debug(f"{ds.calibrationPlan}")
 
     def get_line_names(self):
-        if self.HCvar.get() == 1:       #optional import of highly charged ions to the dropdown
+        if self.self.HCIonCheckbox.isChecked()==True:       #optional import of highly charged ions to the dropdown. Does not work now.
             from mass.calibration import _highly_charged_ion_lines
+            import mass.calibration.hci_models
         self.LinesDict=list(mass.spectra.keys()) 
 
     def clear_table(self):
@@ -162,12 +166,14 @@ class MainWindow(QtWidgets.QWidget):
         if (self.HCIonCheckbox.isChecked()==True):
             import mass.calibration.hci_models
             import mass.calibration._highly_charged_ion_lines
+            self.common_models = mass.calibration.hci_models.models(has_linear_background=True)
 
 
     def singleChannelCalibration(self):
-        self.ds = self.data[int(self.getChannum())]
+
         #self.data.cutAdd("cutForLearnDC", lambda energyRough: np.logical_and(energyRough > 0, energyRough < 10000), setDefault=False) #ideally, user can set the bounds
 
+        self.ds.alignToReferenceChannel(referenceChannel=self.ds, binEdges=np.arange(0,35000,10), attr="filtValue", states=self.ds.stateLabels)
         newestName = "filtValue"
         if self.PCcheckbox.isChecked():
             self.ds.learnPhaseCorrection(indicatorName="filtPhase", uncorrectedName=newestName, correctedName = "filtValuePC", states=self.ds.stateLabels)
@@ -178,7 +184,9 @@ class MainWindow(QtWidgets.QWidget):
         if self.TDCcheckbox.isChecked():
             self.ds.learnTimeDriftCorrection(indicatorName="relTimeSec", uncorrectedName=newestName, correctedName = "filtValuePCDCTC", states=self.ds.stateLabels)#,cutRecipeName="cutForLearnDC", _rethrow=True) 
             newestName = "filtValuePCDCTC"
+        print(f'Calibrated channel {self.ds.channum}')
         self.ds.plotHist(np.arange(0,35000,10),newestName, states=self.ds.stateLabels)
+
 
 
 def main(test=False):
