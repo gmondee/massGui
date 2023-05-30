@@ -257,15 +257,10 @@ p, li { white-space: pre-wrap; }
        </widget>
       </item>
       <item row="3" column="0" rowspan="2" colspan="3">
-       <widget class="QTableWidget" name="table">
+       <widget class="QTableWidget" name="calTable">
         <property name="enabled">
          <bool>false</bool>
         </property>
-        <row>
-         <property name="text">
-          <string>1</string>
-         </property>
-        </row>
         <column>
          <property name="text">
           <string>Line Name</string>
@@ -281,21 +276,6 @@ p, li { white-space: pre-wrap; }
           <string>State</string>
          </property>
         </column>
-        <item row="0" column="0">
-         <property name="text">
-          <string>MgKAlpha</string>
-         </property>
-        </item>
-        <item row="0" column="1">
-         <property name="text">
-          <string>6000</string>
-         </property>
-        </item>
-        <item row="0" column="2">
-         <property name="text">
-          <string>A</string>
-         </property>
-        </item>
        </widget>
       </item>
       <item row="2" column="0">
@@ -312,7 +292,11 @@ p, li { white-space: pre-wrap; }
        </widget>
       </item>
       <item row="2" column="1">
-       <widget class="QComboBox" name="refChannelComboBox"/>
+       <widget class="QLineEdit" name="refChannelBox">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>

@@ -1,6 +1,7 @@
 import PyQt5.QtWidgets as QtWidgets
 import PyQt5.uic
 from PyQt5 import QtCore, QtGui, QtWidgets
+
 from PyQt5.QtCore import QSettings, pyqtSlot
 from PyQt5.QtWidgets import QFileDialog
 import sys
@@ -13,9 +14,9 @@ from .massless import HistCalibrator
 
 
 import mass
-
-
 from mass.off import ChannelGroup, Channel, getOffFileListFromOneFile
+
+import numpy as np
 
 # def main():
 #     app = qt.QApplication([])
@@ -46,7 +47,7 @@ class MainWindow(QtWidgets.QWidget):
     def connect(self):
         self.selectFileButton.clicked.connect(self.handle_choose_file)
         self.lineIDButton.clicked.connect(self.handle_manual_cal)
-        # self.pushButton_align.clicked.connect(self.handle_align)
+        self.oneChanCalButton.clicked.connect(self.singleChannelCalibration)
         # self.pushButton_calibrate.clicked.connect(self.handle_calibrate)
         # self.pushButton_plotEnergy.clicked.connect(self.handle_plot)
         # self.pushButton_refresh.clicked.connect(self.handle_refresh)
@@ -59,8 +60,10 @@ class MainWindow(QtWidgets.QWidget):
         self.data = ChannelGroup(filenames, verbose=False)
         #self.label_loadedChans.setText("loaded {} chans".format(len(self.data)))
         self.fileTextBox.setText("Curret dataset: {}".format(self.data.shortName)) 
+        self.channels = []
         for channum in self.data.keys():
-            self.refChannelComboBox.addItem("{}".format(channum))
+            self.channels.append(channum)
+            #self.refChannelBox.addItem("{}".format(channum))
 
     def handle_choose_file(self):
         options = QFileDialog.Options()
@@ -82,20 +85,26 @@ class MainWindow(QtWidgets.QWidget):
 
     def handle_manual_cal(self):
         # log.debug("handle_manual_cal")
-        channum = int(self.refChannelComboBox.currentText())
-        self.launch_channel(self.data[channum])
+        channum = self.channels[0]#int(self.refChannelBox.currentText())
+        #self.launch_channel(self.data[channum])
+        self.launch_channel(self.data, channum)
 
-    def launch_channel(self, ds):
-        hc = HistCalibrator(self, ds, "filtValue", ds.stateLabels) 
-        hc.setParams(ds, "filtValue", ds.stateLabels)
+    def launch_channel(self, data, channum):
+        self.checkHCI()
+        self.fileSelectionGroup.setEnabled(False)
+        self.hc = HistCalibrator(self, data, channum, "filtValue", data[channum].stateLabels) 
+        self.hc.setParams(data, channum, "filtValue", data[channum].stateLabels)
         #hc.setWindowModality(self, QtCore.Qt.ApplicationModal)
-        hc.exec_()
-
-        cal_info = hc.getTableRows()
+        self.hc.exec_()
+        ds = data[channum]
+        self.cal_info = self.hc.getTableRows()
+        self.clear_table()
+        self.importTableRows()
+        self.setChannum()
         # log.debug(f"hc dict {cal_info}")
-        self.label_calStatus.setText("{}".format(cal_info))
+        #self.label_calStatus.setText("{}".format(self.cal_info))
         ds.calibrationPlanInit("filtValue")
-        for (states, fv, line, energy) in cal_info: 
+        for (states, fv, line, energy) in self.cal_info: 
             # # log.debug(f"states {states}, fv {fv}, line {line}, energy {energy}")
             if line and not energy:
                 ds.calibrationPlanAddPoint(float(fv), line, states=states)
@@ -115,7 +124,7 @@ class MainWindow(QtWidgets.QWidget):
         # for i in range(self.table.columnCount()):
         #     for j in range(self.table.rowCount()):
         #         self.table.setHorizontalHeaderItem(j, QtWidgets.QTableWidgetItem())
-        self.table.setRowCount(0)
+        self.calTable.setRowCount(0)
 
     def getTableRows(self):
         rows = []
@@ -127,6 +136,50 @@ class MainWindow(QtWidgets.QWidget):
             row.append(self.table.item(i, 3).text())
             rows.append(row)
         return rows
+    
+    def importTableRows(self):
+        for i in range(len(self.cal_info)):
+            rowPosition = self.calTable.rowCount()
+            rowData = self.cal_info[i] #data like       [state, filtVal, name]
+                                #this table looks like  [name, filtVal, state]
+            #print(rowPosition, rowData)
+            self.calTable.insertRow(rowPosition)
+            self.calTable.setItem(rowPosition, 0, QtWidgets.QTableWidgetItem(rowData[2]))
+            self.calTable.setItem(rowPosition, 1, QtWidgets.QTableWidgetItem(rowData[1]))
+            self.calTable.setItem(rowPosition, 2, QtWidgets.QTableWidgetItem(rowData[0]))
+
+
+    def getChannum(self):
+        channum = self.hc.channelBox.currentText()
+        return channum
+
+    def setChannum(self):
+        channum = self.getChannum()
+        self.refChannelBox.setText(str(channum))
+
+
+    def checkHCI(self):
+        if (self.HCIonCheckbox.isChecked()==True):
+            import mass.calibration.hci_models
+            import mass.calibration._highly_charged_ion_lines
+
+
+    def singleChannelCalibration(self):
+        self.ds = self.data[int(self.getChannum())]
+        #self.data.cutAdd("cutForLearnDC", lambda energyRough: np.logical_and(energyRough > 0, energyRough < 10000), setDefault=False) #ideally, user can set the bounds
+
+        newestName = "filtValue"
+        if self.PCcheckbox.isChecked():
+            self.ds.learnPhaseCorrection(indicatorName="filtPhase", uncorrectedName=newestName, correctedName = "filtValuePC", states=self.ds.stateLabels)
+            newestName = "filtValuePC"
+        if self.DCcheckbox.isChecked():
+            self.ds.learnDriftCorrection(indicatorName="pretriggerMean", uncorrectedName=newestName, correctedName = "filtValuePCDC", states=self.ds.stateLabels)#, cutRecipeName="cutForLearnDC")
+            newestName = "filtValuePCDC"
+        if self.TDCcheckbox.isChecked():
+            self.ds.learnTimeDriftCorrection(indicatorName="relTimeSec", uncorrectedName=newestName, correctedName = "filtValuePCDCTC", states=self.ds.stateLabels)#,cutRecipeName="cutForLearnDC", _rethrow=True) 
+            newestName = "filtValuePCDCTC"
+        self.ds.plotHist(np.arange(0,35000,10),newestName, states=self.ds.stateLabels)
+
 
 def main(test=False):
     app = QtWidgets.QApplication(sys.argv)
@@ -138,23 +191,5 @@ def main(test=False):
     #     mw.launch_channel(mw.data.firstGoodChannel())
     retval = app.exec_() 
 
-
-# @pytest.fixture()
-# def mybot():
-#     pass
-
-# def test():
-#     pytestqt.qt_compat.qt_api.set_qt_api('pyqt5')
-
-#     app=QtWidgets.QApplication(sys.argv)
-#     widget = MainWindow()
-#     widget.show()
-
-#     QtBot.addWidget(, widget)
-#     QtBot.mouseClick(widget.selectFileButton, QtCore.Qt.LeftButton)
-
 # #https://www.youtube.com/watch?v=WjctCBjHvmA
 # http://adambemski.pythonanywhere.com/testing-qt-application-python-and-pytest
-
-# # if __name__ == '__main__':
-# #     main()

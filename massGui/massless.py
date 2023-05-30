@@ -22,37 +22,39 @@ MPL_DEFAULT_COLORS = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728',
               '#9467bd', '#8c564b', '#e377c2', '#7f7f7f',
               '#bcbd22', '#17becf']
 
-DEFAULT_LINES = ["MnKAlpha", "TiKAlpha", "O H-Like 2p"]
+DEFAULT_LINES = list(mass.spectra.keys())
 
 class HistCalibrator(QtWidgets.QDialog):
-    def __init__(self, parent, s=None, attr=None, state_labels=None, colors=MPL_DEFAULT_COLORS[:6], lines=DEFAULT_LINES):
+    def __init__(self, parent=None,s=None, attr=None, state_labels=None, colors=MPL_DEFAULT_COLORS[:6], lines=DEFAULT_LINES):
         super(HistCalibrator, self).__init__(parent)
         #self.setWindowModality(QtCore.Qt.ApplicationModal)
-        QtWidgets.QDialog.__init__(self, parent)
+        QtWidgets.QDialog.__init__(self)
+        self.lines = self.TOptionsDict=list(mass.spectra.keys())
 
-    def setParams(self, s, attr, state_labels, colors=MPL_DEFAULT_COLORS[:6], lines=DEFAULT_LINES):
-        self.build(s, attr, state_labels, colors)
+    def setParams(self, data, channum, attr, state_labels, colors=MPL_DEFAULT_COLORS[:6], lines=DEFAULT_LINES):
+        self.build(data, channum, attr, state_labels, colors)
         self.connect()
 
-    def build(self, s, attr, state_labels, colors):
+    def build(self, data, channum, attr, state_labels, colors):
         PyQt5.uic.loadUi(os.path.join(os.path.dirname(__file__), "ui/ChannelBrowser.ui"), self) #,  s, attr, state_labels, colors)
         #self.histHistViewer = HistViewer(self, s, attr, state_labels, colors) #histHistViewer is the name of the widget that plots.
-        self.histHistViewer.setParams(s, attr, state_labels, colors)
+        self.data = data
+        self.channum = channum
+        for channum in self.data.keys():
+            self.channelBox.addItem("{}".format(channum))
+        self.histHistViewer.setParams(self, data, channum, attr, state_labels, colors)
 
 
     def connect(self):
         self.histHistViewer.plotted.connect(self.handle_plotted)
         self.histHistViewer.markered.connect(self.handle_markered)
+        self.channelBox.currentTextChanged.connect(self.updateChild)
 
     def clear_table(self):
         # for i in range(self.table.columnCount()):
         #     for j in range(self.table.rowCount()):
         #         self.table.setHorizontalHeaderItem(j, QtWidgets.QTableWidgetItem())
         self.table.setRowCount(0)
-
-    def connect(self):
-        self.histHistViewer.plotted.connect(self.handle_plotted)
-        self.histHistViewer.markered.connect(self.handle_markered)
 
     def handle_plotted(self):
         # log.debug("handle_plotted")
@@ -82,6 +84,14 @@ class HistCalibrator(QtWidgets.QDialog):
             row.append(self.table.item(i, 3).text())
             rows.append(row)
         return rows
+    
+    def getChannum(self):
+        self.channum = self.channelBox.currentText()
+        return self.channum
+    def updateChild(self):
+        self.histHistViewer.channum = self.getChannum()
+
+
 
 
 
@@ -94,10 +104,15 @@ class HistViewer(QtWidgets.QWidget): #widget. plots clickable hist.
     markered = QtCore.pyqtSignal(float, list)
     def __init__(self, parent, s=None, attr=None, state_labels=None, colors=None):
         QtWidgets.QWidget.__init__(self, parent)#, s, attr, state_labels, colors)
+        super(HistViewer, self).__init__(parent)
         # PyQt5.uic.loadUi(os.path.join(os.path.dirname(__file__), "ui/channel.ui"), self) 
 
-    def setParams(self, s, attr, state_labels, colors):
-        self.s = s
+    def setParams(self, parent, data, channum, attr, state_labels, colors):
+        # QtWidgets.QWidget.__init__(self, parent)#, s, attr, state_labels, colors)
+        # super(HistViewer, self).__init__(parent)
+        self.channum = channum
+        self.data=data
+        self.s = data[channum]
         self.attr = attr
         self.build(state_labels, colors) 
         self.connect()
@@ -118,7 +133,8 @@ class HistViewer(QtWidgets.QWidget): #widget. plots clickable hist.
     def connect(self):
         self.plotButton.clicked.connect(self.handle_plot)
  
-    def handle_plot(self): 
+    def handle_plot(self): #needs to use channel
+        #self.channum = self.parent().getChannum()  #can't use parent properly b/c initialised with .ui file. Use an update signal instead.
         colors, states_list = self.statesGrid.get_colors_and_states_list() 
         # log.debug(f"handle_plot: color: {colors}")
         # log.debug(f"handle_plot: states_list: {states_list}")
@@ -132,7 +148,7 @@ class HistViewer(QtWidgets.QWidget): #widget. plots clickable hist.
         self.line2marker = {}
         self.line2states = {}
         for states, color in zip(states_list, colors):
-            x,y = self.s.hist(bin_edges, attr, states=states)
+            x,y = self.data[int(self.channum)].hist(bin_edges, attr, states=states)
             [line2d] = self.canvas.plot(x,y, c=color, ds='steps-mid', lw=2, picker=4) 
             # # log.debug(f"plot: loop: states={states} color={color}")
             self.line2marker[line2d] = []

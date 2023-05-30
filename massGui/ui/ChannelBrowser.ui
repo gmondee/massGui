@@ -68,47 +68,70 @@
        </widget>
       </item>
       <item>
-       <widget class="QGroupBox" name="csWindow">
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>0</height>
-         </size>
+       <widget class="QFrame" name="frame_3">
+        <property name="frameShape">
+         <enum>QFrame::StyledPanel</enum>
         </property>
-        <property name="maximumSize">
-         <size>
-          <width>16777215</width>
-          <height>300</height>
-         </size>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
         </property>
-        <property name="title">
-         <string>Select Channel(s)</string>
-        </property>
-        <layout class="QHBoxLayout" name="horizontalLayout">
+        <layout class="QHBoxLayout" name="horizontalLayout_4">
          <item>
-          <widget class="QLabel" name="label">
+          <widget class="QTableWidget" name="table">
            <property name="minimumSize">
             <size>
              <width>0</width>
              <height>0</height>
             </size>
            </property>
-           <property name="text">
-            <string>Channel:</string>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>300</height>
+            </size>
            </property>
+           <column>
+            <property name="text">
+             <string>States</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>filtValue</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Line</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Energy</string>
+            </property>
+           </column>
           </widget>
          </item>
          <item>
-          <widget class="QFrame" name="frame_2">
-           <property name="frameShape">
-            <enum>QFrame::StyledPanel</enum>
+          <widget class="QGroupBox" name="csWindow">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>0</height>
+            </size>
            </property>
-           <property name="frameShadow">
-            <enum>QFrame::Raised</enum>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>300</height>
+            </size>
            </property>
-           <layout class="QHBoxLayout" name="horizontalLayout_2">
+           <property name="title">
+            <string>Select Channel(s)</string>
+           </property>
+           <layout class="QHBoxLayout" name="horizontalLayout">
             <item>
-             <widget class="QCheckBox" name="checkBox">
+             <widget class="QLabel" name="label">
               <property name="minimumSize">
                <size>
                 <width>0</width>
@@ -116,60 +139,29 @@
                </size>
               </property>
               <property name="text">
-               <string>All Channels</string>
+               <string>Channel:</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QComboBox" name="channelBox"/>
+             <widget class="QFrame" name="frame_2">
+              <property name="frameShape">
+               <enum>QFrame::StyledPanel</enum>
+              </property>
+              <property name="frameShadow">
+               <enum>QFrame::Raised</enum>
+              </property>
+              <layout class="QVBoxLayout" name="verticalLayout">
+               <item>
+                <widget class="QComboBox" name="channelBox"/>
+               </item>
+              </layout>
+             </widget>
             </item>
            </layout>
           </widget>
          </item>
-         <item>
-          <widget class="QPushButton" name="viewPlotButton">
-           <property name="text">
-            <string>View Plot</string>
-           </property>
-          </widget>
-         </item>
         </layout>
-       </widget>
-      </item>
-      <item>
-       <widget class="QTableWidget" name="table">
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>16777215</width>
-          <height>300</height>
-         </size>
-        </property>
-        <column>
-         <property name="text">
-          <string>States</string>
-         </property>
-        </column>
-        <column>
-         <property name="text">
-          <string>filtValue</string>
-         </property>
-        </column>
-        <column>
-         <property name="text">
-          <string>Line</string>
-         </property>
-        </column>
-        <column>
-         <property name="text">
-          <string>Energy</string>
-         </property>
-        </column>
        </widget>
       </item>
       <item>
