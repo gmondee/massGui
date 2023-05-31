@@ -10,7 +10,7 @@ from pytestqt.qtbot import QtBot
 import pytest
 import pytestqt
 
-from .massless import HistCalibrator, HistPlotter
+from .massless import HistCalibrator, HistPlotter, diagnoseViewer
 from .canvas import MplCanvas
 
 
@@ -52,6 +52,7 @@ class MainWindow(QtWidgets.QWidget):
         self.oneChanCalButton.clicked.connect(self.singleChannelCalibration)
         self.resetCalButton.clicked.connect(self.resetCalibration)
         self.allChanCalButton.clicked.connect(self.allChannelCalibration)
+        self.diagCalButton.clicked.connect(self.diagnoseCalibration)
         # self.pushButton_calibrate.clicked.connect(self.handle_calibrate)
         # self.pushButton_plotEnergy.clicked.connect(self.handle_plot)
         # self.pushButton_refresh.clicked.connect(self.handle_refresh)
@@ -137,11 +138,14 @@ class MainWindow(QtWidgets.QWidget):
                 self.ds.calibrationPlanAddPoint(float(fv), line, states=states, energy=float(energy))
         self.data.referenceDs = self.ds
         # log.debug(f"{ds.calibrationPlan}")
+        self.tabWidget.setEnabled(True) 
+        self.lineFitComboBox.setEnabled(True)
 
   
 
     def resetCalibration(self):
         self.calButtonGroup.setEnabled(False)
+        self.tabWidget.setEnabled(False)
         self.clear_table()
 
     def get_line_names(self):
@@ -170,14 +174,17 @@ class MainWindow(QtWidgets.QWidget):
     def importTableRows(self):
         rowPosition = None
         allowCal = True
+        self.lineFitComboBox.clear()
         for i in range(len(self.cal_info)):
             rowPosition = self.calTable.rowCount()
             rowData = self.cal_info[i] #data like       [state, filtVal, name]
                                 #this table looks like  [name, filtVal, state]
             #print(rowPosition, rowData)
             self.calTable.insertRow(rowPosition)
+            
             if rowData[2] != '':
                 self.calTable.setItem(rowPosition, 0, QtWidgets.QTableWidgetItem(rowData[2]))   #name
+                self.lineFitComboBox.addItem(rowData[2])
             else:
                 self.calTable.setItem(rowPosition, 0, QtWidgets.QTableWidgetItem('Name?'))
                 self.calTable.item(rowPosition, 0).setBackground(QtGui.QColor(255,10,10))  #name
@@ -228,19 +235,18 @@ class MainWindow(QtWidgets.QWidget):
                     uncorr = self.newestName
                     self.newestName+="TC"
                     self.ds.learnTimeDriftCorrection(indicatorName="relTimeSec", uncorrectedName=uncorr, correctedName = self.newestName, states=self.ds.stateLabels)#,cutRecipeName="cutForLearnDC", _rethrow=True) 
-
+                self.ds.calibrateFollowingPlan(self.newestName, dlo=15,dhi=15, binsize=10, _rethrow=True) #add dlo, dhi, binsize options later
                 print(f'Calibrated channel {self.ds.channum}')
             except:
                 pass
+            self.ds.calibrateFollowingPlan(self.newestName, dlo=15,dhi=15, binsize=1) #add dlo, dhi, binsize options later
 
         self.plotter = HistPlotter(self) 
-        self.plotter.setParams(self.data, self.ds.channum, self.newestName, self.ds.stateLabels)
+        self.plotter.setParams(self.data, self.ds.channum, "energy", self.ds.stateLabels)
         self.plotter.channelBox.setEnabled(False)
         self.plotter.histChannelCheckbox.setEnabled(False)
         self.plotter.exec_()
         #self.ds.plotHist(np.arange(0,35000,10),newestName, states=self.ds.stateLabels)
-
-        #
 
     def allChannelCalibration(self):
         self.initCal()
@@ -262,12 +268,25 @@ class MainWindow(QtWidgets.QWidget):
                 self.newestName+="TC"
                 self.data.learnTimeDriftCorrection(indicatorName="relTimeSec", uncorrectedName=uncorr, correctedName = self.newestName, states=self.ds.stateLabels)#,cutRecipeName="cutForLearnDC", _rethrow=True) 
 
+            
+
             print(f'Calibrated {len(self.data.values())} channels using reference channel {self.ds.channum}')
         except:
             pass
+        self.data.calibrateFollowingPlan(self.newestName, dlo=15,dhi=15, binsize=1, _rethrow=True) #add dlo, dhi, binsize options later
         self.plotter = HistPlotter(self) 
-        self.plotter.setParams(self.data, self.ds.channum, self.newestName, self.ds.stateLabels)
+        self.plotter.setParams(self.data, self.ds.channum, "energy", self.ds.stateLabels)
         self.plotter.exec_()
+
+    def diagnoseCalibration(self):
+        self.plotter = diagnoseViewer(self)
+        self.plotter.setParams(self.data, self.ds.channum)
+        self.plotter.exec_()
+
+    def handle_line_fit(self, method): #unfinished
+        if method == 'comboBox':
+            self.line = self.lineFitComboBox.currentText()
+
 
 
 def main(test=False):

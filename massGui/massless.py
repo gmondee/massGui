@@ -398,3 +398,58 @@ class HistPlotter(QtWidgets.QDialog):
         else:
             self.pHistViewer.binHi = 20000
         ##energy range updating
+
+
+class diagnoseViewer(QtWidgets.QDialog):
+    def __init__(self, parent=None):
+        super(diagnoseViewer, self).__init__(parent)
+        QtWidgets.QDialog.__init__(self)
+
+    def setParams(self, data, channum, colors=MPL_DEFAULT_COLORS[:6]):
+        self.colors = colors
+        self.build(data, channum)
+        self.connect()
+
+    def build(self, data, channum):
+        PyQt5.uic.loadUi(os.path.join(os.path.dirname(__file__), "ui/diagnosePlotWindow.ui"), self) #,  s, attr, state_labels, colors)
+        #self.pHistViewer = HistViewer(self, s, attr, state_labels, colors) #pHistViewer is the name of the widget that plots.
+        self.data = data
+        self.channum = channum
+        for channum in self.data.keys():
+            self.channelBox.addItem("{}".format(channum))
+        self.channelBox.setCurrentText(str(self.channum))
+        self.plotDiagnosis()
+        # self.eRangeLow.insert(str(0))
+        # self.eRangeHi.insert(str(20000))
+        #self.canvas.setParams(self, data, int(self.channum), state_labels, colors, clickable=False)
+
+
+    def connect(self):
+        #self.channelBox.currentTextChanged.connect(self.updateChild)
+        self.diagPlotButton.clicked.connect(self.plotDiagnosis)
+
+    def handle_plot(self): #needs to use channel
+        #update channel
+        self.plot(self.channum)
+
+    def plotDiagnosis(self):
+        channel = self.getChannum()
+        self.plot(channel)
+
+    def getChannum(self):
+        self.channum = int(self.channelBox.currentText())
+        return self.channum
+
+    def plot(self, channel):
+        #print(self.data[int(self.channum)].channum)
+        self.canvas.clear()
+        self.data[channel].diagnoseCalibration()
+        #line2d = self.canvas.plot(x,y) 
+
+        #self.canvas.legend([",".join(states) for states in states_list])
+        #self.canvas.set_xlabel(attr)
+        #self.canvas.set_ylabel("counts per bin")
+        # plt.tight_layout()
+        self.canvas.draw()
+        self.plotted.emit()
+
