@@ -178,22 +178,28 @@ class MainWindow(QtWidgets.QWidget):
         
         try:    #crashes if user already calibrated (without resetting) and pressed it again. I want it to pull up the same plots again.
             self.ds.alignToReferenceChannel(referenceChannel=self.ds, binEdges=np.arange(0,35000,10), attr="filtValue", states=self.ds.stateLabels)
-            newestName = "filtValue"
+            self.newestName = "filtValue"
             if self.PCcheckbox.isChecked():
-                self.ds.learnPhaseCorrection(indicatorName="filtPhase", uncorrectedName=newestName, correctedName = "filtValuePC", states=self.ds.stateLabels)
-                newestName = "filtValuePC"
+                uncorr = self.newestName
+                self.newestName+="PC"
+                self.ds.learnPhaseCorrection(indicatorName="filtPhase", uncorrectedName=uncorr, correctedName = self.newestName, states=self.ds.stateLabels)
+    
             if self.DCcheckbox.isChecked():
-                self.ds.learnDriftCorrection(indicatorName="pretriggerMean", uncorrectedName=newestName, correctedName = "filtValuePCDC", states=self.ds.stateLabels)#, cutRecipeName="cutForLearnDC")
-                newestName = "filtValuePCDC"
+                uncorr = self.newestName
+                self.newestName+="DC"
+                self.ds.learnDriftCorrection(indicatorName="pretriggerMean", uncorrectedName=uncorr, correctedName = self.newestName, states=self.ds.stateLabels)#, cutRecipeName="cutForLearnDC")
+
             if self.TDCcheckbox.isChecked():
-                self.ds.learnTimeDriftCorrection(indicatorName="relTimeSec", uncorrectedName=newestName, correctedName = "filtValuePCDCTC", states=self.ds.stateLabels)#,cutRecipeName="cutForLearnDC", _rethrow=True) 
-                newestName = "filtValuePCDCTC"
+                uncorr = self.newestName
+                self.newestName+="TC"
+                self.ds.learnTimeDriftCorrection(indicatorName="relTimeSec", uncorrectedName=uncorr, correctedName = self.newestName, states=self.ds.stateLabels)#,cutRecipeName="cutForLearnDC", _rethrow=True) 
+
             print(f'Calibrated channel {self.ds.channum}')
         except:
             pass
 
         self.plotter = HistPlotter(self) 
-        self.plotter.setParams(self.data, self.ds.channum, newestName, self.ds.stateLabels)
+        self.plotter.setParams(self.data, self.ds.channum, self.newestName, self.ds.stateLabels)
         self.plotter.channelBox.setEnabled(False)
         self.plotter.histChannelCheckbox.setEnabled(False)
         self.plotter.exec_()

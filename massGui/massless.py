@@ -110,6 +110,7 @@ class HistViewer(QtWidgets.QWidget): #widget. plots clickable hist.
     def setParams(self, parent, data, channum, attr, state_labels, colors, clickable=True):
         # QtWidgets.QWidget.__init__(self, parent)#, s, attr, state_labels, colors)
         # super(HistViewer, self).__init__(parent)
+        self.plotAllChans = False #used to switch between self.plot and self.plotAll
         self.channum = channum
         self.data=data
         self.s = data[channum]
@@ -119,7 +120,7 @@ class HistViewer(QtWidgets.QWidget): #widget. plots clickable hist.
         self.statesGrid.fill_simple()
         self.handle_plot()
         self.clickable = clickable
-
+        
     def build(self, state_labels, colors):
         layout = QtWidgets.QVBoxLayout()
         self.canvas = MplCanvas()
@@ -141,7 +142,11 @@ class HistViewer(QtWidgets.QWidget): #widget. plots clickable hist.
         # log.debug(f"handle_plot: states_list: {states_list}")
         if len(colors) == 0:
             raise Exception("no states clicked: {}  {}".format(colors, states_list))
-        self.plot(states_list, np.arange(0,20000, 10), self.attr, colors)
+        
+        if self.plotAllChans == False:
+            self.plot(states_list, np.arange(0,20000, 10), self.attr, colors)
+        else:
+            self.plotAll(states_list, np.arange(0,20000, 10), self.attr, colors)
 
 
     def plot(self, states_list, bin_edges, attr, colors):
@@ -164,6 +169,7 @@ class HistViewer(QtWidgets.QWidget): #widget. plots clickable hist.
         self.plotted.emit()
 
     def plotAll(self, states_list, bin_edges, attr, colors):
+        print("plotting all channels")
         self.canvas.clear()
         self.line2marker = {}
         self.line2states = {}
@@ -245,6 +251,8 @@ class HistViewer(QtWidgets.QWidget): #widget. plots clickable hist.
                 break
 
         return i
+    
+
         
 
             
@@ -343,11 +351,22 @@ class HistPlotter(QtWidgets.QDialog):
 
 
     def connect(self):
-        pass
+        self.channelBox.currentTextChanged.connect(self.updateChild)
+        self.histChannelCheckbox.stateChanged.connect(self.updateChild)
         # self.histHistViewer.plotted.connect(self.handle_plotted)
         # self.histHistViewer.markered.connect(self.handle_markered)
         # self.channelBox.currentTextChanged.connect(self.updateChild)
 
+
+
     def getChannum(self):
         self.channum = self.channelBox.currentText()
         return self.channum
+    
+    def updateChild(self):
+        # if arg == 'chan':
+        #     self.pHistViewer.channum=self.getChannum()
+        # if arg == 'checkbox':
+        #     self.pHistViewer.plotAllChans = (not self.pHistViewer.plotAllChans)
+        self.pHistViewer.channum=self.getChannum()
+        self.pHistViewer.plotAllChans = self.histChannelCheckbox.isChecked()
