@@ -119,6 +119,7 @@ class HistViewer(QtWidgets.QWidget): #widget. plots clickable hist.
         self.binHi = 20000
         self.binSize = 10
         self.channum = channum
+        self.lastUsedChannel = channum
         self.data=data
         self.s = data[channum]
         self.attr = attr
@@ -148,16 +149,18 @@ class HistViewer(QtWidgets.QWidget): #widget. plots clickable hist.
         # log.debug(f"handle_plot: color: {colors}")
         # log.debug(f"handle_plot: states_list: {states_list}")
         if len(colors) == 0:
-            raise Exception("no states clicked: {}  {}".format(colors, states_list))
-        
-        if self.plotAllChans == False:
-            self.plot(states_list, np.arange(self.binLo,self.binHi, self.binSize), self.attr, colors)
+            #raise Exception("no states clicked: {}  {}".format(colors, states_list))
+            pass
         else:
-            self.plotAll(states_list, np.arange(self.binLo,self.binHi, self.binSize), self.attr, colors)
+            if self.plotAllChans == False:
+                self.plot(states_list, np.arange(self.binLo,self.binHi, self.binSize), self.attr, colors)
+            else:
+                self.plotAll(states_list, np.arange(self.binLo,self.binHi, self.binSize), self.attr, colors)
 
 
     def plot(self, states_list, bin_edges, attr, colors):
-        print(self.data[int(self.channum)].channum)
+        #print(self.data[int(self.channum)].channum)
+        self.lastUsedChannel = self.data[int(self.channum)].channum
         self.canvas.clear()
         self.line2marker = {}
         self.line2states = {}

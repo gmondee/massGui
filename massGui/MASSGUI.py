@@ -44,6 +44,7 @@ class MainWindow(QtWidgets.QWidget):
 
     def build(self):
         PyQt5.uic.loadUi(os.path.join(os.path.dirname(__file__), "ui/massGuiW.ui"), self)
+        self.calibrationGroup.setEnabled(False)
 
     def connect(self):
         self.selectFileButton.clicked.connect(self.handle_choose_file)
@@ -79,6 +80,8 @@ class MainWindow(QtWidgets.QWidget):
             # log.debug("opening: {}".format(fileName))
             self.load_file(fileName) # sets self._choose_file_lastdir
             self.set_std_dev_threshold()
+        self.calibrationGroup.setEnabled(True) #file is loaded, user should now do the line identification.
+        self.calButtonGroup.setEnabled(False) #don't let users run the calibration procedure yet. enabled in importTableRows()
 
     def set_std_dev_threshold(self):
         for ds in self.data.values():
@@ -121,6 +124,7 @@ class MainWindow(QtWidgets.QWidget):
         self.data.referenceDs = self.ds
         # log.debug(f"{ds.calibrationPlan}")
 
+
     def get_line_names(self):
         if self.self.HCIonCheckbox.isChecked()==True:       #optional import of highly charged ions to the dropdown. Does not work now.
             from mass.calibration import _highly_charged_ion_lines
@@ -145,19 +149,30 @@ class MainWindow(QtWidgets.QWidget):
         return rows
     
     def importTableRows(self):
+        rowPosition = None
+        allowCal = True
         for i in range(len(self.cal_info)):
             rowPosition = self.calTable.rowCount()
             rowData = self.cal_info[i] #data like       [state, filtVal, name]
                                 #this table looks like  [name, filtVal, state]
             #print(rowPosition, rowData)
             self.calTable.insertRow(rowPosition)
-            self.calTable.setItem(rowPosition, 0, QtWidgets.QTableWidgetItem(rowData[2]))
-            self.calTable.setItem(rowPosition, 1, QtWidgets.QTableWidgetItem(rowData[1]))
-            self.calTable.setItem(rowPosition, 2, QtWidgets.QTableWidgetItem(rowData[0]))
+            if rowData[2] != '':
+                self.calTable.setItem(rowPosition, 0, QtWidgets.QTableWidgetItem(rowData[2]))   #name
+            else:
+                self.calTable.setItem(rowPosition, 0, QtWidgets.QTableWidgetItem('Name?'))
+                self.calTable.item(rowPosition, 0).setBackground(QtGui.QColor(255,10,10))  #name
+                allowCal = False
+            self.calTable.setItem(rowPosition, 1, QtWidgets.QTableWidgetItem(rowData[1]))   #filtVal    
+            self.calTable.setItem(rowPosition, 2, QtWidgets.QTableWidgetItem(rowData[0]))   #state
+        if rowPosition != None and allowCal == True: #if something is added to the calibration plan and each line has a name, let user calibrate. 
+            self.calButtonGroup.setEnabled(True)
+        else:   #if nothing is added OR if a line isn't identified, stop the user from calibrating.
+            self.calButtonGroup.setEnabled(False)
 
 
     def getChannum(self):
-        channum = self.hc.channelBox.currentText()
+        channum = self.hc.histHistViewer.lastUsedChannel
         return channum
 
     def setChannum(self):
