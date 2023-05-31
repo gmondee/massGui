@@ -51,6 +51,7 @@ class MainWindow(QtWidgets.QWidget):
         self.lineIDButton.clicked.connect(self.handle_manual_cal)
         self.oneChanCalButton.clicked.connect(self.singleChannelCalibration)
         self.resetCalButton.clicked.connect(self.resetCalibration)
+        self.allChanCalButton.clicked.connect(self.allChannelCalibration)
         # self.pushButton_calibrate.clicked.connect(self.handle_calibrate)
         # self.pushButton_plotEnergy.clicked.connect(self.handle_plot)
         # self.pushButton_refresh.clicked.connect(self.handle_refresh)
@@ -60,6 +61,7 @@ class MainWindow(QtWidgets.QWidget):
         if maxChans is None:
             maxChans = self.maxChansSpinBox.value()
         filenames = getOffFileListFromOneFile(filename, maxChans)
+        self.filenames = filenames
         self.data = ChannelGroup(filenames, verbose=False)
         #self.label_loadedChans.setText("loaded {} chans".format(len(self.data)))
         self.fileTextBox.setText("Curret dataset: {}".format(self.data.shortName)) 
@@ -81,6 +83,7 @@ class MainWindow(QtWidgets.QWidget):
             # log.debug("opening: {}".format(fileName))
             self.load_file(fileName) # sets self._choose_file_lastdir
             self.set_std_dev_threshold()
+            self.data_no_cal = self.data
         self.calibrationGroup.setEnabled(True) #file is loaded, user should now do the line identification.
         self.calButtonGroup.setEnabled(False) #don't let users run the calibration procedure yet. enabled in importTableRows()
 
@@ -106,9 +109,19 @@ class MainWindow(QtWidgets.QWidget):
         self.cal_info = self.hc.getTableRows()
         self.clear_table()
         self.importTableRows()
-
+        #self.initCal()
+        self._cal_stage = 0 #_cal_stage tracks the most recent calibration activity. 0=cal plan made; 1=single channel calibration done; 2=all channel calibration
+                            #I use _cal_stage so I know when I need to reload the self.data object (to switch between single and all channel calibration)
         # log.debug(f"hc dict {cal_info}")
         #self.label_calStatus.setText("{}".format(self.cal_info))
+
+    def initCal(self):
+        #self.data = self.data_no_cal
+
+        self.data = ChannelGroup(self.filenames, verbose=False)
+        self.set_std_dev_threshold()
+
+        self.ds = self.data[self.channum]
         self.ds.calibrationPlanInit("filtValue")
         for (states, fv, line, energy) in self.cal_info: 
             # # log.debug(f"states {states}, fv {fv}, line {line}, energy {energy}")
@@ -124,6 +137,8 @@ class MainWindow(QtWidgets.QWidget):
                 self.ds.calibrationPlanAddPoint(float(fv), line, states=states, energy=float(energy))
         self.data.referenceDs = self.ds
         # log.debug(f"{ds.calibrationPlan}")
+
+  
 
     def resetCalibration(self):
         self.calButtonGroup.setEnabled(False)
@@ -192,30 +207,31 @@ class MainWindow(QtWidgets.QWidget):
 
 
     def singleChannelCalibration(self):
-
-        #self.data.cutAdd("cutForLearnDC", lambda energyRough: np.logical_and(energyRough > 0, energyRough < 10000), setDefault=False) #ideally, user can set the bounds
+        if self._cal_stage != 1: #reset the calibration unless a single-channel calibration was done. doesn't allow user to enable/disable DC, PC, TC and redo without resetting completely...
+            self.initCal()
+            self._cal_stage = 1
+            #self.data.cutAdd("cutForLearnDC", lambda energyRough: np.logical_and(energyRough > 0, energyRough < 10000), setDefault=False) #ideally, user can set the bounds
+            try:    #crashes if user already calibrated (without resetting) and pressed it again. I want it to pull up the same plots again.
+                self.ds.alignToReferenceChannel(referenceChannel=self.ds, binEdges=np.arange(0,35000,10), attr="filtValue", states=self.ds.stateLabels)
+                self.newestName = "filtValue"
+                if self.PCcheckbox.isChecked():
+                    uncorr = self.newestName
+                    self.newestName+="PC"
+                    self.ds.learnPhaseCorrection(indicatorName="filtPhase", uncorrectedName=uncorr, correctedName = self.newestName, states=self.ds.stateLabels)
         
-        try:    #crashes if user already calibrated (without resetting) and pressed it again. I want it to pull up the same plots again.
-            self.ds.alignToReferenceChannel(referenceChannel=self.ds, binEdges=np.arange(0,35000,10), attr="filtValue", states=self.ds.stateLabels)
-            self.newestName = "filtValue"
-            if self.PCcheckbox.isChecked():
-                uncorr = self.newestName
-                self.newestName+="PC"
-                self.ds.learnPhaseCorrection(indicatorName="filtPhase", uncorrectedName=uncorr, correctedName = self.newestName, states=self.ds.stateLabels)
-    
-            if self.DCcheckbox.isChecked():
-                uncorr = self.newestName
-                self.newestName+="DC"
-                self.ds.learnDriftCorrection(indicatorName="pretriggerMean", uncorrectedName=uncorr, correctedName = self.newestName, states=self.ds.stateLabels)#, cutRecipeName="cutForLearnDC")
+                if self.DCcheckbox.isChecked():
+                    uncorr = self.newestName
+                    self.newestName+="DC"
+                    self.ds.learnDriftCorrection(indicatorName="pretriggerMean", uncorrectedName=uncorr, correctedName = self.newestName, states=self.ds.stateLabels)#, cutRecipeName="cutForLearnDC")
 
-            if self.TDCcheckbox.isChecked():
-                uncorr = self.newestName
-                self.newestName+="TC"
-                self.ds.learnTimeDriftCorrection(indicatorName="relTimeSec", uncorrectedName=uncorr, correctedName = self.newestName, states=self.ds.stateLabels)#,cutRecipeName="cutForLearnDC", _rethrow=True) 
+                if self.TDCcheckbox.isChecked():
+                    uncorr = self.newestName
+                    self.newestName+="TC"
+                    self.ds.learnTimeDriftCorrection(indicatorName="relTimeSec", uncorrectedName=uncorr, correctedName = self.newestName, states=self.ds.stateLabels)#,cutRecipeName="cutForLearnDC", _rethrow=True) 
 
-            print(f'Calibrated channel {self.ds.channum}')
-        except:
-            pass
+                print(f'Calibrated channel {self.ds.channum}')
+            except:
+                pass
 
         self.plotter = HistPlotter(self) 
         self.plotter.setParams(self.data, self.ds.channum, self.newestName, self.ds.stateLabels)
@@ -224,6 +240,34 @@ class MainWindow(QtWidgets.QWidget):
         self.plotter.exec_()
         #self.ds.plotHist(np.arange(0,35000,10),newestName, states=self.ds.stateLabels)
 
+        #
+
+    def allChannelCalibration(self):
+        self.initCal()
+        self.data.alignToReferenceChannel(referenceChannel=self.ds, binEdges=np.arange(0,35000,10), attr="filtValue", states=self.ds.stateLabels)
+        self.newestName = "filtValue"
+        try:
+            if self.PCcheckbox.isChecked():
+                uncorr = self.newestName
+                self.newestName+="PC"
+                self.data.learnPhaseCorrection(indicatorName="filtPhase", uncorrectedName=uncorr, correctedName = self.newestName, states=self.ds.stateLabels)
+        
+            if self.DCcheckbox.isChecked():
+                uncorr = self.newestName
+                self.newestName+="DC"
+                self.data.learnDriftCorrection(indicatorName="pretriggerMean", uncorrectedName=uncorr, correctedName = self.newestName, states=self.ds.stateLabels)#, cutRecipeName="cutForLearnDC")
+
+            if self.TDCcheckbox.isChecked():
+                uncorr = self.newestName
+                self.newestName+="TC"
+                self.data.learnTimeDriftCorrection(indicatorName="relTimeSec", uncorrectedName=uncorr, correctedName = self.newestName, states=self.ds.stateLabels)#,cutRecipeName="cutForLearnDC", _rethrow=True) 
+
+            print(f'Calibrated {len(self.data.values())} channels using reference channel {self.ds.channum}')
+        except:
+            pass
+        self.plotter = HistPlotter(self) 
+        self.plotter.setParams(self.data, self.ds.channum, self.newestName, self.ds.stateLabels)
+        self.plotter.exec_()
 
 
 def main(test=False):
