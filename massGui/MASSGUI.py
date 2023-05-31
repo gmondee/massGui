@@ -50,6 +50,7 @@ class MainWindow(QtWidgets.QWidget):
         self.selectFileButton.clicked.connect(self.handle_choose_file)
         self.lineIDButton.clicked.connect(self.handle_manual_cal)
         self.oneChanCalButton.clicked.connect(self.singleChannelCalibration)
+        self.resetCalButton.clicked.connect(self.resetCalibration)
         # self.pushButton_calibrate.clicked.connect(self.handle_calibrate)
         # self.pushButton_plotEnergy.clicked.connect(self.handle_plot)
         # self.pushButton_refresh.clicked.connect(self.handle_refresh)
@@ -124,6 +125,9 @@ class MainWindow(QtWidgets.QWidget):
         self.data.referenceDs = self.ds
         # log.debug(f"{ds.calibrationPlan}")
 
+    def resetCalibration(self):
+        self.calButtonGroup.setEnabled(False)
+        self.clear_table()
 
     def get_line_names(self):
         if self.self.HCIonCheckbox.isChecked()==True:       #optional import of highly charged ions to the dropdown. Does not work now.
