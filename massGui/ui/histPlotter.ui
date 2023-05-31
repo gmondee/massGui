@@ -73,7 +73,11 @@
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="eRangeLow"/>
+       <widget class="QLineEdit" name="eRangeLow">
+        <property name="inputMethodHints">
+         <set>Qt::ImhDigitsOnly</set>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="QLabel" name="label_3">
@@ -83,7 +87,11 @@
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="eRangeHi"/>
+       <widget class="QLineEdit" name="eRangeHi">
+        <property name="inputMethodHints">
+         <set>Qt::ImhDigitsOnly</set>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="QLabel" name="label_4">

@@ -49,6 +49,7 @@ class HistCalibrator(QtWidgets.QDialog):
         self.histHistViewer.plotted.connect(self.handle_plotted)
         self.histHistViewer.markered.connect(self.handle_markered)
         self.channelBox.currentTextChanged.connect(self.updateChild)
+        self.closeButton.clicked.connect(self.close)
 
     def clear_table(self):
         # for i in range(self.table.columnCount()):
@@ -104,13 +105,19 @@ class HistViewer(QtWidgets.QWidget): #widget. plots clickable hist.
     markered = QtCore.pyqtSignal(float, list)
     def __init__(self, parent, s=None, attr=None, state_labels=None, colors=None):
         QtWidgets.QWidget.__init__(self, parent)#, s, attr, state_labels, colors)
+        #super(HistViewer, self).__init__(parent)
         super(HistViewer, self).__init__(parent)
+ 
         # PyQt5.uic.loadUi(os.path.join(os.path.dirname(__file__), "ui/channel.ui"), self) 
 
     def setParams(self, parent, data, channum, attr, state_labels, colors, clickable=True):
         # QtWidgets.QWidget.__init__(self, parent)#, s, attr, state_labels, colors)
-        # super(HistViewer, self).__init__(parent)
+        #super(HistViewer, self).__init__(parent)
+        self.parent = parent
         self.plotAllChans = False #used to switch between self.plot and self.plotAll
+        self.binLo = 0
+        self.binHi = 20000
+        self.binSize = 10
         self.channum = channum
         self.data=data
         self.s = data[channum]
@@ -144,9 +151,9 @@ class HistViewer(QtWidgets.QWidget): #widget. plots clickable hist.
             raise Exception("no states clicked: {}  {}".format(colors, states_list))
         
         if self.plotAllChans == False:
-            self.plot(states_list, np.arange(0,20000, 10), self.attr, colors)
+            self.plot(states_list, np.arange(self.binLo,self.binHi, self.binSize), self.attr, colors)
         else:
-            self.plotAll(states_list, np.arange(0,20000, 10), self.attr, colors)
+            self.plotAll(states_list, np.arange(self.binLo,self.binHi, self.binSize), self.attr, colors)
 
 
     def plot(self, states_list, bin_edges, attr, colors):
@@ -154,8 +161,10 @@ class HistViewer(QtWidgets.QWidget): #widget. plots clickable hist.
         self.canvas.clear()
         self.line2marker = {}
         self.line2states = {}
+        self.photonCount = 0
         for states, color in zip(states_list, colors):
             x,y = self.data[int(self.channum)].hist(bin_edges, attr, states=states)
+            self.photonCount+=sum(y)
             [line2d] = self.canvas.plot(x,y, c=color, ds='steps-mid', lw=2, picker=4) 
             # # log.debug(f"plot: loop: states={states} color={color}")
             self.line2marker[line2d] = []
@@ -164,6 +173,7 @@ class HistViewer(QtWidgets.QWidget): #widget. plots clickable hist.
         self.canvas.set_xlabel(attr)
         self.canvas.set_ylabel("counts per bin")
         # plt.tight_layout()
+        self.parent.photonCountBox.setText(str(self.photonCount))
         self.canvas.draw()
         self.canvas.mpl_connect('pick_event', self.mpl_click_event)
         self.plotted.emit()
@@ -347,12 +357,16 @@ class HistPlotter(QtWidgets.QDialog):
         for channum in self.data.keys():
             self.channelBox.addItem("{}".format(channum))
         self.channelBox.setCurrentText(str(self.channum))
+        self.eRangeLow.insert(str(0))
+        self.eRangeHi.insert(str(20000))
         self.pHistViewer.setParams(self, data, int(self.channum), attr, state_labels, colors, clickable=False)
 
 
     def connect(self):
         self.channelBox.currentTextChanged.connect(self.updateChild)
         self.histChannelCheckbox.stateChanged.connect(self.updateChild)
+        self.eRangeLow.textChanged.connect(self.updateChild)
+        self.eRangeHi.textChanged.connect(self.updateChild)
         # self.histHistViewer.plotted.connect(self.handle_plotted)
         # self.histHistViewer.markered.connect(self.handle_markered)
         # self.channelBox.currentTextChanged.connect(self.updateChild)
@@ -370,3 +384,14 @@ class HistPlotter(QtWidgets.QDialog):
         #     self.pHistViewer.plotAllChans = (not self.pHistViewer.plotAllChans)
         self.pHistViewer.channum=self.getChannum()
         self.pHistViewer.plotAllChans = self.histChannelCheckbox.isChecked()
+        #crashes if the range boxes are empty. Use default values instead to avoid crash.
+        if self.eRangeLow.displayText() != '':
+            self.pHistViewer.binLo = int(self.eRangeLow.displayText())
+        else:
+            self.pHistViewer.binLo = 0
+
+        if self.eRangeHi.displayText() != '':
+            self.pHistViewer.binHi = int(self.eRangeHi.displayText())
+        else:
+            self.pHistViewer.binHi = 20000
+        ##energy range updating
