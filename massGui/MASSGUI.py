@@ -189,11 +189,13 @@ class MainWindow(QtWidgets.QWidget):
                 self.ds.learnTimeDriftCorrection(indicatorName="relTimeSec", uncorrectedName=newestName, correctedName = "filtValuePCDCTC", states=self.ds.stateLabels)#,cutRecipeName="cutForLearnDC", _rethrow=True) 
                 newestName = "filtValuePCDCTC"
             print(f'Calibrated channel {self.ds.channum}')
-        finally:
+        except:
             pass
 
         self.plotter = HistPlotter(self) 
         self.plotter.setParams(self.data, self.ds.channum, newestName, self.ds.stateLabels)
+        self.plotter.channelBox.setEnabled(False)
+        self.plotter.histChannelCheckbox.setEnabled(False)
         self.plotter.exec_()
         #self.ds.plotHist(np.arange(0,35000,10),newestName, states=self.ds.stateLabels)
 

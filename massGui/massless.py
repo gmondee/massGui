@@ -40,8 +40,8 @@ class HistCalibrator(QtWidgets.QDialog):
         #self.histHistViewer = HistViewer(self, s, attr, state_labels, colors) #histHistViewer is the name of the widget that plots.
         self.data = data
         self.channum = channum
-        for channum in self.data.keys():
-            self.channelBox.addItem("{}".format(channum))
+        for channel in self.data.keys():
+            self.channelBox.addItem("{}".format(channel))
         self.histHistViewer.setParams(self, data, channum, attr, state_labels, colors)
 
 
