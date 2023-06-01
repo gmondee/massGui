@@ -15,7 +15,10 @@ classifiers = [
 
 dependencies = [
   "numpy",
-  "PyQt5"
+  "PyQt5",
+  "pytestqt",
+  "logging",
+  "pylab"
 ]
 
 [project.scripts]
