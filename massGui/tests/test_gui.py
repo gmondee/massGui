@@ -8,11 +8,11 @@ import pytest
 import sys
 import os
 import massGui
-import massGui.MASSGUI
+#import massGui.massGui
 
 @pytest.fixture
 def app(qtbot):
-    test_gui_app = massGui.MASSGUI.MainWindow()
+    test_gui_app = massGui.massGui.MainWindow()
     qtbot.addWidget(test_gui_app)
 
     return test_gui_app
@@ -22,9 +22,7 @@ def test_open(app):
 
 def runOpen():
     sys.exit(pytest.main(args=massGui.__path__))
-    #sys.exit(pytest.main(['-ra',str(massGui.__path__)]))#, massGui.__path__))
-    #sys.exit(pytest.main(["-ra", massGui.__path__]))#, massGui.__path__))
 
-if __name__=="__main__":
-    sys.exit(pytest.main(args=massGui.__path__))
+# if __name__=="__main__":
+#     sys.exit(pytest.main(args=massGui.__path__))
 

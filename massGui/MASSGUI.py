@@ -209,7 +209,7 @@ class MainWindow(QtWidgets.QWidget):
     def checkHCI(self):
         if (self.HCIonCheckbox.isChecked()==True):
             import mass.calibration.hci_models
-            import mass.calibration._highly_charged_ion_lines
+            #import mass.calibration._highly_charged_ion_lines
             self.common_models = mass.calibration.hci_models.models(has_linear_background=True)
 
 

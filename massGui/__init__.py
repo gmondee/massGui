@@ -3,5 +3,3 @@
 from .MASSGUI import main
 from .tests.test_gui import test_open
 from .tests.test_gui import runOpen
-#from massGui import massless
-
