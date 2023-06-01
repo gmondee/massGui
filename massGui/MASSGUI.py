@@ -36,7 +36,7 @@ import numpy as np
 class MainWindow(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
-
+        mass.line_models.VALIDATE_BIN_SIZE = False
         QtWidgets.QWidget.__init__(self)
         self.data = None 
         self.build()
@@ -267,9 +267,6 @@ class MainWindow(QtWidgets.QWidget):
                 uncorr = self.newestName
                 self.newestName+="TC"
                 self.data.learnTimeDriftCorrection(indicatorName="relTimeSec", uncorrectedName=uncorr, correctedName = self.newestName, states=self.ds.stateLabels)#,cutRecipeName="cutForLearnDC", _rethrow=True) 
-
-            
-
             print(f'Calibrated {len(self.data.values())} channels using reference channel {self.ds.channum}')
         except:
             pass

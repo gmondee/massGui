@@ -4,12 +4,12 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
 from matplotlib.figure import Figure
 
-class MplCanvas(QtWidgets.QWidget):
-    def __init__(self, parent = None, width=6, height=5, dpi=100):
+class MplCanvas(QtWidgets.QWidget): #figsize=(20, 12)
+    def __init__(self, parent = None, width=20, height=12, dpi=100):
         QtWidgets.QWidget.__init__(self).__init__(self, parent)
-        fig = Figure(figsize=(width,height), dpi=dpi)
-        self.canvas = FigureCanvas(fig)
-        self.axes = fig.add_subplot(111)
+        self.fig = Figure(figsize=(width,height), dpi=dpi)
+        self.canvas = FigureCanvas(self.fig)
+        self.axes = self.fig.add_subplot(111)
         self.canvas.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
         self.canvas.updateGeometry()
         self.mpl_toolbar = NavigationToolbar(self.canvas, self)

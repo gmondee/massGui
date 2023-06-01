@@ -428,28 +428,32 @@ class diagnoseViewer(QtWidgets.QDialog):
         #self.channelBox.currentTextChanged.connect(self.updateChild)
         self.diagPlotButton.clicked.connect(self.plotDiagnosis)
 
-    def handle_plot(self): #needs to use channel
-        #update channel
-        self.plot(self.channum)
-
     def plotDiagnosis(self):
-        channel = self.getChannum()
-        self.plot(channel)
+        self.diagnoseCalibration()
+        self.canvas.draw()
 
     def getChannum(self):
         self.channum = int(self.channelBox.currentText())
         return self.channum
 
-    def plot(self, channel):
-        #print(self.data[int(self.channum)].channum)
-        self.canvas.clear()
-        self.data[channel].diagnoseCalibration()
-        #line2d = self.canvas.plot(x,y) 
-
-        #self.canvas.legend([",".join(states) for states in states_list])
-        #self.canvas.set_xlabel(attr)
-        #self.canvas.set_ylabel("counts per bin")
-        # plt.tight_layout()
-        self.canvas.draw()
-        self.plotted.emit()
-
+    def diagnoseCalibration(self, calibratedName="energy"):
+        ds = self.data[self.channum]
+        calibration = ds.recipes[calibratedName].f
+        uncalibratedName = calibration.uncalibratedName
+        results = calibration.results
+        n_intermediate = len(calibration.intermediate_calibrations)
+        self.canvas.fig.suptitle(
+            ds.shortName+", cal diagnose for '{}'\n with {} intermediate calibrations".format(calibratedName, n_intermediate))
+        n = int(np.ceil(np.sqrt(len(results)+2)))
+        for i, result in enumerate(results):
+            ax = self.canvas.fig.add_subplot(n, n, i+1)
+            ax.clear()
+            # pass title to suppress showing the dataset shortName on each subplot
+            result.plotm(ax=ax, title=str(result.model.spect.shortname))
+        ax = self.canvas.fig.add_subplot(n, n, i+2)
+        calibration.plot(axis=ax)
+        ax = self.canvas.fig.add_subplot(n, n, i+3)
+        ds.plotHist(np.arange(0, 16000, 4), uncalibratedName,
+                      axis=ax, coAddStates=False)
+        #ax.vlines(ds.calibrationPlan.uncalibratedVals, 0, self.canvas.fig.ylim()[1])
+        #plt.tight_layout()
