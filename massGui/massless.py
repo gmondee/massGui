@@ -447,7 +447,7 @@ class diagnoseViewer(QtWidgets.QDialog):
         n = int(np.ceil(np.sqrt(len(results)+2)))
         for i, result in enumerate(results):
             ax = self.canvas.fig.add_subplot(n, n, i+1)
-            ax.clear()
+            #ax.clear()
             # pass title to suppress showing the dataset shortName on each subplot
             result.plotm(ax=ax, title=str(result.model.spect.shortname))
         ax = self.canvas.fig.add_subplot(n, n, i+2)
