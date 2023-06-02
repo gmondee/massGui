@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>621</height>
+    <height>714</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -109,7 +109,7 @@
     </widget>
    </item>
    <item>
-    <widget class="StatesGrid" name="rtpStatesGrid" native="true"/>
+    <widget class="StatesGrid" name="statesGrid" native="true"/>
    </item>
   </layout>
  </widget>

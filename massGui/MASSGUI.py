@@ -85,7 +85,7 @@ class MainWindow(QtWidgets.QWidget):
             # log.debug("opening: {}".format(fileName))
             self.load_file(fileName) # sets self._choose_file_lastdir
             self.set_std_dev_threshold()
-            self.data_no_cal = self.data
+            #self.data_no_cal = self.data
         self.calibrationGroup.setEnabled(True) #file is loaded, user should now do the line identification.
         self.calButtonGroup.setEnabled(False) #don't let users run the calibration procedure yet. enabled in importTableRows()
 

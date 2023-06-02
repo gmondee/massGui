@@ -7,9 +7,9 @@ log = logging.getLogger("massless")
 #qt imports
 import PyQt5.uic
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import QSettings, pyqtSlot
+from PyQt5.QtCore import QSettings, QTimer, pyqtSlot
 from PyQt5.QtWidgets import QFileDialog
-
+QtGui.QCursor
 # other imports
 import numpy as np
 import pylab as plt
@@ -205,6 +205,8 @@ class HistViewer(QtWidgets.QWidget): #widget. plots clickable hist.
         if self.clickable == True:
             x = event.mouseevent.xdata
             y = event.mouseevent.ydata
+            # pos = QtGui.QCursor.pos()
+            # print(self.mapFromGlobal(pos))
             artist = event.artist
             # log.info(artist.get_label()+f" was clicked at {x:.2f},{y:.2f}")
             if artist in self.line2marker.keys():
@@ -465,9 +467,9 @@ class rtpViewer(QtWidgets.QDialog):
     def __init__(self, parent=None):
         super(rtpViewer, self).__init__(parent)
         QtWidgets.QDialog.__init__(self)
-
+        plt.ion()
     def setParams(self, parent):
-        self.colors =MPL_DEFAULT_COLORS[0]
+        self.colors =MPL_DEFAULT_COLORS[1]
         self.RTPdelay = 15 #will be in seconds
         self.parent = parent
         self.stateLabels = self.parent.ds.stateLabels
@@ -477,13 +479,17 @@ class rtpViewer(QtWidgets.QDialog):
 
     def build(self):
         PyQt5.uic.loadUi(os.path.join(os.path.dirname(__file__), "ui/realtimeviewer.ui"), self)
-        self.statesGrid.setParams(state_labels=self.stateLabels, colors=MPL_DEFAULT_COLORS[0], one_state_per_line=True)
+        print(self.stateLabels, MPL_DEFAULT_COLORS[:1])
+        self.statesGrid.setParams(state_labels=self.stateLabels, colors=MPL_DEFAULT_COLORS[:1], one_state_per_line=False)
+        self.statesGrid.fill_simple()
         self.initRTP()
 
-    def connect():
+    def connect(self):
+        self.updateButton.clicked.connect(self.updateButtonClicked)
+
+
+    def updateButtonClicked(self):
         pass
-
-
     #####################################| Real-time plotting routine|#####################################
     def initRTP(self): #creates axes, clears variables, and starts real-time plotting routine
 
@@ -510,14 +516,14 @@ class rtpViewer(QtWidgets.QDialog):
     def UpdatePlots(self):  #real-time plotting routine. refreshes data, adjust alphas, and replots graphs
         print(f"iteration {self.updateIndex}")
         self.parent.data.refreshFromFiles()                #Mass function to refresh .off files as they are updated
-        self.ds.stateLabels #how to update grid's list of states?
+        #self.parent.ds.stateLabels #how to update grid's list of states?
         States, _colors = self.statesGrid.get_colors_and_states_list()
         # States = str.split(self.FullCalStates.Val)  #Gets last-submitted states from the lower states text box
         self.rtpdata=[]                             #temporary storage of data points
         self.rtpline.append([])                     #stores every line that is plotted according to the updateIndex
 
         for s in range(len(States)):    #looping over each state passed in
-            self.rtpdata.append(self.parent().data.hist(np.arange(0, 14000, float(self.parent.binSize)), "energy", states=States[s]))   #[x,y] points of current energy spectrum, one state at a time
+            self.rtpdata.append(self.parent.data.hist(np.arange(0, 14000, float(self.parent.binSize)), "energy", states=States[s]))   #[x,y] points of current energy spectrum, one state at a time
             self.energyAxis.plot(self.rtpdata[s][0],self.rtpdata[s][1],alpha=1, color=self.getColorfromState(States[s]))    #plots the [x,y] points and assigns color based on the state
             if States[s] not in self.plottedStates:     #new states are added to the legend; old ones are already there                      
                 self.plottedStates.append(States[s])
@@ -535,21 +541,29 @@ class rtpViewer(QtWidgets.QDialog):
                 self.alphas[lineI] = self.alphas[lineI] - self.rate
             for setI in range(len(self.rtpline[lineI])):    #loops over the states within one refresh cycle
                 self.rtpline[lineI][setI].set_alpha(self.alphas[lineI])     #sets adjusted alpha values
-        self.energyAxis.draw()
+        self.canvas.draw()
         self.updateIndex=self.updateIndex+1
         if self.continueRTP==True:  #if off button hasn't been pressed
-            self.after(self.updateFreq, self.UpdatePlots)   #calls the UpdatePlots function again after time has passed
+            QTimer.singleShot(self.updateFreq, self.UpdatePlots)   #calls the UpdatePlots function again after time has passed
 
     def getColorfromState(self, s): #pass in a state label string like 'A' or 'AC' (for states past Z) and get a color index using plt.colormaps() 
-        c = plt.cm.get_cmap('gist_rainbow')     #can be other colormaps, rainbow is most distinct
-        maxColors=8                             #how many unique colors there are. lower values make it easier to distinguish between neighboring states.
-        cinter=np.linspace(0,1,maxColors)       #colormaps use values between 0 and 1. this interpolation lets us assign integers to colors easily.
-        cIndex=0
-        cIndex=cIndex+ord(s[-1])-ord('A')       #uses unicode values of state labels (e.g. 'A') to get an integer 
+        # c = plt.cm.get_cmap('gist_rainbow')     #can be other colormaps, rainbow is most distinct
+        # maxColors=8                             #how many unique colors there are. lower values make it easier to distinguish between neighboring states.
+        # cinter=np.linspace(0,1,maxColors)       #colormaps use values between 0 and 1. this interpolation lets us assign integers to colors easily.
+        # cIndex=0
+        # cIndex=cIndex+ord(s[-1])-ord('A')       #uses unicode values of state labels (e.g. 'A') to get an integer 
+        # if len(s)!=1:   #for states like AA, AB, etc., 27 is added to the value of the ones place
+        #     cIndex=cIndex+26+ord(s[0])-ord('A')+1 #26 + value of first letter (making A=1 so AA != Z)
+
+        # while cIndex >= maxColors:       #colors repeat after maxColors states. loops until there is a valid interpolated index from cinter
+        #     cIndex=cIndex-maxColors
+        # #print(c(cinter[cIndex]))
+        # return c(cinter[cIndex])        #returns values that can be assigned as a plt color, looks like (X,Y,Z,...) or something similar    
+        c=MPL_DEFAULT_COLORS[0:7]
+        maxColors = 8
+        cIndex =  ord(s[-1])-ord('A')
         if len(s)!=1:   #for states like AA, AB, etc., 27 is added to the value of the ones place
             cIndex=cIndex+26+ord(s[0])-ord('A')+1 #26 + value of first letter (making A=1 so AA != Z)
-
         while cIndex >= maxColors:       #colors repeat after maxColors states. loops until there is a valid interpolated index from cinter
             cIndex=cIndex-maxColors
-        #print(c(cinter[cIndex]))
-        return c(cinter[cIndex])        #returns values that can be assigned as a plt color, looks like (X,Y,Z,...) or something similar    
+        return c[cIndex]
