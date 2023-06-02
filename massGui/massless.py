@@ -92,7 +92,9 @@ class HistCalibrator(QtWidgets.QDialog):
     def updateChild(self):
         self.histHistViewer.channum = self.getChannum()
 
-
+    @property
+    def selected_window(self):
+        return self._selected_window
 
 
 

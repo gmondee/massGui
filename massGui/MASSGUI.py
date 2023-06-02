@@ -105,6 +105,7 @@ class MainWindow(QtWidgets.QWidget):
         self.hc = HistCalibrator(self, data, channum, "filtValue", data[channum].stateLabels) 
         self.hc.setParams(data, channum, "filtValue", data[channum].stateLabels)
         #hc.setWindowModality(self, QtCore.Qt.ApplicationModal)
+        self._selected_window = self.hc
         self.hc.exec_()
         self.setChannum()
         self.ds = data[self.channum]
@@ -291,7 +292,9 @@ class MainWindow(QtWidgets.QWidget):
         self.plotter.setParams(self)
         self.plotter.exec_()
 
-
+    @property
+    def selected_window(self):
+        return self._selected_window
 
 
 

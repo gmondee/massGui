@@ -30,11 +30,13 @@ def test_cal(app, qtbot):
     app.set_std_dev_threshold()
     app.calibrationGroup.setEnabled(True)
     app.calButtonGroup.setEnabled(False)
-    
     qtbot.mouseClick(app.lineIDButton, QtCore.Qt.LeftButton)
-    print("A")
+    
     QtTest.QTest.qWait(0.5*1000.)
-    hc = QtWidgets.QApplication.activeWindow()#app.hc#app.activeWindow()
+    hc = app._selected_window#QtWidgets.QApplication.activeWindow()#app.hc
+    
+    qtbot.addWidget(hc)
+    assert isinstance(hc, massGui.massless.HistCalibrator) #exists but not clicking on it
     qtbot.mouseClick(hc, QtCore.Qt.LeftButton, pos=QtCore.QPoint(554, 177))
     qtbot.mouseClick(hc, QtCore.Qt.LeftButton, pos=QtCore.QPoint(604, 112))
     qtbot.keyClicks(hc.table.item(0,2), "AlKAlpha")
