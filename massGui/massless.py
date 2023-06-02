@@ -15,7 +15,7 @@ import numpy as np
 import pylab as plt
 from .canvas import MplCanvas
 import mass
-
+from matplotlib.lines import Line2D
 import massGui
 
 MPL_DEFAULT_COLORS = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728',
@@ -457,3 +457,99 @@ class diagnoseViewer(QtWidgets.QDialog):
                       axis=ax, coAddStates=False)
         #ax.vlines(ds.calibrationPlan.uncalibratedVals, 0, self.canvas.fig.ylim()[1])
         #plt.tight_layout()
+
+
+
+
+class rtpViewer(QtWidgets.QDialog):
+    def __init__(self, parent=None):
+        super(rtpViewer, self).__init__(parent)
+        QtWidgets.QDialog.__init__(self)
+
+    def setParams(self, parent):
+        self.colors =MPL_DEFAULT_COLORS[0]
+        self.RTPdelay = 15 #will be in seconds
+        self.parent = parent
+        self.stateLabels = self.parent.ds.stateLabels
+        self.build()
+        self.connect()
+
+
+    def build(self):
+        PyQt5.uic.loadUi(os.path.join(os.path.dirname(__file__), "ui/realtimeviewer.ui"), self)
+        self.statesGrid.setParams(state_labels=self.stateLabels, colors=MPL_DEFAULT_COLORS[0], one_state_per_line=True)
+        self.initRTP()
+
+    def connect():
+        pass
+
+
+    #####################################| Real-time plotting routine|#####################################
+    def initRTP(self): #creates axes, clears variables, and starts real-time plotting routine
+
+        self.updateIndex=0                  #tracks how many updates have happened
+        self.alphas=[]                      #transparencies of lines
+        self.rtpline=[]                     #list of all plotted lines
+        self.plottedStates=[]               #used for the RTP legend
+        
+        #self.energyPlot=plt.figure()        #everything is plotted onto this figure
+        self.energyAxis = self.canvas.fig.add_subplot(111)
+        # self.energyAxis = plt.gca()
+        self.energyAxis.grid()
+        self.canvas.set_title('Real-time energy')
+        self.canvas.set_xlabel('Energy (eV)')
+        self.canvas.set_ylabel('Counts per'+str(self.parent.binSize)+'eV bin')
+        self.rate = 0.1                     #how much to lower the transparency of lines each update
+        self.updateFreq = int(self.RTPdelay)*1000             #in ms after the multiplication
+        self.continueRTP = True             #toggle to keep updating plots
+        self.UpdatePlots()
+
+    def stopRTP(self):
+        self.continueRTP = False
+
+    def UpdatePlots(self):  #real-time plotting routine. refreshes data, adjust alphas, and replots graphs
+        print(f"iteration {self.updateIndex}")
+        self.parent.data.refreshFromFiles()                #Mass function to refresh .off files as they are updated
+        self.ds.stateLabels #how to update grid's list of states?
+        States, _colors = self.statesGrid.get_colors_and_states_list()
+        # States = str.split(self.FullCalStates.Val)  #Gets last-submitted states from the lower states text box
+        self.rtpdata=[]                             #temporary storage of data points
+        self.rtpline.append([])                     #stores every line that is plotted according to the updateIndex
+
+        for s in range(len(States)):    #looping over each state passed in
+            self.rtpdata.append(self.parent().data.hist(np.arange(0, 14000, float(self.parent.binSize)), "energy", states=States[s]))   #[x,y] points of current energy spectrum, one state at a time
+            self.energyAxis.plot(self.rtpdata[s][0],self.rtpdata[s][1],alpha=1, color=self.getColorfromState(States[s]))    #plots the [x,y] points and assigns color based on the state
+            if States[s] not in self.plottedStates:     #new states are added to the legend; old ones are already there                      
+                self.plottedStates.append(States[s])
+            self.rtpline[self.updateIndex].append(self.energyAxis.lines[-1])    #stores most recent line
+
+        self.alphas.append(1)   #lines in the same refresh cycle share an alpha (transparency) value. a new one is made for the newest lines.
+        customLegend=[]         #temporary list to store the legend
+        for s in self.plottedStates:    #loops over all states called during the current real-time plotting routine
+            customLegend.append(Line2D([0], [0], color=self.getColorfromState(s)))      #each state is added to the legend with the state's respective color
+        self.energyAxis.legend(customLegend, list(self.plottedStates))                  #makes the legend
+
+        ###change transparency of current elements, plot adjusted lines
+        for lineI in range(len(self.alphas)):   #loops over the number of refresh cycles, which is also the length of the alphas list
+            if self.alphas[lineI] > 0.1:        #alpha values cannot be below 0
+                self.alphas[lineI] = self.alphas[lineI] - self.rate
+            for setI in range(len(self.rtpline[lineI])):    #loops over the states within one refresh cycle
+                self.rtpline[lineI][setI].set_alpha(self.alphas[lineI])     #sets adjusted alpha values
+        self.energyAxis.draw()
+        self.updateIndex=self.updateIndex+1
+        if self.continueRTP==True:  #if off button hasn't been pressed
+            self.after(self.updateFreq, self.UpdatePlots)   #calls the UpdatePlots function again after time has passed
+
+    def getColorfromState(self, s): #pass in a state label string like 'A' or 'AC' (for states past Z) and get a color index using plt.colormaps() 
+        c = plt.cm.get_cmap('gist_rainbow')     #can be other colormaps, rainbow is most distinct
+        maxColors=8                             #how many unique colors there are. lower values make it easier to distinguish between neighboring states.
+        cinter=np.linspace(0,1,maxColors)       #colormaps use values between 0 and 1. this interpolation lets us assign integers to colors easily.
+        cIndex=0
+        cIndex=cIndex+ord(s[-1])-ord('A')       #uses unicode values of state labels (e.g. 'A') to get an integer 
+        if len(s)!=1:   #for states like AA, AB, etc., 27 is added to the value of the ones place
+            cIndex=cIndex+26+ord(s[0])-ord('A')+1 #26 + value of first letter (making A=1 so AA != Z)
+
+        while cIndex >= maxColors:       #colors repeat after maxColors states. loops until there is a valid interpolated index from cinter
+            cIndex=cIndex-maxColors
+        #print(c(cinter[cIndex]))
+        return c(cinter[cIndex])        #returns values that can be assigned as a plt color, looks like (X,Y,Z,...) or something similar    

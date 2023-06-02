@@ -9,8 +9,8 @@ import os
 from pytestqt.qtbot import QtBot
 import pytest
 import pytestqt
-
-from .massless import HistCalibrator, HistPlotter, diagnoseViewer
+from matplotlib.lines import Line2D
+from .massless import HistCalibrator, HistPlotter, diagnoseViewer, rtpViewer
 from .canvas import MplCanvas
 
 
@@ -53,6 +53,7 @@ class MainWindow(QtWidgets.QWidget):
         self.resetCalButton.clicked.connect(self.resetCalibration)
         self.allChanCalButton.clicked.connect(self.allChannelCalibration)
         self.diagCalButton.clicked.connect(self.diagnoseCalibration)
+        self.startRTPButton.clicked.connect(self.startRTP)
         # self.pushButton_calibrate.clicked.connect(self.handle_calibrate)
         # self.pushButton_plotEnergy.clicked.connect(self.handle_plot)
         # self.pushButton_refresh.clicked.connect(self.handle_refresh)
@@ -283,6 +284,18 @@ class MainWindow(QtWidgets.QWidget):
     def handle_line_fit(self, method): #unfinished
         if method == 'comboBox':
             self.line = self.lineFitComboBox.currentText()
+
+    def startRTP(self):
+        self.binSize = 1
+        self.plotter = rtpViewer(self)
+        self.plotter.setParams(self)
+        self.plotter.exec_()
+
+
+
+
+
+
 
 
 

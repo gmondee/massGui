@@ -544,14 +544,14 @@ p, li { white-space: pre-wrap; }
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout_6">
           <item>
-           <widget class="QPushButton" name="pushButton_2">
+           <widget class="QPushButton" name="startRTPButton">
             <property name="text">
              <string>Start RTP</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton">
+           <widget class="QPushButton" name="stopRTPButton">
             <property name="text">
              <string>Stop RTP</string>
             </property>
