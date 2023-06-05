@@ -1,9 +1,9 @@
 #from: https://stackoverflow.com/questions/43947318/plotting-matplotlib-figure-inside-qwidget-using-qt-designer-form-and-pyqt5
 
 # Imports
-from PyQt5 import QtWidgets
+from PyQt6 import QtWidgets
 from matplotlib.figure import Figure
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as Canvas
+from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as Canvas
 import matplotlib
 
 # Ensure using PyQt5 backend

@@ -15,7 +15,7 @@ classifiers = [
 
 dependencies = [
   "numpy",
-  "PyQt5",
+  "PyQt6",
   "pytest-qt",
   "logging",
   "matplotlib"

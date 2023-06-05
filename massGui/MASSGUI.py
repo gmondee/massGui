@@ -1,9 +1,9 @@
-import PyQt5.QtWidgets as QtWidgets
-import PyQt5.uic
-from PyQt5 import QtCore, QtGui, QtWidgets
+import PyQt6.QtWidgets as QtWidgets
+import PyQt6.uic
+from PyQt6 import QtCore, QtGui, QtWidgets
 
-from PyQt5.QtCore import QSettings, pyqtSlot
-from PyQt5.QtWidgets import QFileDialog
+from PyQt6.QtCore import QSettings, pyqtSlot
+from PyQt6.QtWidgets import QFileDialog
 import sys
 import os
 from pytestqt.qtbot import QtBot
@@ -43,7 +43,7 @@ class MainWindow(QtWidgets.QWidget):
         self.connect()
 
     def build(self):
-        PyQt5.uic.loadUi(os.path.join(os.path.dirname(__file__), "ui/massGuiW.ui"), self)
+        PyQt6.uic.loadUi(os.path.join(os.path.dirname(__file__), "ui/massGuiW.ui"), self)
         self.calibrationGroup.setEnabled(False)
 
     def connect(self):
@@ -73,14 +73,14 @@ class MainWindow(QtWidgets.QWidget):
             #self.refChannelBox.addItem("{}".format(channum))
 
     def handle_choose_file(self):
-        options = QFileDialog.Options()
+        #options = QFileDialog.options(QFileDialog)
         if not hasattr(self, "_choose_file_lastdir"):
             dir = os.path.expanduser("~")
         else:
             dir = self._choose_file_lastdir
         fileName, _ = QFileDialog.getOpenFileName(
             self, "Find OFF file", dir,
-            "OFF Files (*.off);;All Files (*)", options=options)
+            "OFF Files (*.off);;All Files (*)")#, options=options)
         if fileName:
             # log.debug("opening: {}".format(fileName))
             self.load_file(fileName) # sets self._choose_file_lastdir
@@ -106,7 +106,7 @@ class MainWindow(QtWidgets.QWidget):
         self.hc.setParams(data, channum, "filtValue", data[channum].stateLabels)
         #hc.setWindowModality(self, QtCore.Qt.ApplicationModal)
         self._selected_window = self.hc
-        self.hc.exec_()
+        self.hc.exec()
         self.setChannum()
         self.ds = data[self.channum]
         self.cal_info = self.hc.getTableRows()
@@ -247,7 +247,7 @@ class MainWindow(QtWidgets.QWidget):
         self.plotter.setParams(self.data, self.ds.channum, "energy", self.ds.stateLabels)
         self.plotter.channelBox.setEnabled(False)
         self.plotter.histChannelCheckbox.setEnabled(False)
-        self.plotter.exec_()
+        self.plotter.exec()
         #self.ds.plotHist(np.arange(0,35000,10),newestName, states=self.ds.stateLabels)
 
     def allChannelCalibration(self):
@@ -277,12 +277,12 @@ class MainWindow(QtWidgets.QWidget):
         self._selected_window = self.plotter
         self.plotter.setParams(self.data, self.ds.channum, "energy", self.ds.stateLabels)
         
-        self.plotter.exec_()
+        self.plotter.exec()
 
     def diagnoseCalibration(self):
         self.plotter = diagnoseViewer(self)
         self.plotter.setParams(self.data, self.ds.channum)
-        self.plotter.exec_()
+        self.plotter.exec()
 
     def handle_line_fit(self, method): #unfinished
         if method == 'comboBox':
@@ -292,17 +292,11 @@ class MainWindow(QtWidgets.QWidget):
         self.binSize = 1
         self.plotter = rtpViewer(self)
         self.plotter.setParams(self)
-        self.plotter.exec_()
+        self.plotter.exec()
 
     @property
     def selected_window(self):
         return self._selected_window
-
-
-
-
-
-
 
 def main(test=False):
     app = QtWidgets.QApplication(sys.argv)
@@ -312,7 +306,7 @@ def main(test=False):
     #     mw.load_file("/Users/oneilg/mass/src/mass/off/data_for_test/20181205_BCDEFGHI/20181205_BCDEFGHI_chan1.off")
     #     mw.set_std_dev_threshold()
     #     mw.launch_channel(mw.data.firstGoodChannel())
-    retval = app.exec_() 
+    retval = app.exec() 
 
 # #https://www.youtube.com/watch?v=WjctCBjHvmA
 # http://adambemski.pythonanywhere.com/testing-qt-application-python-and-pytest

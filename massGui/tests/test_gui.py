@@ -1,11 +1,11 @@
 import pytest
 
-# import PyQt5.QtWidgets as QtWidgets
-# import PyQt5.uic
-from PyQt5 import QtCore, QtGui, QtWidgets, QtTest
-import PyQt5
-# from PyQt5.QtCore import QSettings, pyqtSlot
-# from PyQt5.QtWidgets import QFileDialog
+# import PyQt6.QtWidgets as QtWidgets
+# import PyQt6.uic
+from PyQt6 import QtCore, QtGui, QtWidgets, QtTest
+import PyQt6
+# from PyQt6.QtCore import QSettings, pyqtSlot
+# from PyQt6.QtWidgets import QFileDialog
 import sys
 import os
 import massGui
@@ -42,7 +42,7 @@ def test_cal(app, qtbot):
         hc = app._selected_window#QtWidgets.QApplication.activeWindow()#app.hc
         qtbot.addWidget(hc)
         assert isinstance(hc, massGui.massless.HistCalibrator) #exists but not clicking on it
-        
+        QtGui.QMouseEvent(QtCore.QEvent)
         qtbot.mouseClick(hc.histHistViewer, QtCore.Qt.LeftButton, pos=QtCore.QPoint(554, 177))
         qtbot.mouseClick(hc, QtCore.Qt.LeftButton, pos=QtCore.QPoint(604, 112))
         qtbot.keyClicks(hc.table.item(0,2), "AlKAlpha")
