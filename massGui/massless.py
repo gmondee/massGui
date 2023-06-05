@@ -3,12 +3,12 @@
 import sys
 import os
 import logging  
-log = logging.getLogger("massless")
+
 #qt imports
-import PyQt5.uic
-from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import QSettings, QTimer, pyqtSlot
-from PyQt5.QtWidgets import QFileDialog
+import PyQt6.uic
+from PyQt6 import QtCore, QtGui, QtWidgets
+from PyQt6.QtCore import QSettings, QTimer, pyqtSlot
+from PyQt6.QtWidgets import QFileDialog
 QtGui.QCursor
 # other imports
 import numpy as np
@@ -17,6 +17,15 @@ from .canvas import MplCanvas
 import mass
 from matplotlib.lines import Line2D
 import massGui
+
+logging.basicConfig(filename='masslessLog.txt',
+                    filemode='a',
+                    format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
+                    datefmt='%H:%M:%S',
+                    level=logging.DEBUG)
+
+logging.info("Massless Log")
+log = logging.getLogger("massless")
 
 MPL_DEFAULT_COLORS = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728',
               '#9467bd', '#8c564b', '#e377c2', '#7f7f7f',
@@ -36,7 +45,7 @@ class HistCalibrator(QtWidgets.QDialog):
         self.connect()
 
     def build(self, data, channum, attr, state_labels, colors):
-        PyQt5.uic.loadUi(os.path.join(os.path.dirname(__file__), "ui/ChannelBrowser.ui"), self) #,  s, attr, state_labels, colors)
+        PyQt6.uic.loadUi(os.path.join(os.path.dirname(__file__), "ui/ChannelBrowser.ui"), self) #,  s, attr, state_labels, colors)
         #self.histHistViewer = HistViewer(self, s, attr, state_labels, colors) #histHistViewer is the name of the widget that plots.
         self.data = data
         self.channum = channum
@@ -58,7 +67,7 @@ class HistCalibrator(QtWidgets.QDialog):
         self.table.setRowCount(0)
 
     def handle_plotted(self):
-        # log.debug("handle_plotted")
+        log.debug("handle_plotted")
         self.clear_table()
 
     def handle_markered(self, x, states):
@@ -108,11 +117,12 @@ class HistViewer(QtWidgets.QWidget): #widget. plots clickable hist.
         #super(HistViewer, self).__init__(parent)
         super(HistViewer, self).__init__(parent)
  
-        # PyQt5.uic.loadUi(os.path.join(os.path.dirname(__file__), "ui/channel.ui"), self) 
+        # PyQt6.uic.loadUi(os.path.join(os.path.dirname(__file__), "ui/channel.ui"), self) 
 
     def setParams(self, parent, data, channum, attr, state_labels, colors, clickable=True):
         # QtWidgets.QWidget.__init__(self, parent)#, s, attr, state_labels, colors)
         #super(HistViewer, self).__init__(parent)
+        log.debug(f"set params for histviewer")
         self.parent = parent
         self.plotAllChans = False #used to switch between self.plot and self.plotAll
         self.binLo = 0
@@ -208,17 +218,17 @@ class HistViewer(QtWidgets.QWidget): #widget. plots clickable hist.
             # pos = QtGui.QCursor.pos()
             # print(self.mapFromGlobal(pos))
             artist = event.artist
-            # log.info(artist.get_label()+f" was clicked at {x:.2f},{y:.2f}")
+            log.info(artist.get_label()+f" was clicked at {x:.2f},{y:.2f}")
             if artist in self.line2marker.keys():
                 xs, ys = artist.get_data()
                 i = self.local_max_ind(xs, ys, x, y) 
                 if ys[i] > y*0.8:
                     self.add_marker(artist, i)
                 else:
-                    # log.debug(f"marker not placed becausel local maximum {ys[i]}<=0.8*mouse_click_height {y}.\nclick closer to the peak")
+                    log.debug(f"marker not placed becausel local maximum {ys[i]}<=0.8*mouse_click_height {y}.\nclick closer to the peak")
                     pass
             else: 
-                # log.debug(f"arist not in line2marker.keys() {line2marker.keys()}")
+                #log.debug(f"arist not in line2marker.keys() {line2marker.keys()}")
                 pass
         else:
             pass
@@ -306,7 +316,7 @@ class StatesGrid(QtWidgets.QWidget):
                 boxes.append(box)
             self.boxes.append(boxes)
         self.setLayout(self.grid) 
-        self.setSizePolicy(QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed,QtWidgets.QSizePolicy.Fixed))
+        self.setSizePolicy(QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Fixed,QtWidgets.QSizePolicy.Policy.Fixed))
     
     def connect(self):
         for (j, color) in enumerate(self.colors):
@@ -355,7 +365,7 @@ class HistPlotter(QtWidgets.QDialog):
         self.connect()
 
     def build(self, data, channum, attr, state_labels, colors):
-        PyQt5.uic.loadUi(os.path.join(os.path.dirname(__file__), "ui/histPlotter.ui"), self) #,  s, attr, state_labels, colors)
+        PyQt6.uic.loadUi(os.path.join(os.path.dirname(__file__), "ui/histPlotter.ui"), self) #,  s, attr, state_labels, colors)
         #self.pHistViewer = HistViewer(self, s, attr, state_labels, colors) #pHistViewer is the name of the widget that plots.
         self.data = data
         self.channum = channum
@@ -372,11 +382,6 @@ class HistPlotter(QtWidgets.QDialog):
         self.histChannelCheckbox.stateChanged.connect(self.updateChild)
         self.eRangeLow.textChanged.connect(self.updateChild)
         self.eRangeHi.textChanged.connect(self.updateChild)
-        # self.histHistViewer.plotted.connect(self.handle_plotted)
-        # self.histHistViewer.markered.connect(self.handle_markered)
-        # self.channelBox.currentTextChanged.connect(self.updateChild)
-
-
 
     def getChannum(self):
         self.channum = self.channelBox.currentText()
@@ -413,7 +418,7 @@ class diagnoseViewer(QtWidgets.QDialog):
         self.connect()
 
     def build(self, data, channum):
-        PyQt5.uic.loadUi(os.path.join(os.path.dirname(__file__), "ui/diagnosePlotWindow.ui"), self) #,  s, attr, state_labels, colors)
+        PyQt6.uic.loadUi(os.path.join(os.path.dirname(__file__), "ui/diagnosePlotWindow.ui"), self) #,  s, attr, state_labels, colors)
         #self.pHistViewer = HistViewer(self, s, attr, state_labels, colors) #pHistViewer is the name of the widget that plots.
         self.data = data
         self.channum = channum
@@ -431,6 +436,7 @@ class diagnoseViewer(QtWidgets.QDialog):
         self.diagPlotButton.clicked.connect(self.plotDiagnosis)
 
     def plotDiagnosis(self):
+        #self.clear()
         self.diagnoseCalibration()
         self.canvas.draw()
 
@@ -439,17 +445,18 @@ class diagnoseViewer(QtWidgets.QDialog):
         return self.channum
 
     def diagnoseCalibration(self, calibratedName="energy"):
-        ds = self.data[self.channum]
+        ds = self.data[self.getChannum()]
         calibration = ds.recipes[calibratedName].f
         uncalibratedName = calibration.uncalibratedName
         results = calibration.results
         n_intermediate = len(calibration.intermediate_calibrations)
+        self.canvas.fig.clear()
         self.canvas.fig.suptitle(
             ds.shortName+", cal diagnose for '{}'\n with {} intermediate calibrations".format(calibratedName, n_intermediate))
         n = int(np.ceil(np.sqrt(len(results)+2)))
         for i, result in enumerate(results):
             ax = self.canvas.fig.add_subplot(n, n, i+1)
-            #ax.clear()
+            ax.cla()
             # pass title to suppress showing the dataset shortName on each subplot
             result.plotm(ax=ax, title=str(result.model.spect.shortname))
         ax = self.canvas.fig.add_subplot(n, n, i+2)
@@ -460,6 +467,11 @@ class diagnoseViewer(QtWidgets.QDialog):
         #ax.vlines(ds.calibrationPlan.uncalibratedVals, 0, self.canvas.fig.ylim()[1])
         #plt.tight_layout()
 
+    # def clear(self):
+    #     print(self.canvas.fig.get_axes())
+    #     for ax in enumerate(self.canvas.fig.get_axes()):
+    #         print(ax)
+    #         ax[1].clf()
 
 
 
@@ -478,7 +490,7 @@ class rtpViewer(QtWidgets.QDialog):
 
 
     def build(self):
-        PyQt5.uic.loadUi(os.path.join(os.path.dirname(__file__), "ui/realtimeviewer.ui"), self)
+        PyQt6.uic.loadUi(os.path.join(os.path.dirname(__file__), "ui/realtimeviewer.ui"), self)
         print(self.stateLabels, MPL_DEFAULT_COLORS[:1])
         self.statesGrid.setParams(state_labels=self.stateLabels, colors=MPL_DEFAULT_COLORS[:1], one_state_per_line=False)
         self.statesGrid.fill_simple()

@@ -15,10 +15,10 @@ classifiers = [
 
 dependencies = [
   "numpy",
-  "PyQt5",
-  "pytestqt",
+  "PyQt6",
+  "pytest-qt",
   "logging",
-  "pylab"
+  "matplotlib"
 ]
 
 [project.scripts]
@@ -35,5 +35,5 @@ massGuiTest = "massGui:runOpen"
 minversion = "6.0"
 addopts = ["-ra", "--showlocals", "--strict-markers", "--strict-config", "--import-mode=importlib"]
 testpaths = [
-    "tests"
-]
+    "tests"]
+log_cli = 1
