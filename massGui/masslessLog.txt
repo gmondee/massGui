@@ -1,0 +1,1678 @@
+11:19:59,267 root INFO Massless Log
+11:19:59,293 PyQt5.uic.uiparser DEBUG uiname is Form
+11:19:59,293 PyQt5.uic.uiparser DEBUG toplevel widget is MainWindow
+11:19:59,294 PyQt5.uic.properties DEBUG setting property geometry
+11:19:59,294 PyQt5.uic.properties DEBUG setting property minimumSize
+11:19:59,294 PyQt5.uic.properties DEBUG setting property windowTitle
+11:19:59,294 PyQt5.uic.uiparser DEBUG push MainWindow Form
+11:19:59,295 PyQt5.uic.uiparser DEBUG push QVBoxLayout verticalLayout
+11:19:59,298 PyQt5.uic.properties DEBUG setting property minimumSize
+11:19:59,298 PyQt5.uic.properties DEBUG setting property maximumSize
+11:19:59,298 PyQt5.uic.properties DEBUG setting property html
+11:19:59,299 PyQt5.uic.uiparser DEBUG push QTextBrowser Title
+11:19:59,299 PyQt5.uic.uiparser DEBUG pop widget QTextBrowser Title
+11:19:59,299 PyQt5.uic.uiparser DEBUG new topwidget <massGui.massGui.MainWindow object at 0x000001D74345A280>
+11:19:59,299 PyQt5.uic.properties DEBUG setting property minimumSize
+11:19:59,299 PyQt5.uic.properties DEBUG setting property maximumSize
+11:19:59,299 PyQt5.uic.properties DEBUG setting property title
+11:19:59,300 PyQt5.uic.uiparser DEBUG push QGroupBox fileSelectionGroup
+11:19:59,300 PyQt5.uic.uiparser DEBUG push QHBoxLayout horizontalLayout
+11:19:59,300 PyQt5.uic.properties DEBUG setting property minimumSize
+11:19:59,300 PyQt5.uic.properties DEBUG setting property text
+11:19:59,300 PyQt5.uic.uiparser DEBUG push QPushButton selectFileButton
+11:19:59,300 PyQt5.uic.uiparser DEBUG pop widget QPushButton selectFileButton
+11:19:59,301 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QGroupBox object at 0x000001D768BEB160>
+11:19:59,301 PyQt5.uic.properties DEBUG setting property enabled
+11:19:59,302 PyQt5.uic.properties DEBUG setting property minimumSize
+11:19:59,302 PyQt5.uic.properties DEBUG setting property maximumSize
+11:19:59,302 PyQt5.uic.uiparser DEBUG push QTextBrowser fileTextBox
+11:19:59,302 PyQt5.uic.uiparser DEBUG pop widget QTextBrowser fileTextBox
+11:19:59,302 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QGroupBox object at 0x000001D768BEB160>
+11:19:59,302 PyQt5.uic.properties DEBUG setting property minimumSize
+11:19:59,303 PyQt5.uic.properties DEBUG setting property text
+11:19:59,303 PyQt5.uic.uiparser DEBUG push QLabel label_4
+11:19:59,303 PyQt5.uic.uiparser DEBUG pop widget QLabel label_4
+11:19:59,303 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QGroupBox object at 0x000001D768BEB160>
+11:19:59,303 PyQt5.uic.properties DEBUG setting property minimumSize
+11:19:59,303 PyQt5.uic.properties DEBUG setting property minimum
+11:19:59,443 PyQt5.uic.properties DEBUG setting property maximum
+11:19:59,443 PyQt5.uic.properties DEBUG setting property value
+11:19:59,444 PyQt5.uic.uiparser DEBUG push QSpinBox maxChansSpinBox
+11:19:59,444 PyQt5.uic.uiparser DEBUG pop widget QSpinBox maxChansSpinBox
+11:19:59,444 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QGroupBox object at 0x000001D768BEB160>
+11:19:59,444 PyQt5.uic.uiparser DEBUG pop layout QHBoxLayout horizontalLayout
+11:19:59,444 PyQt5.uic.uiparser DEBUG pop widget QGroupBox fileSelectionGroup
+11:19:59,444 PyQt5.uic.uiparser DEBUG new topwidget <massGui.massGui.MainWindow object at 0x000001D74345A280>
+11:19:59,444 PyQt5.uic.properties DEBUG setting property minimumSize
+11:19:59,445 PyQt5.uic.properties DEBUG setting property maximumSize
+11:19:59,445 PyQt5.uic.properties DEBUG setting property title
+11:19:59,445 PyQt5.uic.uiparser DEBUG push QGroupBox calibrationGroup
+11:19:59,445 PyQt5.uic.uiparser DEBUG push QGridLayout gridLayout_2
+11:19:59,445 PyQt5.uic.properties DEBUG setting property text
+11:19:59,445 PyQt5.uic.uiparser DEBUG push QCheckBox HCIonCheckbox
+11:19:59,445 PyQt5.uic.uiparser DEBUG pop widget QCheckBox HCIonCheckbox
+11:19:59,446 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QGroupBox object at 0x000001D768BEB5E0>
+11:19:59,446 PyQt5.uic.properties DEBUG setting property text
+11:19:59,446 PyQt5.uic.uiparser DEBUG push QPushButton lineIDButton
+11:19:59,446 PyQt5.uic.uiparser DEBUG pop widget QPushButton lineIDButton
+11:19:59,446 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QGroupBox object at 0x000001D768BEB5E0>
+11:19:59,446 PyQt5.uic.properties DEBUG setting property title
+11:19:59,446 PyQt5.uic.uiparser DEBUG push QGroupBox calibrationStepsBox
+11:19:59,446 PyQt5.uic.uiparser DEBUG push QVBoxLayout verticalLayout_2
+11:19:59,447 PyQt5.uic.properties DEBUG setting property text
+11:19:59,447 PyQt5.uic.properties DEBUG setting property checked
+11:19:59,447 PyQt5.uic.uiparser DEBUG push QCheckBox DCcheckbox
+11:19:59,447 PyQt5.uic.uiparser DEBUG pop widget QCheckBox DCcheckbox
+11:19:59,447 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QGroupBox object at 0x000001D768BEB820>
+11:19:59,447 PyQt5.uic.properties DEBUG setting property text
+11:19:59,447 PyQt5.uic.properties DEBUG setting property checked
+11:19:59,447 PyQt5.uic.uiparser DEBUG push QCheckBox PCcheckbox
+11:19:59,448 PyQt5.uic.uiparser DEBUG pop widget QCheckBox PCcheckbox
+11:19:59,448 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QGroupBox object at 0x000001D768BEB820>
+11:19:59,448 PyQt5.uic.properties DEBUG setting property text
+11:19:59,448 PyQt5.uic.properties DEBUG setting property checked
+11:19:59,448 PyQt5.uic.uiparser DEBUG push QCheckBox TDCcheckbox
+11:19:59,448 PyQt5.uic.uiparser DEBUG pop widget QCheckBox TDCcheckbox
+11:19:59,448 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QGroupBox object at 0x000001D768BEB820>
+11:19:59,448 PyQt5.uic.uiparser DEBUG pop layout QVBoxLayout verticalLayout_2
+11:19:59,448 PyQt5.uic.uiparser DEBUG pop widget QGroupBox calibrationStepsBox
+11:19:59,449 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QGroupBox object at 0x000001D768BEB5E0>
+11:19:59,449 PyQt5.uic.properties DEBUG setting property minimumSize
+11:19:59,449 PyQt5.uic.uiparser DEBUG push QWidget calButtonGroup
+11:19:59,449 PyQt5.uic.uiparser DEBUG push QVBoxLayout verticalLayout_6
+11:19:59,449 PyQt5.uic.properties DEBUG setting property minimumSize
+11:19:59,449 PyQt5.uic.properties DEBUG setting property text
+11:19:59,449 PyQt5.uic.uiparser DEBUG push QPushButton oneChanCalButton
+11:19:59,449 PyQt5.uic.uiparser DEBUG pop widget QPushButton oneChanCalButton
+11:19:59,449 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QWidget object at 0x000001D768BEBAF0>
+11:19:59,450 PyQt5.uic.properties DEBUG setting property minimumSize
+11:19:59,450 PyQt5.uic.properties DEBUG setting property text
+11:19:59,450 PyQt5.uic.uiparser DEBUG push QPushButton allChanCalButton
+11:19:59,450 PyQt5.uic.uiparser DEBUG pop widget QPushButton allChanCalButton
+11:19:59,450 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QWidget object at 0x000001D768BEBAF0>
+11:19:59,450 PyQt5.uic.properties DEBUG setting property minimumSize
+11:19:59,450 PyQt5.uic.properties DEBUG setting property baseSize
+11:19:59,450 PyQt5.uic.properties DEBUG setting property text
+11:19:59,450 PyQt5.uic.uiparser DEBUG push QPushButton resetCalButton
+11:19:59,451 PyQt5.uic.uiparser DEBUG pop widget QPushButton resetCalButton
+11:19:59,451 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QWidget object at 0x000001D768BEBAF0>
+11:19:59,451 PyQt5.uic.uiparser DEBUG pop layout QVBoxLayout verticalLayout_6
+11:19:59,451 PyQt5.uic.uiparser DEBUG pop widget QWidget calButtonGroup
+11:19:59,451 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QGroupBox object at 0x000001D768BEB5E0>
+11:19:59,451 PyQt5.uic.properties DEBUG setting property minimumSize
+11:19:59,451 PyQt5.uic.properties DEBUG setting property text
+11:19:59,451 PyQt5.uic.uiparser DEBUG push QLabel label
+11:19:59,451 PyQt5.uic.uiparser DEBUG pop widget QLabel label
+11:19:59,452 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QGroupBox object at 0x000001D768BEB5E0>
+11:19:59,452 PyQt5.uic.properties DEBUG setting property enabled
+11:19:59,452 PyQt5.uic.uiparser DEBUG push QLineEdit refChannelBox
+11:19:59,452 PyQt5.uic.uiparser DEBUG pop widget QLineEdit refChannelBox
+11:19:59,453 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QGroupBox object at 0x000001D768BEB5E0>
+11:19:59,454 PyQt5.uic.properties DEBUG setting property enabled
+11:19:59,454 PyQt5.uic.properties DEBUG setting property editTriggers
+11:19:59,455 PyQt5.uic.uiparser DEBUG push QTableWidget calTable
+11:19:59,458 PyQt5.uic.uiparser DEBUG pop widget QTableWidget calTable
+11:19:59,458 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QGroupBox object at 0x000001D768BEB5E0>
+11:19:59,458 PyQt5.uic.uiparser DEBUG pop layout QGridLayout gridLayout_2
+11:19:59,458 PyQt5.uic.uiparser DEBUG pop widget QGroupBox calibrationGroup
+11:19:59,459 PyQt5.uic.uiparser DEBUG new topwidget <massGui.massGui.MainWindow object at 0x000001D74345A280>
+11:19:59,459 PyQt5.uic.properties DEBUG setting property enabled
+11:19:59,459 PyQt5.uic.properties DEBUG setting property maximumSize
+11:19:59,459 PyQt5.uic.properties DEBUG setting property currentIndex
+11:19:59,459 PyQt5.uic.uiparser DEBUG push QTabWidget tabWidget
+11:19:59,460 PyQt5.uic.uiparser DEBUG push QWidget plotsTab
+11:19:59,460 PyQt5.uic.uiparser DEBUG push QVBoxLayout verticalLayout_4
+11:19:59,460 PyQt5.uic.properties DEBUG setting property title
+11:19:59,460 PyQt5.uic.uiparser DEBUG push QGroupBox plotsGroup
+11:19:59,460 PyQt5.uic.uiparser DEBUG push QVBoxLayout verticalLayout_3
+11:19:59,460 PyQt5.uic.properties DEBUG setting property frameShape
+11:19:59,460 PyQt5.uic.properties DEBUG setting property frameShadow
+11:19:59,461 PyQt5.uic.uiparser DEBUG push QFrame frame
+11:19:59,461 PyQt5.uic.uiparser DEBUG push QGridLayout gridLayout
+11:19:59,461 PyQt5.uic.properties DEBUG setting property minimumSize
+11:19:59,461 PyQt5.uic.properties DEBUG setting property text
+11:19:59,461 PyQt5.uic.uiparser DEBUG push QPushButton energyHistButton
+11:19:59,461 PyQt5.uic.uiparser DEBUG pop widget QPushButton energyHistButton
+11:19:59,461 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QFrame object at 0x000001D768DC3430>
+11:19:59,461 PyQt5.uic.properties DEBUG setting property minimumSize
+11:19:59,461 PyQt5.uic.properties DEBUG setting property text
+11:19:59,462 PyQt5.uic.uiparser DEBUG push QPushButton AvsBbutton
+11:19:59,462 PyQt5.uic.uiparser DEBUG pop widget QPushButton AvsBbutton
+11:19:59,462 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QFrame object at 0x000001D768DC3430>
+11:19:59,462 PyQt5.uic.properties DEBUG setting property minimumSize
+11:19:59,462 PyQt5.uic.properties DEBUG setting property text
+11:19:59,462 PyQt5.uic.uiparser DEBUG push QPushButton diagCalButton
+11:19:59,463 PyQt5.uic.uiparser DEBUG pop widget QPushButton diagCalButton
+11:19:59,463 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QFrame object at 0x000001D768DC3430>
+11:19:59,463 PyQt5.uic.properties DEBUG setting property minimumSize
+11:19:59,463 PyQt5.uic.properties DEBUG setting property text
+11:19:59,463 PyQt5.uic.uiparser DEBUG push QPushButton AvsB2Dbutton
+11:19:59,463 PyQt5.uic.uiparser DEBUG pop widget QPushButton AvsB2Dbutton
+11:19:59,463 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QFrame object at 0x000001D768DC3430>
+11:19:59,463 PyQt5.uic.properties DEBUG setting property minimumSize
+11:19:59,463 PyQt5.uic.properties DEBUG setting property text
+11:19:59,464 PyQt5.uic.uiparser DEBUG push QPushButton ptmButton
+11:19:59,464 PyQt5.uic.uiparser DEBUG pop widget QPushButton ptmButton
+11:19:59,464 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QFrame object at 0x000001D768DC3430>
+11:19:59,464 PyQt5.uic.uiparser DEBUG pop layout QGridLayout gridLayout
+11:19:59,464 PyQt5.uic.uiparser DEBUG pop widget QFrame frame
+11:19:59,464 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QGroupBox object at 0x000001D768DC3310>
+11:19:59,464 PyQt5.uic.properties DEBUG setting property frameShape
+11:19:59,464 PyQt5.uic.properties DEBUG setting property frameShadow
+11:19:59,464 PyQt5.uic.uiparser DEBUG push QFrame lineFitFrame
+11:19:59,465 PyQt5.uic.uiparser DEBUG push QHBoxLayout horizontalLayout_4
+11:19:59,465 PyQt5.uic.properties DEBUG setting property minimumSize
+11:19:59,465 PyQt5.uic.properties DEBUG setting property text
+11:19:59,465 PyQt5.uic.uiparser DEBUG push QLabel label_2
+11:19:59,465 PyQt5.uic.uiparser DEBUG pop widget QLabel label_2
+11:19:59,465 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QFrame object at 0x000001D768DC3820>
+11:19:59,465 PyQt5.uic.properties DEBUG setting property enabled
+11:19:59,465 PyQt5.uic.properties DEBUG setting property minimumSize
+11:19:59,466 PyQt5.uic.uiparser DEBUG push QComboBox lineFitComboBox
+11:19:59,466 PyQt5.uic.uiparser DEBUG pop widget QComboBox lineFitComboBox
+11:19:59,466 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QFrame object at 0x000001D768DC3820>
+11:19:59,466 PyQt5.uic.properties DEBUG setting property minimumSize
+11:19:59,466 PyQt5.uic.properties DEBUG setting property maximumSize
+11:19:59,466 PyQt5.uic.properties DEBUG setting property text
+11:19:59,466 PyQt5.uic.uiparser DEBUG push QPushButton lineFitComboButton
+11:19:59,466 PyQt5.uic.uiparser DEBUG pop widget QPushButton lineFitComboButton
+11:19:59,467 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QFrame object at 0x000001D768DC3820>
+11:19:59,467 PyQt5.uic.properties DEBUG setting property minimumSize
+11:19:59,467 PyQt5.uic.properties DEBUG setting property text
+11:19:59,467 PyQt5.uic.uiparser DEBUG push QLabel label_3
+11:19:59,467 PyQt5.uic.uiparser DEBUG pop widget QLabel label_3
+11:19:59,467 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QFrame object at 0x000001D768DC3820>
+11:19:59,467 PyQt5.uic.properties DEBUG setting property minimumSize
+11:19:59,468 PyQt5.uic.properties DEBUG setting property text
+11:19:59,468 PyQt5.uic.properties DEBUG setting property placeholderText
+11:19:59,468 PyQt5.uic.uiparser DEBUG push QLineEdit lineFitTextBox
+11:19:59,468 PyQt5.uic.uiparser DEBUG pop widget QLineEdit lineFitTextBox
+11:19:59,468 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QFrame object at 0x000001D768DC3820>
+11:19:59,468 PyQt5.uic.properties DEBUG setting property minimumSize
+11:19:59,468 PyQt5.uic.properties DEBUG setting property maximumSize
+11:19:59,468 PyQt5.uic.properties DEBUG setting property text
+11:19:59,468 PyQt5.uic.uiparser DEBUG push QPushButton lineFitTextButton
+11:19:59,468 PyQt5.uic.uiparser DEBUG pop widget QPushButton lineFitTextButton
+11:19:59,469 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QFrame object at 0x000001D768DC3820>
+11:19:59,469 PyQt5.uic.uiparser DEBUG pop layout QHBoxLayout horizontalLayout_4
+11:19:59,469 PyQt5.uic.uiparser DEBUG pop widget QFrame lineFitFrame
+11:19:59,469 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QGroupBox object at 0x000001D768DC3310>
+11:19:59,469 PyQt5.uic.uiparser DEBUG pop layout QVBoxLayout verticalLayout_3
+11:19:59,469 PyQt5.uic.uiparser DEBUG pop widget QGroupBox plotsGroup
+11:19:59,469 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QWidget object at 0x000001D768DC31F0>
+11:19:59,469 PyQt5.uic.uiparser DEBUG pop layout QVBoxLayout verticalLayout_4
+11:19:59,469 PyQt5.uic.uiparser DEBUG pop widget QWidget plotsTab
+11:19:59,469 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QTabWidget object at 0x000001D768DC3160>
+11:19:59,470 PyQt5.uic.uiparser DEBUG push QWidget rtpTab
+11:19:59,471 PyQt5.uic.uiparser DEBUG push QVBoxLayout verticalLayout_5
+11:19:59,471 PyQt5.uic.properties DEBUG setting property frameShape
+11:19:59,471 PyQt5.uic.properties DEBUG setting property frameShadow
+11:19:59,471 PyQt5.uic.uiparser DEBUG push QFrame frame_3
+11:19:59,471 PyQt5.uic.uiparser DEBUG push QHBoxLayout horizontalLayout_6
+11:19:59,472 PyQt5.uic.properties DEBUG setting property text
+11:19:59,472 PyQt5.uic.uiparser DEBUG push QPushButton startRTPButton
+11:19:59,472 PyQt5.uic.uiparser DEBUG pop widget QPushButton startRTPButton
+11:19:59,472 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QFrame object at 0x000001D768DCF1F0>
+11:19:59,472 PyQt5.uic.properties DEBUG setting property text
+11:19:59,472 PyQt5.uic.uiparser DEBUG push QPushButton stopRTPButton
+11:19:59,472 PyQt5.uic.uiparser DEBUG pop widget QPushButton stopRTPButton
+11:19:59,472 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QFrame object at 0x000001D768DCF1F0>
+11:19:59,473 PyQt5.uic.uiparser DEBUG pop layout QHBoxLayout horizontalLayout_6
+11:19:59,473 PyQt5.uic.uiparser DEBUG pop widget QFrame frame_3
+11:19:59,473 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QWidget object at 0x000001D768DCF0D0>
+11:19:59,473 PyQt5.uic.uiparser DEBUG pop layout QVBoxLayout verticalLayout_5
+11:19:59,473 PyQt5.uic.uiparser DEBUG pop widget QWidget rtpTab
+11:19:59,473 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QTabWidget object at 0x000001D768DC3160>
+11:19:59,473 PyQt5.uic.uiparser DEBUG pop widget QTabWidget tabWidget
+11:19:59,473 PyQt5.uic.uiparser DEBUG new topwidget <massGui.massGui.MainWindow object at 0x000001D74345A280>
+11:19:59,473 PyQt5.uic.properties DEBUG setting property maximumSize
+11:19:59,474 PyQt5.uic.properties DEBUG setting property frameShape
+11:19:59,474 PyQt5.uic.properties DEBUG setting property frameShadow
+11:19:59,474 PyQt5.uic.uiparser DEBUG push QFrame frame_2
+11:19:59,474 PyQt5.uic.uiparser DEBUG push QHBoxLayout horizontalLayout_5
+11:19:59,474 PyQt5.uic.properties DEBUG setting property minimumSize
+11:19:59,474 PyQt5.uic.properties DEBUG setting property text
+11:19:59,474 PyQt5.uic.uiparser DEBUG push QPushButton saveCalButton
+11:19:59,474 PyQt5.uic.uiparser DEBUG pop widget QPushButton saveCalButton
+11:19:59,474 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QFrame object at 0x000001D768DCF430>
+11:19:59,475 PyQt5.uic.properties DEBUG setting property minimumSize
+11:19:59,475 PyQt5.uic.properties DEBUG setting property text
+11:19:59,475 PyQt5.uic.uiparser DEBUG push QPushButton loadCalButton
+11:19:59,475 PyQt5.uic.uiparser DEBUG pop widget QPushButton loadCalButton
+11:19:59,475 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QFrame object at 0x000001D768DCF430>
+11:19:59,475 PyQt5.uic.uiparser DEBUG pop layout QHBoxLayout horizontalLayout_5
+11:19:59,475 PyQt5.uic.uiparser DEBUG pop widget QFrame frame_2
+11:19:59,475 PyQt5.uic.uiparser DEBUG new topwidget <massGui.massGui.MainWindow object at 0x000001D74345A280>
+11:19:59,475 PyQt5.uic.uiparser DEBUG pop layout QVBoxLayout verticalLayout
+11:19:59,475 PyQt5.uic.uiparser DEBUG pop widget MainWindow Form
+11:19:59,476 PyQt5.uic.uiparser DEBUG new topwidget None
+11:20:06,99 PyQt5.uic.uiparser DEBUG uiname is Dialog
+11:20:06,101 PyQt5.uic.uiparser DEBUG toplevel widget is HistCalibrator
+11:20:06,101 PyQt5.uic.properties DEBUG setting property geometry
+11:20:06,101 PyQt5.uic.properties DEBUG setting property minimumSize
+11:20:06,101 PyQt5.uic.properties DEBUG setting property windowTitle
+11:20:06,102 PyQt5.uic.uiparser DEBUG push HistCalibrator Dialog
+11:20:06,102 PyQt5.uic.uiparser DEBUG push QHBoxLayout horizontalLayout_3
+11:20:06,102 PyQt5.uic.properties DEBUG setting property minimumSize
+11:20:06,103 PyQt5.uic.properties DEBUG setting property frameShape
+11:20:06,103 PyQt5.uic.properties DEBUG setting property frameShadow
+11:20:06,103 PyQt5.uic.uiparser DEBUG push QFrame frame
+11:20:06,103 PyQt5.uic.uiparser DEBUG push QVBoxLayout verticalLayout_2
+11:20:06,104 PyQt5.uic.properties DEBUG setting property minimumSize
+11:20:06,104 PyQt5.uic.uiparser DEBUG push HistViewer histHistViewer
+11:20:06,105 PyQt5.uic.uiparser DEBUG pop widget HistViewer histHistViewer
+11:20:06,105 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QFrame object at 0x000001D768DCFD30>
+11:20:06,105 PyQt5.uic.properties DEBUG setting property minimumSize
+11:20:06,105 PyQt5.uic.properties DEBUG setting property maximumSize
+11:20:06,105 PyQt5.uic.properties DEBUG setting property baseSize
+11:20:06,105 PyQt5.uic.uiparser DEBUG push StatesGrid histStatesGrid
+11:20:06,105 PyQt5.uic.uiparser DEBUG pop widget StatesGrid histStatesGrid
+11:20:06,105 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QFrame object at 0x000001D768DCFD30>
+11:20:06,105 PyQt5.uic.properties DEBUG setting property minimumSize
+11:20:06,105 PyQt5.uic.properties DEBUG setting property frameShape
+11:20:06,107 PyQt5.uic.properties DEBUG setting property frameShadow
+11:20:06,107 PyQt5.uic.uiparser DEBUG push QFrame frame_3
+11:20:06,107 PyQt5.uic.uiparser DEBUG push QHBoxLayout horizontalLayout_4
+11:20:06,107 PyQt5.uic.properties DEBUG setting property frameShape
+11:20:06,107 PyQt5.uic.properties DEBUG setting property frameShadow
+11:20:06,107 PyQt5.uic.uiparser DEBUG push QFrame frame_4
+11:20:06,108 PyQt5.uic.uiparser DEBUG push QVBoxLayout verticalLayout_3
+11:20:06,108 PyQt5.uic.properties DEBUG setting property minimumSize
+11:20:06,108 PyQt5.uic.properties DEBUG setting property maximumSize
+11:20:06,108 PyQt5.uic.properties DEBUG setting property title
+11:20:06,108 PyQt5.uic.uiparser DEBUG push QGroupBox csWindow
+11:20:06,108 PyQt5.uic.uiparser DEBUG push QVBoxLayout verticalLayout_4
+11:20:06,108 PyQt5.uic.properties DEBUG setting property minimumSize
+11:20:06,108 PyQt5.uic.properties DEBUG setting property text
+11:20:06,109 PyQt5.uic.uiparser DEBUG push QLabel label
+11:20:06,109 PyQt5.uic.uiparser DEBUG pop widget QLabel label
+11:20:06,109 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QGroupBox object at 0x000001D768C001F0>
+11:20:06,109 PyQt5.uic.properties DEBUG setting property currentText
+11:20:06,109 PyQt5.uic.uiparser DEBUG push QComboBox channelBox
+11:20:06,109 PyQt5.uic.uiparser DEBUG pop widget QComboBox channelBox
+11:20:06,109 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QGroupBox object at 0x000001D768C001F0>
+11:20:06,110 PyQt5.uic.uiparser DEBUG pop layout QVBoxLayout verticalLayout_4
+11:20:06,110 PyQt5.uic.uiparser DEBUG pop widget QGroupBox csWindow
+11:20:06,110 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QFrame object at 0x000001D768C000D0>
+11:20:06,110 PyQt5.uic.properties DEBUG setting property frameShape
+11:20:06,110 PyQt5.uic.properties DEBUG setting property frameShadow
+11:20:06,110 PyQt5.uic.uiparser DEBUG push QFrame frame_5
+11:20:06,111 PyQt5.uic.uiparser DEBUG push QVBoxLayout verticalLayout
+11:20:06,111 PyQt5.uic.properties DEBUG setting property text
+11:20:06,111 PyQt5.uic.uiparser DEBUG push QLabel label_2
+11:20:06,112 PyQt5.uic.uiparser DEBUG pop widget QLabel label_2
+11:20:06,112 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QFrame object at 0x000001D768C00430>
+11:20:06,112 PyQt5.uic.properties DEBUG setting property enabled
+11:20:06,112 PyQt5.uic.uiparser DEBUG push QLineEdit photonCountBox
+11:20:06,112 PyQt5.uic.uiparser DEBUG pop widget QLineEdit photonCountBox
+11:20:06,112 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QFrame object at 0x000001D768C00430>
+11:20:06,112 PyQt5.uic.uiparser DEBUG pop layout QVBoxLayout verticalLayout
+11:20:06,113 PyQt5.uic.uiparser DEBUG pop widget QFrame frame_5
+11:20:06,113 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QFrame object at 0x000001D768C000D0>
+11:20:06,113 PyQt5.uic.uiparser DEBUG pop layout QVBoxLayout verticalLayout_3
+11:20:06,113 PyQt5.uic.uiparser DEBUG pop widget QFrame frame_4
+11:20:06,113 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QFrame object at 0x000001D768DCFF70>
+11:20:06,113 PyQt5.uic.properties DEBUG setting property minimumSize
+11:20:06,113 PyQt5.uic.properties DEBUG setting property maximumSize
+11:20:06,114 PyQt5.uic.uiparser DEBUG push QTableWidget table
+11:20:06,115 PyQt5.uic.uiparser DEBUG pop widget QTableWidget table
+11:20:06,115 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QFrame object at 0x000001D768DCFF70>
+11:20:06,115 PyQt5.uic.uiparser DEBUG pop layout QHBoxLayout horizontalLayout_4
+11:20:06,115 PyQt5.uic.uiparser DEBUG pop widget QFrame frame_3
+11:20:06,115 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QFrame object at 0x000001D768DCFD30>
+11:20:06,115 PyQt5.uic.properties DEBUG setting property minimumSize
+11:20:06,115 PyQt5.uic.properties DEBUG setting property text
+11:20:06,115 PyQt5.uic.uiparser DEBUG push QPushButton closeButton
+11:20:06,116 PyQt5.uic.uiparser DEBUG pop widget QPushButton closeButton
+11:20:06,116 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QFrame object at 0x000001D768DCFD30>
+11:20:06,116 PyQt5.uic.uiparser DEBUG pop layout QVBoxLayout verticalLayout_2
+11:20:06,116 PyQt5.uic.uiparser DEBUG pop widget QFrame frame
+11:20:06,117 PyQt5.uic.uiparser DEBUG new topwidget <massGui.massless.HistCalibrator object at 0x000001D768DCFC10>
+11:20:06,117 PyQt5.uic.uiparser DEBUG pop layout QHBoxLayout horizontalLayout_3
+11:20:06,117 PyQt5.uic.uiparser DEBUG pop widget HistCalibrator Dialog
+11:20:06,117 PyQt5.uic.uiparser DEBUG new topwidget None
+11:20:06,118 massless DEBUG set params for histviewer
+11:20:06,194 matplotlib.font_manager DEBUG findfont: Matching sans\-serif:style=normal:variant=normal:weight=normal:stretch=normal:size=10.0.
+11:20:06,195 matplotlib.font_manager DEBUG findfont: score(<Font 'cmsy10' (cmsy10.ttf) normal normal 400 normal>) = 10.05
+11:20:06,195 matplotlib.font_manager DEBUG findfont: score(<Font 'DejaVu Sans Mono' (DejaVuSansMono.ttf) normal normal 400 normal>) = 10.05
+11:20:06,195 matplotlib.font_manager DEBUG findfont: score(<Font 'STIXSizeOneSym' (STIXSizOneSymReg.ttf) normal normal 400 normal>) = 10.05
+11:20:06,196 matplotlib.font_manager DEBUG findfont: score(<Font 'cmb10' (cmb10.ttf) normal normal 400 normal>) = 10.05
+11:20:06,196 matplotlib.font_manager DEBUG findfont: score(<Font 'DejaVu Sans Mono' (DejaVuSansMono-Bold.ttf) normal normal 700 normal>) = 10.335
+11:20:06,196 matplotlib.font_manager DEBUG findfont: score(<Font 'DejaVu Sans Mono' (DejaVuSansMono-Oblique.ttf) oblique normal 400 normal>) = 11.05
+11:20:06,196 matplotlib.font_manager DEBUG findfont: score(<Font 'STIXGeneral' (STIXGeneralItalic.ttf) italic normal 400 normal>) = 11.05
+11:20:06,197 matplotlib.font_manager DEBUG findfont: score(<Font 'STIXNonUnicode' (STIXNonUniBolIta.ttf) italic normal 700 normal>) = 11.335
+11:20:06,198 matplotlib.font_manager DEBUG findfont: score(<Font 'DejaVu Serif' (DejaVuSerif-Italic.ttf) italic normal 400 normal>) = 11.05
+11:20:06,198 matplotlib.font_manager DEBUG findfont: score(<Font 'STIXGeneral' (STIXGeneral.ttf) normal normal 400 normal>) = 10.05
+11:20:06,198 matplotlib.font_manager DEBUG findfont: score(<Font 'DejaVu Sans' (DejaVuSans-Bold.ttf) normal normal 700 normal>) = 0.33499999999999996
+11:20:06,198 matplotlib.font_manager DEBUG findfont: score(<Font 'cmr10' (cmr10.ttf) normal normal 400 normal>) = 10.05
+11:20:06,198 matplotlib.font_manager DEBUG findfont: score(<Font 'STIXGeneral' (STIXGeneralBolIta.ttf) italic normal 700 normal>) = 11.335
+11:20:06,199 matplotlib.font_manager DEBUG findfont: score(<Font 'DejaVu Sans' (DejaVuSans-Oblique.ttf) oblique normal 400 normal>) = 1.05
+11:20:06,199 matplotlib.font_manager DEBUG findfont: score(<Font 'STIXNonUnicode' (STIXNonUniIta.ttf) italic normal 400 normal>) = 11.05
+11:20:06,199 matplotlib.font_manager DEBUG findfont: score(<Font 'STIXSizeFourSym' (STIXSizFourSymReg.ttf) normal normal 400 normal>) = 10.05
+11:20:06,199 matplotlib.font_manager DEBUG findfont: score(<Font 'DejaVu Sans Display' (DejaVuSansDisplay.ttf) normal normal 400 normal>) = 10.05
+11:20:06,199 matplotlib.font_manager DEBUG findfont: score(<Font 'cmtt10' (cmtt10.ttf) normal normal 400 normal>) = 10.05
+11:20:06,199 matplotlib.font_manager DEBUG findfont: score(<Font 'DejaVu Sans' (DejaVuSans-BoldOblique.ttf) oblique normal 700 normal>) = 1.335
+11:20:06,199 matplotlib.font_manager DEBUG findfont: score(<Font 'STIXSizeThreeSym' (STIXSizThreeSymReg.ttf) normal normal 400 normal>) = 10.05
+11:20:06,199 matplotlib.font_manager DEBUG findfont: score(<Font 'DejaVu Serif' (DejaVuSerif-Bold.ttf) normal normal 700 normal>) = 10.335
+11:20:06,200 matplotlib.font_manager DEBUG findfont: score(<Font 'STIXSizeOneSym' (STIXSizOneSymBol.ttf) normal normal 700 normal>) = 10.335
+11:20:06,200 matplotlib.font_manager DEBUG findfont: score(<Font 'STIXNonUnicode' (STIXNonUniBol.ttf) normal normal 700 normal>) = 10.335
+11:20:06,200 matplotlib.font_manager DEBUG findfont: score(<Font 'STIXSizeFiveSym' (STIXSizFiveSymReg.ttf) normal normal 400 normal>) = 10.05
+11:20:06,200 matplotlib.font_manager DEBUG findfont: score(<Font 'DejaVu Serif Display' (DejaVuSerifDisplay.ttf) normal normal 400 normal>) = 10.05
+11:20:06,200 matplotlib.font_manager DEBUG findfont: score(<Font 'cmss10' (cmss10.ttf) normal normal 400 normal>) = 10.05
+11:20:06,200 matplotlib.font_manager DEBUG findfont: score(<Font 'STIXNonUnicode' (STIXNonUni.ttf) normal normal 400 normal>) = 10.05
+11:20:06,200 matplotlib.font_manager DEBUG findfont: score(<Font 'DejaVu Sans' (DejaVuSans.ttf) normal normal 400 normal>) = 0.05
+11:20:06,201 matplotlib.font_manager DEBUG findfont: score(<Font 'STIXSizeFourSym' (STIXSizFourSymBol.ttf) normal normal 700 normal>) = 10.335
+11:20:06,201 matplotlib.font_manager DEBUG findfont: score(<Font 'STIXSizeThreeSym' (STIXSizThreeSymBol.ttf) normal normal 700 normal>) = 10.335
+11:20:06,201 matplotlib.font_manager DEBUG findfont: score(<Font 'cmmi10' (cmmi10.ttf) normal normal 400 normal>) = 10.05
+11:20:06,201 matplotlib.font_manager DEBUG findfont: score(<Font 'DejaVu Serif' (DejaVuSerif.ttf) normal normal 400 normal>) = 10.05
+11:20:06,201 matplotlib.font_manager DEBUG findfont: score(<Font 'DejaVu Serif' (DejaVuSerif-BoldItalic.ttf) italic normal 700 normal>) = 11.335
+11:20:06,202 matplotlib.font_manager DEBUG findfont: score(<Font 'cmex10' (cmex10.ttf) normal normal 400 normal>) = 10.05
+11:20:06,202 matplotlib.font_manager DEBUG findfont: score(<Font 'DejaVu Sans Mono' (DejaVuSansMono-BoldOblique.ttf) oblique normal 700 normal>) = 11.335
+11:20:06,202 matplotlib.font_manager DEBUG findfont: score(<Font 'STIXGeneral' (STIXGeneralBol.ttf) normal normal 700 normal>) = 10.335
+11:20:06,202 matplotlib.font_manager DEBUG findfont: score(<Font 'STIXSizeTwoSym' (STIXSizTwoSymBol.ttf) normal normal 700 normal>) = 10.335
+11:20:06,202 matplotlib.font_manager DEBUG findfont: score(<Font 'STIXSizeTwoSym' (STIXSizTwoSymReg.ttf) normal normal 400 normal>) = 10.05
+11:20:06,202 matplotlib.font_manager DEBUG findfont: score(<Font 'Verdana' (verdana.ttf) normal normal 400 normal>) = 3.6863636363636365
+11:20:06,202 matplotlib.font_manager DEBUG findfont: score(<Font 'Microsoft JhengHei' (msjh.ttc) normal normal 400 normal>) = 10.05
+11:20:06,202 matplotlib.font_manager DEBUG findfont: score(<Font 'Century Gothic' (GOTHICBI.TTF) italic normal 700 normal>) = 11.335
+11:20:06,202 matplotlib.font_manager DEBUG findfont: score(<Font 'Californian FB' (CALIFB.TTF) normal normal 700 normal>) = 10.335
+11:20:06,202 matplotlib.font_manager DEBUG findfont: score(<Font 'Tw Cen MT' (TCB_____.TTF) normal normal 700 normal>) = 10.335
+11:20:06,202 matplotlib.font_manager DEBUG findfont: score(<Font 'Lucida Bright' (LBRITEDI.TTF) italic normal 600 normal>) = 11.24
+11:20:06,203 matplotlib.font_manager DEBUG findfont: score(<Font 'Javanese Text' (javatext.ttf) normal normal 400 normal>) = 10.05
+11:20:06,203 matplotlib.font_manager DEBUG findfont: score(<Font 'Segoe UI' (segoeuiz.ttf) italic normal 700 normal>) = 11.335
+11:20:06,203 matplotlib.font_manager DEBUG findfont: score(<Font 'Yu Gothic' (YuGothL.ttc) normal normal 300 normal>) = 10.145
+11:20:06,203 matplotlib.font_manager DEBUG findfont: score(<Font 'SimSun' (simsun.ttc) normal normal 400 normal>) = 10.05
+11:20:06,203 matplotlib.font_manager DEBUG findfont: score(<Font 'Candara' (Candaral.ttf) normal normal 400 normal>) = 10.05
+11:20:06,203 matplotlib.font_manager DEBUG findfont: score(<Font 'Cambria' (cambriai.ttf) italic normal 400 normal>) = 11.05
+11:20:06,203 matplotlib.font_manager DEBUG findfont: score(<Font 'Elephant' (ELEPHNTI.TTF) italic normal 400 normal>) = 11.05
+11:20:06,203 matplotlib.font_manager DEBUG findfont: score(<Font 'Algerian' (ALGER.TTF) normal normal 400 normal>) = 10.05
+11:20:06,204 matplotlib.font_manager DEBUG findfont: score(<Font 'Ebrima' (ebrima.ttf) normal normal 400 normal>) = 10.05
+11:20:06,204 matplotlib.font_manager DEBUG findfont: score(<Font 'Segoe Script' (segoescb.ttf) normal normal 700 normal>) = 10.335
+11:20:06,205 matplotlib.font_manager DEBUG findfont: score(<Font 'Eras Light ITC' (ERASLGHT.TTF) normal normal 400 normal>) = 10.05
+11:20:06,205 matplotlib.font_manager DEBUG findfont: score(<Font 'Microsoft New Tai Lue' (ntailub.ttf) normal normal 700 normal>) = 10.335
+11:20:06,205 matplotlib.font_manager DEBUG findfont: score(<Font 'Elephant' (ELEPHNT.TTF) normal normal 400 normal>) = 10.05
+11:20:06,205 matplotlib.font_manager DEBUG findfont: score(<Font 'Felix Titling' (FELIXTI.TTF) normal normal 400 normal>) = 10.05
+11:20:06,205 matplotlib.font_manager DEBUG findfont: score(<Font 'Monotype Corsiva' (MTCORSVA.TTF) normal normal 400 normal>) = 10.05
+11:20:06,205 matplotlib.font_manager DEBUG findfont: score(<Font 'Corbel' (corbelb.ttf) normal normal 700 normal>) = 10.335
+11:20:06,206 matplotlib.font_manager DEBUG findfont: score(<Font 'Arial' (ARIALNB.TTF) normal normal 700 condensed>) = 6.8986363636363635
+11:20:06,206 matplotlib.font_manager DEBUG findfont: score(<Font 'Tahoma' (tahoma.ttf) normal normal 400 normal>) = 10.05
+11:20:06,206 matplotlib.font_manager DEBUG findfont: score(<Font 'Script MT Bold' (SCRIPTBL.TTF) normal normal 700 normal>) = 10.335
+11:20:06,206 matplotlib.font_manager DEBUG findfont: score(<Font 'Malgun Gothic' (malgunsl.ttf) normal normal 300 normal>) = 10.145
+11:20:06,206 matplotlib.font_manager DEBUG findfont: score(<Font 'Georgia' (georgiai.ttf) italic normal 400 normal>) = 11.05
+11:20:06,206 matplotlib.font_manager DEBUG findfont: score(<Font 'Book Antiqua' (ANTQUAI.TTF) italic normal 400 normal>) = 11.05
+11:20:06,206 matplotlib.font_manager DEBUG findfont: score(<Font 'Imprint MT Shadow' (IMPRISHA.TTF) normal normal 400 normal>) = 10.05
+11:20:06,207 matplotlib.font_manager DEBUG findfont: score(<Font 'Gill Sans MT Ext Condensed Bold' (GLSNECB.TTF) normal normal 400 condensed>) = 10.25
+11:20:06,207 matplotlib.font_manager DEBUG findfont: score(<Font 'Tw Cen MT Condensed Extra Bold' (TCCEB.TTF) normal normal 400 condensed>) = 10.25
+11:20:06,207 matplotlib.font_manager DEBUG findfont: score(<Font 'Comic Sans MS' (comic.ttf) normal normal 400 normal>) = 10.05
+11:20:06,207 matplotlib.font_manager DEBUG findfont: score(<Font 'Modern No. 20' (MOD20.TTF) normal normal 400 normal>) = 10.05
+11:20:06,207 matplotlib.font_manager DEBUG findfont: score(<Font 'Bradley Hand ITC' (BRADHITC.TTF) normal normal 400 normal>) = 10.05
+11:20:06,207 matplotlib.font_manager DEBUG findfont: score(<Font 'Leelawadee' (LEELAWAD.TTF) normal normal 400 normal>) = 10.05
+11:20:06,207 matplotlib.font_manager DEBUG findfont: score(<Font 'Bodoni MT' (BOD_CR.TTF) normal normal 400 condensed>) = 10.25
+11:20:06,207 matplotlib.font_manager DEBUG findfont: score(<Font 'Franklin Gothic Medium Cond' (FRAMDCN.TTF) normal normal 400 condensed>) = 10.25
+11:20:06,207 matplotlib.font_manager DEBUG findfont: score(<Font 'Leelawadee' (LEELAWDB.TTF) normal normal 700 normal>) = 10.335
+11:20:06,207 matplotlib.font_manager DEBUG findfont: score(<Font 'Mistral' (MISTRAL.TTF) normal normal 400 normal>) = 10.05
+11:20:06,208 matplotlib.font_manager DEBUG findfont: score(<Font 'Calisto MT' (CALISTB.TTF) normal normal 700 normal>) = 10.335
+11:20:06,208 matplotlib.font_manager DEBUG findfont: score(<Font 'Franklin Gothic Heavy' (FRAHVIT.TTF) italic normal 400 normal>) = 11.05
+11:20:06,208 matplotlib.font_manager DEBUG findfont: score(<Font 'Nirmala UI' (NirmalaB.ttf) normal normal 700 normal>) = 10.335
+11:20:06,208 matplotlib.font_manager DEBUG findfont: score(<Font 'Lucida Sans Typewriter' (LTYPEBO.TTF) oblique normal 600 normal>) = 11.24
+11:20:06,209 matplotlib.font_manager DEBUG findfont: score(<Font 'Eras Bold ITC' (ERASBD.TTF) normal normal 400 normal>) = 10.05
+11:20:06,209 matplotlib.font_manager DEBUG findfont: score(<Font 'Harrington' (HARNGTON.TTF) normal normal 400 normal>) = 10.05
+11:20:06,209 matplotlib.font_manager DEBUG findfont: score(<Font 'Book Antiqua' (ANTQUAB.TTF) normal normal 700 normal>) = 10.335
+11:20:06,209 matplotlib.font_manager DEBUG findfont: score(<Font 'Century' (CENTURY.TTF) normal normal 400 normal>) = 10.05
+11:20:06,209 matplotlib.font_manager DEBUG findfont: score(<Font 'Microsoft New Tai Lue' (ntailu.ttf) normal normal 400 normal>) = 10.05
+11:20:06,209 matplotlib.font_manager DEBUG findfont: score(<Font 'Garamond' (GARAIT.TTF) italic normal 400 normal>) = 11.05
+11:20:06,209 matplotlib.font_manager DEBUG findfont: score(<Font 'Corbel' (corbelz.ttf) italic normal 700 normal>) = 11.335
+11:20:06,209 matplotlib.font_manager DEBUG findfont: score(<Font 'Segoe UI Historic' (seguihis.ttf) normal normal 400 normal>) = 10.05
+11:20:06,209 matplotlib.font_manager DEBUG findfont: score(<Font 'Arial' (ariali.ttf) italic normal 400 normal>) = 7.413636363636363
+11:20:06,209 matplotlib.font_manager DEBUG findfont: score(<Font 'Lucida Handwriting' (LHANDW.TTF) italic normal 400 normal>) = 11.05
+11:20:06,209 matplotlib.font_manager DEBUG findfont: score(<Font 'Arial' (arialbd.ttf) normal normal 700 normal>) = 6.698636363636363
+11:20:06,210 matplotlib.font_manager DEBUG findfont: score(<Font 'Gill Sans Ultra Bold Condensed' (GILLUBCD.TTF) normal normal 400 condensed>) = 10.25
+11:20:06,210 matplotlib.font_manager DEBUG findfont: score(<Font 'Wingdings' (wingding.ttf) normal normal 400 normal>) = 10.05
+11:20:06,210 matplotlib.font_manager DEBUG findfont: score(<Font 'Kunstler Script' (KUNSTLER.TTF) normal normal 400 normal>) = 10.05
+11:20:06,210 matplotlib.font_manager DEBUG findfont: score(<Font 'Lucida Fax' (LFAXI.TTF) italic normal 400 normal>) = 11.05
+11:20:06,211 matplotlib.font_manager DEBUG findfont: score(<Font 'Candara' (Candara.ttf) normal normal 400 normal>) = 10.05
+11:20:06,211 matplotlib.font_manager DEBUG findfont: score(<Font 'Papyrus' (PAPYRUS.TTF) normal normal 400 normal>) = 10.05
+11:20:06,211 matplotlib.font_manager DEBUG findfont: score(<Font 'Trebuchet MS' (trebucit.ttf) italic normal 400 normal>) = 11.05
+11:20:06,211 matplotlib.font_manager DEBUG findfont: score(<Font 'Segoe Print' (segoeprb.ttf) normal normal 700 normal>) = 10.335
+11:20:06,211 matplotlib.font_manager DEBUG findfont: score(<Font 'Gill Sans MT' (GILBI___.TTF) italic normal 700 normal>) = 11.335
+11:20:06,211 matplotlib.font_manager DEBUG findfont: score(<Font 'Gill Sans MT' (GILI____.TTF) italic normal 400 normal>) = 11.05
+11:20:06,211 matplotlib.font_manager DEBUG findfont: score(<Font 'Lucida Sans' (LSANSD.TTF) normal normal 600 normal>) = 10.24
+11:20:06,212 matplotlib.font_manager DEBUG findfont: score(<Font 'Leelawadee UI' (LeelawUI.ttf) normal normal 400 normal>) = 10.05
+11:20:06,212 matplotlib.font_manager DEBUG findfont: score(<Font 'Impact' (impact.ttf) normal normal 400 normal>) = 10.05
+11:20:06,212 matplotlib.font_manager DEBUG findfont: score(<Font 'Agency FB' (AGENCYR.TTF) normal normal 400 normal>) = 10.05
+11:20:06,212 matplotlib.font_manager DEBUG findfont: score(<Font 'Rockwell Condensed' (ROCCB___.TTF) normal normal 700 condensed>) = 10.535
+11:20:06,213 matplotlib.font_manager DEBUG findfont: score(<Font 'Franklin Gothic Medium' (framdit.ttf) italic normal 400 normal>) = 11.05
+11:20:06,213 matplotlib.font_manager DEBUG findfont: score(<Font 'Perpetua Titling MT' (PERTIBD.TTF) normal normal 700 normal>) = 10.335
+11:20:06,213 matplotlib.font_manager DEBUG findfont: score(<Font 'Baskerville Old Face' (BASKVILL.TTF) normal normal 400 normal>) = 10.05
+11:20:06,213 matplotlib.font_manager DEBUG findfont: score(<Font 'Calisto MT' (CALISTBI.TTF) italic normal 700 normal>) = 11.335
+11:20:06,213 matplotlib.font_manager DEBUG findfont: score(<Font 'Microsoft YaHei' (msyhl.ttc) normal normal 290 normal>) = 10.1545
+11:20:06,213 matplotlib.font_manager DEBUG findfont: score(<Font 'Segoe Script' (segoesc.ttf) normal normal 400 normal>) = 10.05
+11:20:06,214 matplotlib.font_manager DEBUG findfont: score(<Font 'Ink Free' (Inkfree.ttf) normal normal 400 normal>) = 10.05
+11:20:06,214 matplotlib.font_manager DEBUG findfont: score(<Font 'Franklin Gothic Demi Cond' (FRADMCN.TTF) normal normal 400 condensed>) = 10.25
+11:20:06,214 matplotlib.font_manager DEBUG findfont: score(<Font 'Bahnschrift' (bahnschrift.ttf) normal normal 400 normal>) = 10.05
+11:20:06,214 matplotlib.font_manager DEBUG findfont: score(<Font 'Lucida Fax' (LFAXD.TTF) normal normal 600 normal>) = 10.24
+11:20:06,214 matplotlib.font_manager DEBUG findfont: score(<Font 'Viner Hand ITC' (VINERITC.TTF) normal normal 400 normal>) = 10.05
+11:20:06,215 matplotlib.font_manager DEBUG findfont: score(<Font 'Calibri' (calibri.ttf) normal normal 400 normal>) = 10.05
+11:20:06,215 matplotlib.font_manager DEBUG findfont: score(<Font 'Webdings' (webdings.ttf) normal normal 400 normal>) = 10.05
+11:20:06,215 matplotlib.font_manager DEBUG findfont: score(<Font 'Forte' (FORTE.TTF) normal normal 400 normal>) = 10.05
+11:20:06,215 matplotlib.font_manager DEBUG findfont: score(<Font 'Garamond' (GARA.TTF) normal normal 400 normal>) = 10.05
+11:20:06,215 matplotlib.font_manager DEBUG findfont: score(<Font 'MingLiU-ExtB' (mingliub.ttc) normal normal 400 normal>) = 10.05
+11:20:06,215 matplotlib.font_manager DEBUG findfont: score(<Font 'Candara' (Candarai.ttf) italic normal 400 normal>) = 11.05
+11:20:06,215 matplotlib.font_manager DEBUG findfont: score(<Font 'Segoe UI' (seguisli.ttf) italic normal 350 normal>) = 11.0975
+11:20:06,215 matplotlib.font_manager DEBUG findfont: score(<Font 'Cooper Black' (COOPBL.TTF) normal normal 400 normal>) = 10.05
+11:20:06,216 matplotlib.font_manager DEBUG findfont: score(<Font 'Juice ITC' (JUICE___.TTF) normal normal 400 normal>) = 10.05
+11:20:06,216 matplotlib.font_manager DEBUG findfont: score(<Font 'Palatino Linotype' (palab.ttf) normal normal 700 normal>) = 10.335
+11:20:06,216 matplotlib.font_manager DEBUG findfont: score(<Font 'Haettenschweiler' (HATTEN.TTF) normal normal 400 normal>) = 10.05
+11:20:06,216 matplotlib.font_manager DEBUG findfont: score(<Font 'Microsoft Uighur' (MSUIGHUB.TTF) normal normal 700 normal>) = 10.335
+11:20:06,216 matplotlib.font_manager DEBUG findfont: score(<Font 'MV Boli' (mvboli.ttf) normal normal 400 normal>) = 10.05
+11:20:06,216 matplotlib.font_manager DEBUG findfont: score(<Font 'Bodoni MT' (BOD_BLAR.TTF) normal normal 900 normal>) = 10.525
+11:20:06,216 matplotlib.font_manager DEBUG findfont: score(<Font 'Calibri' (calibrii.ttf) italic normal 400 normal>) = 11.05
+11:20:06,216 matplotlib.font_manager DEBUG findfont: score(<Font 'Courier New' (courbi.ttf) italic normal 700 normal>) = 11.335
+11:20:06,217 matplotlib.font_manager DEBUG findfont: score(<Font 'Microsoft PhagsPa' (phagspab.ttf) normal normal 700 normal>) = 10.335
+11:20:06,217 matplotlib.font_manager DEBUG findfont: score(<Font 'Constantia' (constan.ttf) normal normal 400 normal>) = 10.05
+11:20:06,217 matplotlib.font_manager DEBUG findfont: score(<Font 'Corbel' (corbelli.ttf) italic normal 300 normal>) = 11.145
+11:20:06,217 matplotlib.font_manager DEBUG findfont: score(<Font 'Chiller' (CHILLER.TTF) normal normal 400 normal>) = 10.05
+11:20:06,217 matplotlib.font_manager DEBUG findfont: score(<Font 'Bodoni MT' (BOD_BLAI.TTF) italic normal 900 normal>) = 11.525
+11:20:06,217 matplotlib.font_manager DEBUG findfont: score(<Font 'Gill Sans MT' (GIL_____.TTF) normal normal 400 normal>) = 10.05
+11:20:06,217 matplotlib.font_manager DEBUG findfont: score(<Font 'Yu Gothic' (YuGothB.ttc) normal normal 700 normal>) = 10.335
+11:20:06,217 matplotlib.font_manager DEBUG findfont: score(<Font 'Lucida Fax' (LFAXDI.TTF) italic normal 600 normal>) = 11.24
+11:20:06,217 matplotlib.font_manager DEBUG findfont: score(<Font 'Gadugi' (gadugi.ttf) normal normal 400 normal>) = 10.05
+11:20:06,218 matplotlib.font_manager DEBUG findfont: score(<Font 'High Tower Text' (HTOWERT.TTF) normal normal 400 normal>) = 10.05
+11:20:06,218 matplotlib.font_manager DEBUG findfont: score(<Font 'Perpetua' (PER_____.TTF) normal normal 400 normal>) = 10.05
+11:20:06,218 matplotlib.font_manager DEBUG findfont: score(<Font 'Malgun Gothic' (malgun.ttf) normal normal 400 normal>) = 10.05
+11:20:06,218 matplotlib.font_manager DEBUG findfont: score(<Font 'Berlin Sans FB Demi' (BRLNSDB.TTF) normal normal 700 normal>) = 10.335
+11:20:06,218 matplotlib.font_manager DEBUG findfont: score(<Font 'Candara' (Candarali.ttf) italic normal 400 normal>) = 11.05
+11:20:06,218 matplotlib.font_manager DEBUG findfont: score(<Font 'Onyx' (ONYX.TTF) normal normal 400 normal>) = 10.05
+11:20:06,219 matplotlib.font_manager DEBUG findfont: score(<Font 'Bodoni MT' (BOD_PSTC.TTF) normal normal 300 normal>) = 10.145
+11:20:06,219 matplotlib.font_manager DEBUG findfont: score(<Font 'Microsoft YaHei' (msyhbd.ttc) normal normal 700 normal>) = 10.335
+11:20:06,219 matplotlib.font_manager DEBUG findfont: score(<Font 'Constantia' (constanb.ttf) normal normal 700 normal>) = 10.335
+11:20:06,219 matplotlib.font_manager DEBUG findfont: score(<Font 'Palatino Linotype' (palabi.ttf) italic normal 700 normal>) = 11.335
+11:20:06,219 matplotlib.font_manager DEBUG findfont: score(<Font 'Californian FB' (CALIFI.TTF) italic normal 400 normal>) = 11.05
+11:20:06,219 matplotlib.font_manager DEBUG findfont: score(<Font 'Cambria' (cambriab.ttf) normal normal 700 normal>) = 10.335
+11:20:06,219 matplotlib.font_manager DEBUG findfont: score(<Font 'Consolas' (consola.ttf) normal normal 400 normal>) = 10.05
+11:20:06,219 matplotlib.font_manager DEBUG findfont: score(<Font 'Goudy Stout' (GOUDYSTO.TTF) normal normal 400 normal>) = 10.05
+11:20:06,220 matplotlib.font_manager DEBUG findfont: score(<Font 'Courier New' (courbd.ttf) normal normal 700 normal>) = 10.335
+11:20:06,220 matplotlib.font_manager DEBUG findfont: score(<Font 'Palatino Linotype' (palai.ttf) italic normal 400 normal>) = 11.05
+11:20:06,220 matplotlib.font_manager DEBUG findfont: score(<Font 'Bookshelf Symbol 7' (BSSYM7.TTF) normal normal 400 normal>) = 10.05
+11:20:06,220 matplotlib.font_manager DEBUG findfont: score(<Font 'Microsoft JhengHei' (msjhbd.ttc) normal normal 700 normal>) = 10.335
+11:20:06,220 matplotlib.font_manager DEBUG findfont: score(<Font 'Lucida Fax' (LFAX.TTF) normal normal 400 normal>) = 10.05
+11:20:06,220 matplotlib.font_manager DEBUG findfont: score(<Font 'Parchment' (PARCHM.TTF) normal normal 400 normal>) = 10.05
+11:20:06,221 matplotlib.font_manager DEBUG findfont: score(<Font 'Perpetua' (PERBI___.TTF) italic normal 700 normal>) = 11.335
+11:20:06,221 matplotlib.font_manager DEBUG findfont: score(<Font 'Bodoni MT' (BOD_I.TTF) italic normal 400 normal>) = 11.05
+11:20:06,221 matplotlib.font_manager DEBUG findfont: score(<Font 'Gloucester MT Extra Condensed' (GLECB.TTF) normal normal 400 condensed>) = 10.25
+11:20:06,221 matplotlib.font_manager DEBUG findfont: score(<Font 'Old English Text MT' (OLDENGL.TTF) normal normal 400 normal>) = 10.05
+11:20:06,221 matplotlib.font_manager DEBUG findfont: score(<Font 'Arial Rounded MT Bold' (ARLRDBD.TTF) normal normal 400 normal>) = 10.05
+11:20:06,222 matplotlib.font_manager DEBUG findfont: score(<Font 'Century Gothic' (GOTHICI.TTF) italic normal 400 normal>) = 11.05
+11:20:06,222 matplotlib.font_manager DEBUG findfont: score(<Font 'Lucida Bright' (LBRITEI.TTF) italic normal 400 normal>) = 11.05
+11:20:06,222 matplotlib.font_manager DEBUG findfont: score(<Font 'Georgia' (georgia.ttf) normal normal 400 normal>) = 10.05
+11:20:06,222 matplotlib.font_manager DEBUG findfont: score(<Font 'Segoe UI Symbol' (seguisym.ttf) normal normal 400 normal>) = 10.05
+11:20:06,222 matplotlib.font_manager DEBUG findfont: score(<Font 'Malgun Gothic' (malgunbd.ttf) normal normal 700 normal>) = 10.335
+11:20:06,222 matplotlib.font_manager DEBUG findfont: score(<Font 'Cambria' (cambriaz.ttf) italic normal 700 normal>) = 11.335
+11:20:06,222 matplotlib.font_manager DEBUG findfont: score(<Font 'Berlin Sans FB' (BRLNSB.TTF) normal normal 700 normal>) = 10.335
+11:20:06,222 matplotlib.font_manager DEBUG findfont: score(<Font 'Century Schoolbook' (SCHLBKB.TTF) normal normal 700 normal>) = 10.335
+11:20:06,223 matplotlib.font_manager DEBUG findfont: score(<Font 'Snap ITC' (SNAP____.TTF) normal normal 400 normal>) = 10.05
+11:20:06,223 matplotlib.font_manager DEBUG findfont: score(<Font 'Jokerman' (JOKERMAN.TTF) normal normal 400 normal>) = 10.05
+11:20:06,223 matplotlib.font_manager DEBUG findfont: score(<Font 'Lucida Sans Typewriter' (LTYPEO.TTF) oblique normal 400 normal>) = 11.05
+11:20:06,223 matplotlib.font_manager DEBUG findfont: score(<Font 'Yu Gothic' (YuGothR.ttc) normal normal 400 normal>) = 10.05
+11:20:06,223 matplotlib.font_manager DEBUG findfont: score(<Font 'Times New Roman' (timesbd.ttf) normal normal 700 normal>) = 10.335
+11:20:06,223 matplotlib.font_manager DEBUG findfont: score(<Font 'Arial' (arial.ttf) normal normal 400 normal>) = 6.413636363636363
+11:20:06,223 matplotlib.font_manager DEBUG findfont: score(<Font 'Century Schoolbook' (SCHLBKI.TTF) italic normal 400 normal>) = 11.05
+11:20:06,223 matplotlib.font_manager DEBUG findfont: score(<Font 'Consolas' (consolab.ttf) normal normal 700 normal>) = 10.335
+11:20:06,224 matplotlib.font_manager DEBUG findfont: score(<Font 'Calibri' (calibrib.ttf) normal normal 700 normal>) = 10.335
+11:20:06,224 matplotlib.font_manager DEBUG findfont: score(<Font 'Trebuchet MS' (trebucbi.ttf) italic normal 700 normal>) = 11.335
+11:20:06,224 matplotlib.font_manager DEBUG findfont: score(<Font 'Bodoni MT' (BOD_BI.TTF) italic normal 700 normal>) = 11.335
+11:20:06,224 matplotlib.font_manager DEBUG findfont: score(<Font 'Mongolian Baiti' (monbaiti.ttf) normal normal 400 normal>) = 10.05
+11:20:06,224 matplotlib.font_manager DEBUG findfont: score(<Font 'Tw Cen MT' (TCM_____.TTF) normal normal 400 normal>) = 10.05
+11:20:06,224 matplotlib.font_manager DEBUG findfont: score(<Font 'Blackadder ITC' (ITCBLKAD.TTF) normal normal 400 normal>) = 10.05
+11:20:06,225 matplotlib.font_manager DEBUG findfont: score(<Font 'Bookman Old Style' (BOOKOS.TTF) normal normal 300 normal>) = 10.145
+11:20:06,225 matplotlib.font_manager DEBUG findfont: score(<Font 'Franklin Gothic Book' (FRABKIT.TTF) italic normal 400 normal>) = 11.05
+11:20:06,225 matplotlib.font_manager DEBUG findfont: score(<Font 'Yu Gothic' (YuGothM.ttc) normal normal 500 normal>) = 10.145
+11:20:06,225 matplotlib.font_manager DEBUG findfont: score(<Font 'Rockwell' (ROCKI.TTF) italic normal 400 normal>) = 11.05
+11:20:06,225 matplotlib.font_manager DEBUG findfont: score(<Font 'Informal Roman' (INFROMAN.TTF) normal normal 400 normal>) = 10.05
+11:20:06,225 matplotlib.font_manager DEBUG findfont: score(<Font 'Stencil' (STENCIL.TTF) normal normal 400 normal>) = 10.05
+11:20:06,225 matplotlib.font_manager DEBUG findfont: score(<Font 'Ebrima' (ebrimabd.ttf) normal normal 700 normal>) = 10.335
+11:20:06,226 matplotlib.font_manager DEBUG findfont: score(<Font 'Segoe UI' (seguisb.ttf) normal normal 600 normal>) = 10.24
+11:20:06,226 matplotlib.font_manager DEBUG findfont: score(<Font 'Berlin Sans FB' (BRLNSR.TTF) normal normal 400 normal>) = 10.05
+11:20:06,226 matplotlib.font_manager DEBUG findfont: score(<Font 'Copperplate Gothic Bold' (COPRGTB.TTF) normal normal 400 normal>) = 10.05
+11:20:06,226 matplotlib.font_manager DEBUG findfont: score(<Font 'Myanmar Text' (mmrtextb.ttf) normal normal 700 normal>) = 10.335
+11:20:06,226 matplotlib.font_manager DEBUG findfont: score(<Font 'Palatino Linotype' (pala.ttf) normal normal 400 normal>) = 10.05
+11:20:06,226 matplotlib.font_manager DEBUG findfont: score(<Font 'Lucida Sans' (LSANSI.TTF) italic normal 400 normal>) = 11.05
+11:20:06,226 matplotlib.font_manager DEBUG findfont: score(<Font 'Segoe UI' (seguibl.ttf) normal normal 900 normal>) = 10.525
+11:20:06,226 matplotlib.font_manager DEBUG findfont: score(<Font 'Tempus Sans ITC' (TEMPSITC.TTF) normal normal 400 normal>) = 10.05
+11:20:06,226 matplotlib.font_manager DEBUG findfont: score(<Font 'Microsoft YaHei' (msyh.ttc) normal normal 400 normal>) = 10.05
+11:20:06,226 matplotlib.font_manager DEBUG findfont: score(<Font 'OCR A Extended' (OCRAEXT.TTF) normal normal 400 expanded>) = 10.25
+11:20:06,226 matplotlib.font_manager DEBUG findfont: score(<Font 'Bell MT' (BELLI.TTF) italic normal 400 normal>) = 11.05
+11:20:06,226 matplotlib.font_manager DEBUG findfont: score(<Font 'Palace Script MT' (PALSCRI.TTF) normal normal 400 normal>) = 10.05
+11:20:06,227 matplotlib.font_manager DEBUG findfont: score(<Font 'Myanmar Text' (mmrtext.ttf) normal normal 400 normal>) = 10.05
+11:20:06,227 matplotlib.font_manager DEBUG findfont: score(<Font 'Leelawadee UI' (LeelUIsl.ttf) normal normal 350 normal>) = 10.0975
+11:20:06,227 matplotlib.font_manager DEBUG findfont: score(<Font 'Wingdings 3' (WINGDNG3.TTF) normal normal 400 normal>) = 10.05
+11:20:06,227 matplotlib.font_manager DEBUG findfont: score(<Font 'Rockwell Extra Bold' (ROCKEB.TTF) normal normal 800 normal>) = 10.43
+11:20:06,227 matplotlib.font_manager DEBUG findfont: score(<Font 'Corbel' (corbell.ttf) normal normal 300 normal>) = 10.145
+11:20:06,227 matplotlib.font_manager DEBUG findfont: score(<Font 'Calisto MT' (CALIST.TTF) normal normal 400 normal>) = 10.05
+11:20:06,227 matplotlib.font_manager DEBUG findfont: score(<Font 'Brush Script MT' (BRUSHSCI.TTF) italic normal 400 normal>) = 11.05
+11:20:06,228 matplotlib.font_manager DEBUG findfont: score(<Font 'Arial' (ARIALNBI.TTF) italic normal 700 condensed>) = 7.8986363636363635
+11:20:06,228 matplotlib.font_manager DEBUG findfont: score(<Font 'Segoe Print' (segoepr.ttf) normal normal 400 normal>) = 10.05
+11:20:06,229 matplotlib.font_manager DEBUG findfont: score(<Font 'Wingdings 2' (WINGDNG2.TTF) normal normal 400 normal>) = 10.05
+11:20:06,229 matplotlib.font_manager DEBUG findfont: score(<Font 'Segoe MDL2 Assets' (segmdl2.ttf) normal normal 400 normal>) = 10.05
+11:20:06,229 matplotlib.font_manager DEBUG findfont: score(<Font 'MS Gothic' (msgothic.ttc) normal normal 400 normal>) = 10.05
+11:20:06,229 matplotlib.font_manager DEBUG findfont: score(<Font 'High Tower Text' (HTOWERTI.TTF) italic normal 400 normal>) = 11.05
+11:20:06,229 matplotlib.font_manager DEBUG findfont: score(<Font 'Arial' (ariblk.ttf) normal normal 900 normal>) = 6.888636363636364
+11:20:06,229 matplotlib.font_manager DEBUG findfont: score(<Font 'Nirmala UI' (NirmalaS.ttf) normal normal 350 normal>) = 10.0975
+11:20:06,229 matplotlib.font_manager DEBUG findfont: score(<Font 'Microsoft JhengHei' (msjhl.ttc) normal normal 290 normal>) = 10.1545
+11:20:06,229 matplotlib.font_manager DEBUG findfont: score(<Font 'Curlz MT' (CURLZ___.TTF) normal normal 400 normal>) = 10.05
+11:20:06,230 matplotlib.font_manager DEBUG findfont: score(<Font 'Consolas' (consolai.ttf) italic normal 400 normal>) = 11.05
+11:20:06,230 matplotlib.font_manager DEBUG findfont: score(<Font 'Rockwell' (ROCKB.TTF) normal normal 700 normal>) = 10.335
+11:20:06,230 matplotlib.font_manager DEBUG findfont: score(<Font 'Dubai' (DUBAI-LIGHT.TTF) normal normal 300 normal>) = 10.145
+11:20:06,230 matplotlib.font_manager DEBUG findfont: score(<Font 'Bookman Old Style' (BOOKOSB.TTF) normal normal 600 normal>) = 10.24
+11:20:06,230 matplotlib.font_manager DEBUG findfont: score(<Font 'Book Antiqua' (BKANT.TTF) normal normal 400 normal>) = 10.05
+11:20:06,230 matplotlib.font_manager DEBUG findfont: score(<Font 'Times New Roman' (timesi.ttf) italic normal 400 normal>) = 11.05
+11:20:06,230 matplotlib.font_manager DEBUG findfont: score(<Font 'Gadugi' (gadugib.ttf) normal normal 700 normal>) = 10.335
+11:20:06,230 matplotlib.font_manager DEBUG findfont: score(<Font 'Wide Latin' (LATINWD.TTF) normal normal 400 expanded>) = 10.25
+11:20:06,231 matplotlib.font_manager DEBUG findfont: score(<Font 'Britannic Bold' (BRITANIC.TTF) normal normal 400 normal>) = 10.05
+11:20:06,231 matplotlib.font_manager DEBUG findfont: score(<Font 'Leelawadee UI' (LeelaUIb.ttf) normal normal 700 normal>) = 10.335
+11:20:06,231 matplotlib.font_manager DEBUG findfont: score(<Font 'Candara' (Candarab.ttf) normal normal 700 normal>) = 10.335
+11:20:06,231 matplotlib.font_manager DEBUG findfont: score(<Font 'Marlett' (marlett.ttf) normal normal 500 normal>) = 10.145
+11:20:06,231 matplotlib.font_manager DEBUG findfont: score(<Font 'Bernard MT Condensed' (BERNHC.TTF) normal normal 400 condensed>) = 10.25
+11:20:06,232 matplotlib.font_manager DEBUG findfont: score(<Font 'Microsoft Tai Le' (taile.ttf) normal normal 400 normal>) = 10.05
+11:20:06,232 matplotlib.font_manager DEBUG findfont: score(<Font 'Bodoni MT' (BOD_B.TTF) normal normal 700 normal>) = 10.335
+11:20:06,232 matplotlib.font_manager DEBUG findfont: score(<Font 'Comic Sans MS' (comici.ttf) italic normal 400 normal>) = 11.05
+11:20:06,232 matplotlib.font_manager DEBUG findfont: score(<Font 'MS Reference Sans Serif' (REFSAN.TTF) normal normal 400 normal>) = 10.05
+11:20:06,232 matplotlib.font_manager DEBUG findfont: score(<Font 'Magneto' (MAGNETOB.TTF) normal normal 700 normal>) = 10.335
+11:20:06,232 matplotlib.font_manager DEBUG findfont: score(<Font 'Lucida Console' (lucon.ttf) normal normal 400 normal>) = 10.05
+11:20:06,233 matplotlib.font_manager DEBUG findfont: score(<Font 'Trebuchet MS' (trebuc.ttf) normal normal 400 normal>) = 10.05
+11:20:06,233 matplotlib.font_manager DEBUG findfont: score(<Font 'Segoe UI' (seguili.ttf) italic normal 300 normal>) = 11.145
+11:20:06,233 matplotlib.font_manager DEBUG findfont: score(<Font 'Bookman Old Style' (BOOKOSI.TTF) italic normal 300 normal>) = 11.145
+11:20:06,233 matplotlib.font_manager DEBUG findfont: score(<Font 'HoloLens MDL2 Assets' (holomdl2.ttf) normal normal 400 normal>) = 10.05
+11:20:06,233 matplotlib.font_manager DEBUG findfont: score(<Font 'Lucida Sans' (LSANS.TTF) normal normal 400 normal>) = 10.05
+11:20:06,233 matplotlib.font_manager DEBUG findfont: score(<Font 'Eras Medium ITC' (ERASMD.TTF) normal normal 400 normal>) = 10.05
+11:20:06,233 matplotlib.font_manager DEBUG findfont: score(<Font 'Pristina' (PRISTINA.TTF) normal normal 400 normal>) = 10.05
+11:20:06,233 matplotlib.font_manager DEBUG findfont: score(<Font 'Verdana' (verdanaz.ttf) italic normal 700 normal>) = 4.971363636363637
+11:20:06,233 matplotlib.font_manager DEBUG findfont: score(<Font 'Bodoni MT' (BOD_R.TTF) normal normal 400 normal>) = 10.05
+11:20:06,234 matplotlib.font_manager DEBUG findfont: score(<Font 'Kristen ITC' (ITCKRIST.TTF) normal normal 400 normal>) = 10.05
+11:20:06,234 matplotlib.font_manager DEBUG findfont: score(<Font 'Playbill' (PLAYBILL.TTF) normal normal 400 normal>) = 10.05
+11:20:06,234 matplotlib.font_manager DEBUG findfont: score(<Font 'Bookman Old Style' (BOOKOSBI.TTF) italic normal 600 normal>) = 11.24
+11:20:06,234 matplotlib.font_manager DEBUG findfont: score(<Font 'Gill Sans MT' (GILB____.TTF) normal normal 700 normal>) = 10.335
+11:20:06,234 matplotlib.font_manager DEBUG findfont: score(<Font 'Times New Roman' (timesbi.ttf) italic normal 700 normal>) = 11.335
+11:20:06,234 matplotlib.font_manager DEBUG findfont: score(<Font 'Rockwell Condensed' (ROCC____.TTF) normal normal 400 condensed>) = 10.25
+11:20:06,234 matplotlib.font_manager DEBUG findfont: score(<Font 'Calibri' (calibriz.ttf) italic normal 700 normal>) = 11.335
+11:20:06,234 matplotlib.font_manager DEBUG findfont: score(<Font 'SimSun-ExtB' (simsunb.ttf) normal normal 400 normal>) = 10.05
+11:20:06,235 matplotlib.font_manager DEBUG findfont: score(<Font 'Arial' (arialbi.ttf) italic normal 700 normal>) = 7.698636363636363
+11:20:06,235 matplotlib.font_manager DEBUG findfont: score(<Font 'Book Antiqua' (ANTQUABI.TTF) italic normal 700 normal>) = 11.335
+11:20:06,235 matplotlib.font_manager DEBUG findfont: score(<Font 'Sitka Small' (SitkaI.ttc) italic normal 400 normal>) = 11.05
+11:20:06,235 matplotlib.font_manager DEBUG findfont: score(<Font 'Niagara Engraved' (NIAGENG.TTF) normal normal 400 normal>) = 10.05
+11:20:06,235 matplotlib.font_manager DEBUG findfont: score(<Font 'Segoe UI' (segoeuib.ttf) normal normal 700 normal>) = 10.335
+11:20:06,235 matplotlib.font_manager DEBUG findfont: score(<Font 'Courier New' (cour.ttf) normal normal 400 normal>) = 10.05
+11:20:06,235 matplotlib.font_manager DEBUG findfont: score(<Font 'Tw Cen MT' (TCBI____.TTF) italic normal 700 normal>) = 11.335
+11:20:06,235 matplotlib.font_manager DEBUG findfont: score(<Font 'Bodoni MT' (BOD_CBI.TTF) italic normal 700 condensed>) = 11.535
+11:20:06,236 matplotlib.font_manager DEBUG findfont: score(<Font 'Gabriola' (Gabriola.ttf) normal normal 400 normal>) = 10.05
+11:20:06,236 matplotlib.font_manager DEBUG findfont: score(<Font 'Corbel' (corbeli.ttf) italic normal 400 normal>) = 11.05
+11:20:06,236 matplotlib.font_manager DEBUG findfont: score(<Font 'Freestyle Script' (FREESCPT.TTF) normal normal 400 normal>) = 10.05
+11:20:06,236 matplotlib.font_manager DEBUG findfont: score(<Font 'Gill Sans MT Condensed' (GILC____.TTF) normal normal 400 condensed>) = 10.25
+11:20:06,236 matplotlib.font_manager DEBUG findfont: score(<Font 'Franklin Gothic Book' (FRABK.TTF) normal normal 400 normal>) = 10.05
+11:20:06,236 matplotlib.font_manager DEBUG findfont: score(<Font 'Franklin Gothic Demi' (FRADM.TTF) normal normal 400 normal>) = 10.05
+11:20:06,236 matplotlib.font_manager DEBUG findfont: score(<Font 'Sitka Small' (SitkaB.ttc) normal normal 700 normal>) = 10.335
+11:20:06,236 matplotlib.font_manager DEBUG findfont: score(<Font 'Franklin Gothic Demi' (FRADMIT.TTF) italic normal 400 normal>) = 11.05
+11:20:06,237 matplotlib.font_manager DEBUG findfont: score(<Font 'Comic Sans MS' (comicbd.ttf) normal normal 700 normal>) = 10.335
+11:20:06,237 matplotlib.font_manager DEBUG findfont: score(<Font 'Century Schoolbook' (CENSCBK.TTF) normal normal 400 normal>) = 10.05
+11:20:06,237 matplotlib.font_manager DEBUG findfont: score(<Font 'Microsoft Himalaya' (himalaya.ttf) normal normal 400 normal>) = 10.05
+11:20:06,237 matplotlib.font_manager DEBUG findfont: score(<Font 'Lucida Sans Typewriter' (LTYPE.TTF) normal normal 400 normal>) = 10.05
+11:20:06,237 matplotlib.font_manager DEBUG findfont: score(<Font 'Segoe UI' (segoeuii.ttf) italic normal 400 normal>) = 11.05
+11:20:06,237 matplotlib.font_manager DEBUG findfont: score(<Font 'Georgia' (georgiab.ttf) normal normal 700 normal>) = 10.335
+11:20:06,238 matplotlib.font_manager DEBUG findfont: score(<Font 'Californian FB' (CALIFR.TTF) normal normal 400 normal>) = 10.05
+11:20:06,238 matplotlib.font_manager DEBUG findfont: score(<Font 'Tw Cen MT Condensed' (TCCM____.TTF) normal normal 400 condensed>) = 10.25
+11:20:06,238 matplotlib.font_manager DEBUG findfont: score(<Font 'Harlow Solid Italic' (HARLOWSI.TTF) italic normal 400 normal>) = 11.05
+11:20:06,238 matplotlib.font_manager DEBUG findfont: score(<Font 'Consolas' (consolaz.ttf) italic normal 700 normal>) = 11.335
+11:20:06,239 matplotlib.font_manager DEBUG findfont: score(<Font 'Calisto MT' (CALISTI.TTF) italic normal 400 normal>) = 11.05
+11:20:06,239 matplotlib.font_manager DEBUG findfont: score(<Font 'Gigi' (GIGI.TTF) normal normal 400 normal>) = 10.05
+11:20:06,239 matplotlib.font_manager DEBUG findfont: score(<Font 'Goudy Old Style' (GOUDOS.TTF) normal normal 400 normal>) = 10.05
+11:20:06,239 matplotlib.font_manager DEBUG findfont: score(<Font 'Bodoni MT' (BOD_CI.TTF) italic normal 400 condensed>) = 11.25
+11:20:06,240 matplotlib.font_manager DEBUG findfont: score(<Font 'Copperplate Gothic Light' (COPRGTL.TTF) normal normal 400 normal>) = 10.05
+11:20:06,240 matplotlib.font_manager DEBUG findfont: score(<Font 'Segoe UI' (segoeuisl.ttf) normal normal 350 normal>) = 10.0975
+11:20:06,240 matplotlib.font_manager DEBUG findfont: score(<Font 'Dubai' (DUBAI-MEDIUM.TTF) normal normal 500 normal>) = 10.145
+11:20:06,240 matplotlib.font_manager DEBUG findfont: score(<Font 'Perpetua Titling MT' (PERTILI.TTF) normal normal 300 normal>) = 10.145
+11:20:06,240 matplotlib.font_manager DEBUG findfont: score(<Font 'Arial' (ARIALN.TTF) normal normal 400 condensed>) = 6.613636363636363
+11:20:06,240 matplotlib.font_manager DEBUG findfont: score(<Font 'Times New Roman' (times.ttf) normal normal 400 normal>) = 10.05
+11:20:06,240 matplotlib.font_manager DEBUG findfont: score(<Font 'Poor Richard' (POORICH.TTF) normal normal 400 normal>) = 10.05
+11:20:06,240 matplotlib.font_manager DEBUG findfont: score(<Font 'Calibri' (calibril.ttf) normal normal 300 normal>) = 10.145
+11:20:06,241 matplotlib.font_manager DEBUG findfont: score(<Font 'Franklin Gothic Medium' (framd.ttf) normal normal 400 normal>) = 10.05
+11:20:06,241 matplotlib.font_manager DEBUG findfont: score(<Font 'Nirmala UI' (Nirmala.ttf) normal normal 400 normal>) = 10.05
+11:20:06,241 matplotlib.font_manager DEBUG findfont: score(<Font 'Lucida Sans Typewriter' (LTYPEB.TTF) normal normal 600 normal>) = 10.24
+11:20:06,241 matplotlib.font_manager DEBUG findfont: score(<Font 'Constantia' (constani.ttf) italic normal 400 normal>) = 11.05
+11:20:06,241 matplotlib.font_manager DEBUG findfont: score(<Font 'Vivaldi' (VIVALDII.TTF) italic normal 400 normal>) = 11.05
+11:20:06,241 matplotlib.font_manager DEBUG findfont: score(<Font 'Microsoft Yi Baiti' (msyi.ttf) normal normal 400 normal>) = 10.05
+11:20:06,241 matplotlib.font_manager DEBUG findfont: score(<Font 'Microsoft Uighur' (MSUIGHUR.TTF) normal normal 400 normal>) = 10.05
+11:20:06,241 matplotlib.font_manager DEBUG findfont: score(<Font 'Candara' (Candaraz.ttf) italic normal 700 normal>) = 11.335
+11:20:06,242 matplotlib.font_manager DEBUG findfont: score(<Font 'Verdana' (verdanab.ttf) normal normal 700 normal>) = 3.9713636363636367
+11:20:06,242 matplotlib.font_manager DEBUG findfont: score(<Font 'Bell MT' (BELL.TTF) normal normal 400 normal>) = 10.05
+11:20:06,242 matplotlib.font_manager DEBUG findfont: score(<Font 'MT Extra' (MTEXTRA.TTF) normal normal 400 normal>) = 10.05
+11:20:06,242 matplotlib.font_manager DEBUG findfont: score(<Font 'Calibri' (calibrili.ttf) italic normal 300 normal>) = 11.145
+11:20:06,242 matplotlib.font_manager DEBUG findfont: score(<Font 'Segoe UI' (seguibli.ttf) italic normal 900 normal>) = 11.525
+11:20:06,242 matplotlib.font_manager DEBUG findfont: score(<Font 'Microsoft PhagsPa' (phagspa.ttf) normal normal 400 normal>) = 10.05
+11:20:06,242 matplotlib.font_manager DEBUG findfont: score(<Font 'Courier New' (couri.ttf) italic normal 400 normal>) = 11.05
+11:20:06,242 matplotlib.font_manager DEBUG findfont: score(<Font 'Franklin Gothic Heavy' (FRAHV.TTF) normal normal 400 normal>) = 10.05
+11:20:06,242 matplotlib.font_manager DEBUG findfont: score(<Font 'Georgia' (georgiaz.ttf) italic normal 700 normal>) = 11.335
+11:20:06,242 matplotlib.font_manager DEBUG findfont: score(<Font 'Dubai' (DUBAI-BOLD.TTF) normal normal 700 normal>) = 10.335
+11:20:06,242 matplotlib.font_manager DEBUG findfont: score(<Font 'Corbel' (corbel.ttf) normal normal 400 normal>) = 10.05
+11:20:06,242 matplotlib.font_manager DEBUG findfont: score(<Font 'Segoe UI Emoji' (seguiemj.ttf) normal normal 400 normal>) = 10.05
+11:20:06,242 matplotlib.font_manager DEBUG findfont: score(<Font 'Goudy Old Style' (GOUDOSB.TTF) normal normal 700 normal>) = 10.335
+11:20:06,243 matplotlib.font_manager DEBUG findfont: score(<Font 'Constantia' (constanz.ttf) italic normal 700 normal>) = 11.335
+11:20:06,244 matplotlib.font_manager DEBUG findfont: score(<Font 'Agency FB' (AGENCYB.TTF) normal normal 700 normal>) = 10.335
+11:20:06,244 matplotlib.font_manager DEBUG findfont: score(<Font 'Verdana' (verdanai.ttf) italic normal 400 normal>) = 4.6863636363636365
+11:20:06,244 matplotlib.font_manager DEBUG findfont: score(<Font 'Lucida Bright' (LBRITED.TTF) normal normal 600 normal>) = 10.24
+11:20:06,244 matplotlib.font_manager DEBUG findfont: score(<Font 'Lucida Sans' (LSANSDI.TTF) italic normal 600 normal>) = 11.24
+11:20:06,244 matplotlib.font_manager DEBUG findfont: score(<Font 'Colonna MT' (COLONNA.TTF) normal normal 400 normal>) = 10.05
+11:20:06,244 matplotlib.font_manager DEBUG findfont: score(<Font 'Centaur' (CENTAUR.TTF) normal normal 400 normal>) = 10.05
+11:20:06,244 matplotlib.font_manager DEBUG findfont: score(<Font 'Century Gothic' (GOTHIC.TTF) normal normal 400 normal>) = 10.05
+11:20:06,245 matplotlib.font_manager DEBUG findfont: score(<Font 'Microsoft Sans Serif' (micross.ttf) normal normal 400 normal>) = 10.05
+11:20:06,245 matplotlib.font_manager DEBUG findfont: score(<Font 'Dubai' (DUBAI-REGULAR.TTF) normal normal 400 normal>) = 10.05
+11:20:06,245 matplotlib.font_manager DEBUG findfont: score(<Font 'Tw Cen MT' (TCMI____.TTF) italic normal 400 normal>) = 11.05
+11:20:06,245 matplotlib.font_manager DEBUG findfont: score(<Font 'Segoe UI' (segoeui.ttf) normal normal 400 normal>) = 10.05
+11:20:06,245 matplotlib.font_manager DEBUG findfont: score(<Font 'Lucida Calligraphy' (LCALLIG.TTF) italic normal 400 normal>) = 11.05
+11:20:06,246 matplotlib.font_manager DEBUG findfont: score(<Font 'Rockwell' (ROCK.TTF) normal normal 400 normal>) = 10.05
+11:20:06,246 matplotlib.font_manager DEBUG findfont: score(<Font 'Footlight MT Light' (FTLTLT.TTF) normal normal 300 normal>) = 10.145
+11:20:06,246 matplotlib.font_manager DEBUG findfont: score(<Font 'Comic Sans MS' (comicz.ttf) italic normal 700 normal>) = 11.335
+11:20:06,246 matplotlib.font_manager DEBUG findfont: score(<Font 'Perpetua' (PERB____.TTF) normal normal 700 normal>) = 10.335
+11:20:06,246 matplotlib.font_manager DEBUG findfont: score(<Font 'Goudy Old Style' (GOUDOSI.TTF) italic normal 400 normal>) = 11.05
+11:20:06,247 matplotlib.font_manager DEBUG findfont: score(<Font 'Segoe UI' (segoeuil.ttf) normal normal 300 normal>) = 10.145
+11:20:06,247 matplotlib.font_manager DEBUG findfont: score(<Font 'Rage Italic' (RAGE.TTF) italic normal 400 normal>) = 11.05
+11:20:06,247 matplotlib.font_manager DEBUG findfont: score(<Font 'Edwardian Script ITC' (ITCEDSCR.TTF) normal normal 400 normal>) = 10.05
+11:20:06,247 matplotlib.font_manager DEBUG findfont: score(<Font 'Broadway' (BROADW.TTF) normal normal 400 normal>) = 10.05
+11:20:06,247 matplotlib.font_manager DEBUG findfont: score(<Font 'Engravers MT' (ENGR.TTF) normal normal 500 normal>) = 10.145
+11:20:06,247 matplotlib.font_manager DEBUG findfont: score(<Font 'Bell MT' (BELLB.TTF) normal normal 700 normal>) = 10.335
+11:20:06,247 matplotlib.font_manager DEBUG findfont: score(<Font 'Lucida Bright' (LBRITE.TTF) normal normal 400 normal>) = 10.05
+11:20:06,248 matplotlib.font_manager DEBUG findfont: score(<Font 'MS Outlook' (OUTLOOK.TTF) normal normal 400 normal>) = 10.05
+11:20:06,248 matplotlib.font_manager DEBUG findfont: score(<Font 'Century Schoolbook' (SCHLBKBI.TTF) italic normal 700 normal>) = 11.335
+11:20:06,248 matplotlib.font_manager DEBUG findfont: score(<Font 'Rockwell' (ROCKBI.TTF) italic normal 700 normal>) = 11.335
+11:20:06,248 matplotlib.font_manager DEBUG findfont: score(<Font 'Arial' (ARIALNI.TTF) italic normal 400 condensed>) = 7.613636363636363
+11:20:06,248 matplotlib.font_manager DEBUG findfont: score(<Font 'Cambria' (cambria.ttc) normal normal 400 normal>) = 10.05
+11:20:06,248 matplotlib.font_manager DEBUG findfont: score(<Font 'Bauhaus 93' (BAUHS93.TTF) normal normal 400 normal>) = 10.05
+11:20:06,248 matplotlib.font_manager DEBUG findfont: score(<Font 'French Script MT' (FRSCRIPT.TTF) normal normal 400 normal>) = 10.05
+11:20:06,249 matplotlib.font_manager DEBUG findfont: score(<Font 'Tw Cen MT Condensed' (TCCB____.TTF) normal normal 700 condensed>) = 10.535
+11:20:06,249 matplotlib.font_manager DEBUG findfont: score(<Font 'Sitka Small' (SitkaZ.ttc) italic normal 700 normal>) = 11.335
+11:20:06,249 matplotlib.font_manager DEBUG findfont: score(<Font 'Lucida Sans Unicode' (l_10646.ttf) normal normal 400 normal>) = 10.05
+11:20:06,249 matplotlib.font_manager DEBUG findfont: score(<Font 'Matura MT Script Capitals' (MATURASC.TTF) normal normal 400 normal>) = 10.05
+11:20:06,249 matplotlib.font_manager DEBUG findfont: score(<Font 'Bodoni MT' (BOD_CB.TTF) normal normal 700 condensed>) = 10.535
+11:20:06,249 matplotlib.font_manager DEBUG findfont: score(<Font 'Segoe UI' (seguisbi.ttf) italic normal 600 normal>) = 11.24
+11:20:06,249 matplotlib.font_manager DEBUG findfont: score(<Font 'Niagara Solid' (NIAGSOL.TTF) normal normal 400 normal>) = 10.05
+11:20:06,250 matplotlib.font_manager DEBUG findfont: score(<Font 'Vladimir Script' (VLADIMIR.TTF) normal normal 400 normal>) = 10.05
+11:20:06,250 matplotlib.font_manager DEBUG findfont: score(<Font 'Sylfaen' (sylfaen.ttf) normal normal 400 normal>) = 10.05
+11:20:06,250 matplotlib.font_manager DEBUG findfont: score(<Font 'Trebuchet MS' (trebucbd.ttf) normal normal 700 normal>) = 10.335
+11:20:06,250 matplotlib.font_manager DEBUG findfont: score(<Font 'Perpetua' (PERI____.TTF) italic normal 400 normal>) = 11.05
+11:20:06,250 matplotlib.font_manager DEBUG findfont: score(<Font 'Tahoma' (tahomabd.ttf) normal normal 700 normal>) = 10.335
+11:20:06,250 matplotlib.font_manager DEBUG findfont: score(<Font 'Microsoft Tai Le' (taileb.ttf) normal normal 700 normal>) = 10.335
+11:20:06,250 matplotlib.font_manager DEBUG findfont: score(<Font 'Gill Sans Ultra Bold' (GILSANUB.TTF) normal normal 400 normal>) = 10.05
+11:20:06,250 matplotlib.font_manager DEBUG findfont: score(<Font 'MS Reference Specialty' (REFSPCL.TTF) normal normal 400 normal>) = 10.05
+11:20:06,251 matplotlib.font_manager DEBUG findfont: score(<Font 'Symbol' (symbol.ttf) normal normal 400 normal>) = 10.05
+11:20:06,251 matplotlib.font_manager DEBUG findfont: score(<Font 'Eras Demi ITC' (ERASDEMI.TTF) normal normal 400 normal>) = 10.05
+11:20:06,251 matplotlib.font_manager DEBUG findfont: score(<Font 'Showcard Gothic' (SHOWG.TTF) normal normal 400 normal>) = 10.05
+11:20:06,251 matplotlib.font_manager DEBUG findfont: score(<Font 'Sitka Small' (Sitka.ttc) normal normal 400 normal>) = 10.05
+11:20:06,251 matplotlib.font_manager DEBUG findfont: score(<Font 'Ravie' (RAVIE.TTF) normal normal 400 normal>) = 10.05
+11:20:06,251 matplotlib.font_manager DEBUG findfont: score(<Font 'Castellar' (CASTELAR.TTF) normal normal 400 normal>) = 10.05
+11:20:06,252 matplotlib.font_manager DEBUG findfont: score(<Font 'Maiandra GD' (MAIAN.TTF) normal normal 400 normal>) = 10.05
+11:20:06,252 matplotlib.font_manager DEBUG findfont: score(<Font 'Garamond' (GARABD.TTF) normal normal 700 normal>) = 10.335
+11:20:06,253 matplotlib.font_manager DEBUG findfont: score(<Font 'Century Gothic' (GOTHICB.TTF) normal normal 700 normal>) = 10.335
+11:20:06,253 matplotlib.font_manager DEBUG findfont: Matching sans\-serif:style=normal:variant=normal:weight=normal:stretch=normal:size=10.0 to DejaVu Sans ('C:\\anaconda\\envs\\TEShci\\lib\\matplotlib\\mpl-data\\fonts\\ttf\\DejaVuSans.ttf') with score of 0.050000.
+11:20:08,373 massless INFO _line3 was clicked at 5983.58,69.91
+11:20:08,380 massless DEBUG marker not placed becausel local maximum 3<=0.8*mouse_click_height 69.91332046332047.
+click closer to the peak
+11:20:09,434 massless INFO _line3 was clicked at 6043.36,69.91
+11:46:30,160 root INFO Massless Log
+11:46:30,185 PyQt5.uic.uiparser DEBUG uiname is Form
+11:46:30,185 PyQt5.uic.uiparser DEBUG toplevel widget is MainWindow
+11:46:30,185 PyQt5.uic.properties DEBUG setting property geometry
+11:46:30,185 PyQt5.uic.properties DEBUG setting property minimumSize
+11:46:30,186 PyQt5.uic.properties DEBUG setting property windowTitle
+11:46:30,186 PyQt5.uic.uiparser DEBUG push MainWindow Form
+11:46:30,186 PyQt5.uic.uiparser DEBUG push QVBoxLayout verticalLayout
+11:46:30,190 PyQt5.uic.properties DEBUG setting property minimumSize
+11:46:30,190 PyQt5.uic.properties DEBUG setting property maximumSize
+11:46:30,190 PyQt5.uic.properties DEBUG setting property html
+11:46:30,191 PyQt5.uic.uiparser DEBUG push QTextBrowser Title
+11:46:30,191 PyQt5.uic.uiparser DEBUG pop widget QTextBrowser Title
+11:46:30,191 PyQt5.uic.uiparser DEBUG new topwidget <massGui.massGui.MainWindow object at 0x0000021F9B09A280>
+11:46:30,191 PyQt5.uic.properties DEBUG setting property minimumSize
+11:46:30,191 PyQt5.uic.properties DEBUG setting property maximumSize
+11:46:30,192 PyQt5.uic.properties DEBUG setting property title
+11:46:30,192 PyQt5.uic.uiparser DEBUG push QGroupBox fileSelectionGroup
+11:46:30,192 PyQt5.uic.uiparser DEBUG push QHBoxLayout horizontalLayout
+11:46:30,192 PyQt5.uic.properties DEBUG setting property minimumSize
+11:46:30,192 PyQt5.uic.properties DEBUG setting property text
+11:46:30,192 PyQt5.uic.uiparser DEBUG push QPushButton selectFileButton
+11:46:30,193 PyQt5.uic.uiparser DEBUG pop widget QPushButton selectFileButton
+11:46:30,193 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QGroupBox object at 0x0000021FC07EB1F0>
+11:46:30,193 PyQt5.uic.properties DEBUG setting property enabled
+11:46:30,194 PyQt5.uic.properties DEBUG setting property minimumSize
+11:46:30,194 PyQt5.uic.properties DEBUG setting property maximumSize
+11:46:30,194 PyQt5.uic.uiparser DEBUG push QTextBrowser fileTextBox
+11:46:30,194 PyQt5.uic.uiparser DEBUG pop widget QTextBrowser fileTextBox
+11:46:30,194 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QGroupBox object at 0x0000021FC07EB1F0>
+11:46:30,194 PyQt5.uic.properties DEBUG setting property minimumSize
+11:46:30,194 PyQt5.uic.properties DEBUG setting property text
+11:46:30,194 PyQt5.uic.uiparser DEBUG push QLabel label_4
+11:46:30,195 PyQt5.uic.uiparser DEBUG pop widget QLabel label_4
+11:46:30,195 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QGroupBox object at 0x0000021FC07EB1F0>
+11:46:30,195 PyQt5.uic.properties DEBUG setting property minimumSize
+11:46:30,195 PyQt5.uic.properties DEBUG setting property minimum
+11:46:30,346 PyQt5.uic.properties DEBUG setting property maximum
+11:46:30,346 PyQt5.uic.properties DEBUG setting property value
+11:46:30,347 PyQt5.uic.uiparser DEBUG push QSpinBox maxChansSpinBox
+11:46:30,347 PyQt5.uic.uiparser DEBUG pop widget QSpinBox maxChansSpinBox
+11:46:30,347 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QGroupBox object at 0x0000021FC07EB1F0>
+11:46:30,347 PyQt5.uic.uiparser DEBUG pop layout QHBoxLayout horizontalLayout
+11:46:30,347 PyQt5.uic.uiparser DEBUG pop widget QGroupBox fileSelectionGroup
+11:46:30,347 PyQt5.uic.uiparser DEBUG new topwidget <massGui.massGui.MainWindow object at 0x0000021F9B09A280>
+11:46:30,348 PyQt5.uic.properties DEBUG setting property minimumSize
+11:46:30,348 PyQt5.uic.properties DEBUG setting property maximumSize
+11:46:30,348 PyQt5.uic.properties DEBUG setting property title
+11:46:30,348 PyQt5.uic.uiparser DEBUG push QGroupBox calibrationGroup
+11:46:30,348 PyQt5.uic.uiparser DEBUG push QGridLayout gridLayout_2
+11:46:30,349 PyQt5.uic.properties DEBUG setting property text
+11:46:30,349 PyQt5.uic.uiparser DEBUG push QCheckBox HCIonCheckbox
+11:46:30,349 PyQt5.uic.uiparser DEBUG pop widget QCheckBox HCIonCheckbox
+11:46:30,349 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QGroupBox object at 0x0000021FC07EB670>
+11:46:30,349 PyQt5.uic.properties DEBUG setting property text
+11:46:30,349 PyQt5.uic.uiparser DEBUG push QPushButton lineIDButton
+11:46:30,350 PyQt5.uic.uiparser DEBUG pop widget QPushButton lineIDButton
+11:46:30,350 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QGroupBox object at 0x0000021FC07EB670>
+11:46:30,350 PyQt5.uic.properties DEBUG setting property title
+11:46:30,350 PyQt5.uic.uiparser DEBUG push QGroupBox calibrationStepsBox
+11:46:30,350 PyQt5.uic.uiparser DEBUG push QVBoxLayout verticalLayout_2
+11:46:30,350 PyQt5.uic.properties DEBUG setting property text
+11:46:30,350 PyQt5.uic.properties DEBUG setting property checked
+11:46:30,351 PyQt5.uic.uiparser DEBUG push QCheckBox DCcheckbox
+11:46:30,351 PyQt5.uic.uiparser DEBUG pop widget QCheckBox DCcheckbox
+11:46:30,351 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QGroupBox object at 0x0000021FC07EB8B0>
+11:46:30,351 PyQt5.uic.properties DEBUG setting property text
+11:46:30,351 PyQt5.uic.properties DEBUG setting property checked
+11:46:30,351 PyQt5.uic.uiparser DEBUG push QCheckBox PCcheckbox
+11:46:30,351 PyQt5.uic.uiparser DEBUG pop widget QCheckBox PCcheckbox
+11:46:30,351 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QGroupBox object at 0x0000021FC07EB8B0>
+11:46:30,351 PyQt5.uic.properties DEBUG setting property text
+11:46:30,351 PyQt5.uic.properties DEBUG setting property checked
+11:46:30,352 PyQt5.uic.uiparser DEBUG push QCheckBox TDCcheckbox
+11:46:30,352 PyQt5.uic.uiparser DEBUG pop widget QCheckBox TDCcheckbox
+11:46:30,352 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QGroupBox object at 0x0000021FC07EB8B0>
+11:46:30,352 PyQt5.uic.uiparser DEBUG pop layout QVBoxLayout verticalLayout_2
+11:46:30,352 PyQt5.uic.uiparser DEBUG pop widget QGroupBox calibrationStepsBox
+11:46:30,352 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QGroupBox object at 0x0000021FC07EB670>
+11:46:30,352 PyQt5.uic.properties DEBUG setting property minimumSize
+11:46:30,352 PyQt5.uic.uiparser DEBUG push QWidget calButtonGroup
+11:46:30,352 PyQt5.uic.uiparser DEBUG push QVBoxLayout verticalLayout_6
+11:46:30,353 PyQt5.uic.properties DEBUG setting property minimumSize
+11:46:30,353 PyQt5.uic.properties DEBUG setting property text
+11:46:30,353 PyQt5.uic.uiparser DEBUG push QPushButton oneChanCalButton
+11:46:30,353 PyQt5.uic.uiparser DEBUG pop widget QPushButton oneChanCalButton
+11:46:30,353 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QWidget object at 0x0000021FC07EBB80>
+11:46:30,354 PyQt5.uic.properties DEBUG setting property minimumSize
+11:46:30,354 PyQt5.uic.properties DEBUG setting property text
+11:46:30,354 PyQt5.uic.uiparser DEBUG push QPushButton allChanCalButton
+11:46:30,354 PyQt5.uic.uiparser DEBUG pop widget QPushButton allChanCalButton
+11:46:30,354 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QWidget object at 0x0000021FC07EBB80>
+11:46:30,354 PyQt5.uic.properties DEBUG setting property minimumSize
+11:46:30,354 PyQt5.uic.properties DEBUG setting property baseSize
+11:46:30,355 PyQt5.uic.properties DEBUG setting property text
+11:46:30,355 PyQt5.uic.uiparser DEBUG push QPushButton resetCalButton
+11:46:30,355 PyQt5.uic.uiparser DEBUG pop widget QPushButton resetCalButton
+11:46:30,355 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QWidget object at 0x0000021FC07EBB80>
+11:46:30,355 PyQt5.uic.uiparser DEBUG pop layout QVBoxLayout verticalLayout_6
+11:46:30,355 PyQt5.uic.uiparser DEBUG pop widget QWidget calButtonGroup
+11:46:30,355 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QGroupBox object at 0x0000021FC07EB670>
+11:46:30,355 PyQt5.uic.properties DEBUG setting property minimumSize
+11:46:30,356 PyQt5.uic.properties DEBUG setting property text
+11:46:30,356 PyQt5.uic.uiparser DEBUG push QLabel label
+11:46:30,356 PyQt5.uic.uiparser DEBUG pop widget QLabel label
+11:46:30,356 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QGroupBox object at 0x0000021FC07EB670>
+11:46:30,356 PyQt5.uic.properties DEBUG setting property enabled
+11:46:30,356 PyQt5.uic.uiparser DEBUG push QLineEdit refChannelBox
+11:46:30,357 PyQt5.uic.uiparser DEBUG pop widget QLineEdit refChannelBox
+11:46:30,357 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QGroupBox object at 0x0000021FC07EB670>
+11:46:30,358 PyQt5.uic.properties DEBUG setting property enabled
+11:46:30,358 PyQt5.uic.properties DEBUG setting property editTriggers
+11:46:30,359 PyQt5.uic.uiparser DEBUG push QTableWidget calTable
+11:46:30,362 PyQt5.uic.uiparser DEBUG pop widget QTableWidget calTable
+11:46:30,362 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QGroupBox object at 0x0000021FC07EB670>
+11:46:30,362 PyQt5.uic.uiparser DEBUG pop layout QGridLayout gridLayout_2
+11:46:30,362 PyQt5.uic.uiparser DEBUG pop widget QGroupBox calibrationGroup
+11:46:30,363 PyQt5.uic.uiparser DEBUG new topwidget <massGui.massGui.MainWindow object at 0x0000021F9B09A280>
+11:46:30,363 PyQt5.uic.properties DEBUG setting property enabled
+11:46:30,363 PyQt5.uic.properties DEBUG setting property maximumSize
+11:46:30,364 PyQt5.uic.properties DEBUG setting property currentIndex
+11:46:30,364 PyQt5.uic.uiparser DEBUG push QTabWidget tabWidget
+11:46:30,364 PyQt5.uic.uiparser DEBUG push QWidget plotsTab
+11:46:30,364 PyQt5.uic.uiparser DEBUG push QVBoxLayout verticalLayout_4
+11:46:30,364 PyQt5.uic.properties DEBUG setting property title
+11:46:30,365 PyQt5.uic.uiparser DEBUG push QGroupBox plotsGroup
+11:46:30,365 PyQt5.uic.uiparser DEBUG push QVBoxLayout verticalLayout_3
+11:46:30,365 PyQt5.uic.properties DEBUG setting property frameShape
+11:46:30,365 PyQt5.uic.properties DEBUG setting property frameShadow
+11:46:30,365 PyQt5.uic.uiparser DEBUG push QFrame frame
+11:46:30,365 PyQt5.uic.uiparser DEBUG push QGridLayout gridLayout
+11:46:30,366 PyQt5.uic.properties DEBUG setting property minimumSize
+11:46:30,366 PyQt5.uic.properties DEBUG setting property text
+11:46:30,366 PyQt5.uic.uiparser DEBUG push QPushButton energyHistButton
+11:46:30,366 PyQt5.uic.uiparser DEBUG pop widget QPushButton energyHistButton
+11:46:30,366 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QFrame object at 0x0000021FC09C34C0>
+11:46:30,366 PyQt5.uic.properties DEBUG setting property minimumSize
+11:46:30,366 PyQt5.uic.properties DEBUG setting property text
+11:46:30,367 PyQt5.uic.uiparser DEBUG push QPushButton AvsBbutton
+11:46:30,367 PyQt5.uic.uiparser DEBUG pop widget QPushButton AvsBbutton
+11:46:30,367 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QFrame object at 0x0000021FC09C34C0>
+11:46:30,367 PyQt5.uic.properties DEBUG setting property minimumSize
+11:46:30,367 PyQt5.uic.properties DEBUG setting property text
+11:46:30,367 PyQt5.uic.uiparser DEBUG push QPushButton diagCalButton
+11:46:30,367 PyQt5.uic.uiparser DEBUG pop widget QPushButton diagCalButton
+11:46:30,367 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QFrame object at 0x0000021FC09C34C0>
+11:46:30,367 PyQt5.uic.properties DEBUG setting property minimumSize
+11:46:30,367 PyQt5.uic.properties DEBUG setting property text
+11:46:30,368 PyQt5.uic.uiparser DEBUG push QPushButton AvsB2Dbutton
+11:46:30,368 PyQt5.uic.uiparser DEBUG pop widget QPushButton AvsB2Dbutton
+11:46:30,368 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QFrame object at 0x0000021FC09C34C0>
+11:46:30,368 PyQt5.uic.properties DEBUG setting property minimumSize
+11:46:30,368 PyQt5.uic.properties DEBUG setting property text
+11:46:30,368 PyQt5.uic.uiparser DEBUG push QPushButton ptmButton
+11:46:30,368 PyQt5.uic.uiparser DEBUG pop widget QPushButton ptmButton
+11:46:30,368 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QFrame object at 0x0000021FC09C34C0>
+11:46:30,369 PyQt5.uic.uiparser DEBUG pop layout QGridLayout gridLayout
+11:46:30,369 PyQt5.uic.uiparser DEBUG pop widget QFrame frame
+11:46:30,369 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QGroupBox object at 0x0000021FC09C33A0>
+11:46:30,369 PyQt5.uic.properties DEBUG setting property frameShape
+11:46:30,369 PyQt5.uic.properties DEBUG setting property frameShadow
+11:46:30,369 PyQt5.uic.uiparser DEBUG push QFrame lineFitFrame
+11:46:30,370 PyQt5.uic.uiparser DEBUG push QHBoxLayout horizontalLayout_4
+11:46:30,370 PyQt5.uic.properties DEBUG setting property minimumSize
+11:46:30,370 PyQt5.uic.properties DEBUG setting property text
+11:46:30,370 PyQt5.uic.uiparser DEBUG push QLabel label_2
+11:46:30,370 PyQt5.uic.uiparser DEBUG pop widget QLabel label_2
+11:46:30,370 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QFrame object at 0x0000021FC09C38B0>
+11:46:30,371 PyQt5.uic.properties DEBUG setting property enabled
+11:46:30,371 PyQt5.uic.properties DEBUG setting property minimumSize
+11:46:30,371 PyQt5.uic.uiparser DEBUG push QComboBox lineFitComboBox
+11:46:30,371 PyQt5.uic.uiparser DEBUG pop widget QComboBox lineFitComboBox
+11:46:30,371 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QFrame object at 0x0000021FC09C38B0>
+11:46:30,372 PyQt5.uic.properties DEBUG setting property minimumSize
+11:46:30,372 PyQt5.uic.properties DEBUG setting property maximumSize
+11:46:30,372 PyQt5.uic.properties DEBUG setting property text
+11:46:30,372 PyQt5.uic.uiparser DEBUG push QPushButton lineFitComboButton
+11:46:30,372 PyQt5.uic.uiparser DEBUG pop widget QPushButton lineFitComboButton
+11:46:30,372 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QFrame object at 0x0000021FC09C38B0>
+11:46:30,373 PyQt5.uic.properties DEBUG setting property minimumSize
+11:46:30,373 PyQt5.uic.properties DEBUG setting property text
+11:46:30,373 PyQt5.uic.uiparser DEBUG push QLabel label_3
+11:46:30,373 PyQt5.uic.uiparser DEBUG pop widget QLabel label_3
+11:46:30,373 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QFrame object at 0x0000021FC09C38B0>
+11:46:30,374 PyQt5.uic.properties DEBUG setting property minimumSize
+11:46:30,374 PyQt5.uic.properties DEBUG setting property text
+11:46:30,374 PyQt5.uic.properties DEBUG setting property placeholderText
+11:46:30,374 PyQt5.uic.uiparser DEBUG push QLineEdit lineFitTextBox
+11:46:30,374 PyQt5.uic.uiparser DEBUG pop widget QLineEdit lineFitTextBox
+11:46:30,374 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QFrame object at 0x0000021FC09C38B0>
+11:46:30,374 PyQt5.uic.properties DEBUG setting property minimumSize
+11:46:30,375 PyQt5.uic.properties DEBUG setting property maximumSize
+11:46:30,375 PyQt5.uic.properties DEBUG setting property text
+11:46:30,375 PyQt5.uic.uiparser DEBUG push QPushButton lineFitTextButton
+11:46:30,375 PyQt5.uic.uiparser DEBUG pop widget QPushButton lineFitTextButton
+11:46:30,375 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QFrame object at 0x0000021FC09C38B0>
+11:46:30,375 PyQt5.uic.uiparser DEBUG pop layout QHBoxLayout horizontalLayout_4
+11:46:30,375 PyQt5.uic.uiparser DEBUG pop widget QFrame lineFitFrame
+11:46:30,375 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QGroupBox object at 0x0000021FC09C33A0>
+11:46:30,375 PyQt5.uic.uiparser DEBUG pop layout QVBoxLayout verticalLayout_3
+11:46:30,376 PyQt5.uic.uiparser DEBUG pop widget QGroupBox plotsGroup
+11:46:30,376 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QWidget object at 0x0000021FC09C3280>
+11:46:30,376 PyQt5.uic.uiparser DEBUG pop layout QVBoxLayout verticalLayout_4
+11:46:30,376 PyQt5.uic.uiparser DEBUG pop widget QWidget plotsTab
+11:46:30,376 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QTabWidget object at 0x0000021FC09C31F0>
+11:46:30,378 PyQt5.uic.uiparser DEBUG push QWidget rtpTab
+11:46:30,378 PyQt5.uic.uiparser DEBUG push QVBoxLayout verticalLayout_5
+11:46:30,378 PyQt5.uic.properties DEBUG setting property frameShape
+11:46:30,378 PyQt5.uic.properties DEBUG setting property frameShadow
+11:46:30,378 PyQt5.uic.uiparser DEBUG push QFrame frame_3
+11:46:30,378 PyQt5.uic.uiparser DEBUG push QHBoxLayout horizontalLayout_6
+11:46:30,379 PyQt5.uic.properties DEBUG setting property text
+11:46:30,379 PyQt5.uic.uiparser DEBUG push QPushButton startRTPButton
+11:46:30,379 PyQt5.uic.uiparser DEBUG pop widget QPushButton startRTPButton
+11:46:30,379 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QFrame object at 0x0000021FC09CF280>
+11:46:30,379 PyQt5.uic.properties DEBUG setting property text
+11:46:30,379 PyQt5.uic.uiparser DEBUG push QPushButton stopRTPButton
+11:46:30,380 PyQt5.uic.uiparser DEBUG pop widget QPushButton stopRTPButton
+11:46:30,380 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QFrame object at 0x0000021FC09CF280>
+11:46:30,380 PyQt5.uic.uiparser DEBUG pop layout QHBoxLayout horizontalLayout_6
+11:46:30,380 PyQt5.uic.uiparser DEBUG pop widget QFrame frame_3
+11:46:30,380 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QWidget object at 0x0000021FC09CF160>
+11:46:30,380 PyQt5.uic.uiparser DEBUG pop layout QVBoxLayout verticalLayout_5
+11:46:30,380 PyQt5.uic.uiparser DEBUG pop widget QWidget rtpTab
+11:46:30,380 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QTabWidget object at 0x0000021FC09C31F0>
+11:46:30,381 PyQt5.uic.uiparser DEBUG pop widget QTabWidget tabWidget
+11:46:30,381 PyQt5.uic.uiparser DEBUG new topwidget <massGui.massGui.MainWindow object at 0x0000021F9B09A280>
+11:46:30,381 PyQt5.uic.properties DEBUG setting property maximumSize
+11:46:30,381 PyQt5.uic.properties DEBUG setting property frameShape
+11:46:30,381 PyQt5.uic.properties DEBUG setting property frameShadow
+11:46:30,382 PyQt5.uic.uiparser DEBUG push QFrame frame_2
+11:46:30,382 PyQt5.uic.uiparser DEBUG push QHBoxLayout horizontalLayout_5
+11:46:30,382 PyQt5.uic.properties DEBUG setting property minimumSize
+11:46:30,382 PyQt5.uic.properties DEBUG setting property text
+11:46:30,382 PyQt5.uic.uiparser DEBUG push QPushButton saveCalButton
+11:46:30,382 PyQt5.uic.uiparser DEBUG pop widget QPushButton saveCalButton
+11:46:30,382 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QFrame object at 0x0000021FC09CF4C0>
+11:46:30,383 PyQt5.uic.properties DEBUG setting property minimumSize
+11:46:30,383 PyQt5.uic.properties DEBUG setting property text
+11:46:30,383 PyQt5.uic.uiparser DEBUG push QPushButton loadCalButton
+11:46:30,383 PyQt5.uic.uiparser DEBUG pop widget QPushButton loadCalButton
+11:46:30,383 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QFrame object at 0x0000021FC09CF4C0>
+11:46:30,383 PyQt5.uic.uiparser DEBUG pop layout QHBoxLayout horizontalLayout_5
+11:46:30,383 PyQt5.uic.uiparser DEBUG pop widget QFrame frame_2
+11:46:30,383 PyQt5.uic.uiparser DEBUG new topwidget <massGui.massGui.MainWindow object at 0x0000021F9B09A280>
+11:46:30,384 PyQt5.uic.uiparser DEBUG pop layout QVBoxLayout verticalLayout
+11:46:30,384 PyQt5.uic.uiparser DEBUG pop widget MainWindow Form
+11:46:30,384 PyQt5.uic.uiparser DEBUG new topwidget None
+11:46:39,265 PyQt5.uic.uiparser DEBUG uiname is Dialog
+11:46:39,268 PyQt5.uic.uiparser DEBUG toplevel widget is HistCalibrator
+11:46:39,268 PyQt5.uic.properties DEBUG setting property geometry
+11:46:39,269 PyQt5.uic.properties DEBUG setting property minimumSize
+11:46:39,269 PyQt5.uic.properties DEBUG setting property windowTitle
+11:46:39,269 PyQt5.uic.uiparser DEBUG push HistCalibrator Dialog
+11:46:39,270 PyQt5.uic.uiparser DEBUG push QHBoxLayout horizontalLayout_3
+11:46:39,271 PyQt5.uic.properties DEBUG setting property minimumSize
+11:46:39,271 PyQt5.uic.properties DEBUG setting property frameShape
+11:46:39,272 PyQt5.uic.properties DEBUG setting property frameShadow
+11:46:39,272 PyQt5.uic.uiparser DEBUG push QFrame frame
+11:46:39,272 PyQt5.uic.uiparser DEBUG push QVBoxLayout verticalLayout_2
+11:46:39,273 PyQt5.uic.properties DEBUG setting property minimumSize
+11:46:39,274 PyQt5.uic.uiparser DEBUG push HistViewer histHistViewer
+11:46:39,274 PyQt5.uic.uiparser DEBUG pop widget HistViewer histHistViewer
+11:46:39,275 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QFrame object at 0x0000021FC09CFDC0>
+11:46:39,275 PyQt5.uic.properties DEBUG setting property minimumSize
+11:46:39,276 PyQt5.uic.properties DEBUG setting property maximumSize
+11:46:39,276 PyQt5.uic.properties DEBUG setting property baseSize
+11:46:39,277 PyQt5.uic.uiparser DEBUG push StatesGrid histStatesGrid
+11:46:39,277 PyQt5.uic.uiparser DEBUG pop widget StatesGrid histStatesGrid
+11:46:39,278 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QFrame object at 0x0000021FC09CFDC0>
+11:46:39,278 PyQt5.uic.properties DEBUG setting property minimumSize
+11:46:39,278 PyQt5.uic.properties DEBUG setting property frameShape
+11:46:39,279 PyQt5.uic.properties DEBUG setting property frameShadow
+11:46:39,279 PyQt5.uic.uiparser DEBUG push QFrame frame_3
+11:46:39,280 PyQt5.uic.uiparser DEBUG push QHBoxLayout horizontalLayout_4
+11:46:39,281 PyQt5.uic.properties DEBUG setting property frameShape
+11:46:39,281 PyQt5.uic.properties DEBUG setting property frameShadow
+11:46:39,282 PyQt5.uic.uiparser DEBUG push QFrame frame_4
+11:46:39,283 PyQt5.uic.uiparser DEBUG push QVBoxLayout verticalLayout_3
+11:46:39,284 PyQt5.uic.properties DEBUG setting property minimumSize
+11:46:39,284 PyQt5.uic.properties DEBUG setting property maximumSize
+11:46:39,285 PyQt5.uic.properties DEBUG setting property title
+11:46:39,286 PyQt5.uic.uiparser DEBUG push QGroupBox csWindow
+11:46:39,286 PyQt5.uic.uiparser DEBUG push QVBoxLayout verticalLayout_4
+11:46:39,287 PyQt5.uic.properties DEBUG setting property minimumSize
+11:46:39,288 PyQt5.uic.properties DEBUG setting property text
+11:46:39,288 PyQt5.uic.uiparser DEBUG push QLabel label
+11:46:39,289 PyQt5.uic.uiparser DEBUG pop widget QLabel label
+11:46:39,290 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QGroupBox object at 0x0000021FC07FC280>
+11:46:39,291 PyQt5.uic.properties DEBUG setting property currentText
+11:46:39,292 PyQt5.uic.uiparser DEBUG push QComboBox channelBox
+11:46:39,292 PyQt5.uic.uiparser DEBUG pop widget QComboBox channelBox
+11:46:39,293 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QGroupBox object at 0x0000021FC07FC280>
+11:46:39,293 PyQt5.uic.uiparser DEBUG pop layout QVBoxLayout verticalLayout_4
+11:46:39,293 PyQt5.uic.uiparser DEBUG pop widget QGroupBox csWindow
+11:46:39,294 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QFrame object at 0x0000021FC07FC160>
+11:46:39,294 PyQt5.uic.properties DEBUG setting property frameShape
+11:46:39,295 PyQt5.uic.properties DEBUG setting property frameShadow
+11:46:39,295 PyQt5.uic.uiparser DEBUG push QFrame frame_5
+11:46:39,296 PyQt5.uic.uiparser DEBUG push QVBoxLayout verticalLayout
+11:46:39,297 PyQt5.uic.properties DEBUG setting property text
+11:46:39,298 PyQt5.uic.uiparser DEBUG push QLabel label_2
+11:46:39,299 PyQt5.uic.uiparser DEBUG pop widget QLabel label_2
+11:46:39,300 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QFrame object at 0x0000021FC07FC4C0>
+11:46:39,301 PyQt5.uic.properties DEBUG setting property enabled
+11:46:39,302 PyQt5.uic.uiparser DEBUG push QLineEdit photonCountBox
+11:46:39,303 PyQt5.uic.uiparser DEBUG pop widget QLineEdit photonCountBox
+11:46:39,303 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QFrame object at 0x0000021FC07FC4C0>
+11:46:39,304 PyQt5.uic.uiparser DEBUG pop layout QVBoxLayout verticalLayout
+11:46:39,305 PyQt5.uic.uiparser DEBUG pop widget QFrame frame_5
+11:46:39,305 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QFrame object at 0x0000021FC07FC160>
+11:46:39,305 PyQt5.uic.uiparser DEBUG pop layout QVBoxLayout verticalLayout_3
+11:46:39,306 PyQt5.uic.uiparser DEBUG pop widget QFrame frame_4
+11:46:39,306 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QFrame object at 0x0000021FC07FC040>
+11:46:39,308 PyQt5.uic.properties DEBUG setting property minimumSize
+11:46:39,308 PyQt5.uic.properties DEBUG setting property maximumSize
+11:46:39,309 PyQt5.uic.uiparser DEBUG push QTableWidget table
+11:46:39,310 PyQt5.uic.uiparser DEBUG pop widget QTableWidget table
+11:46:39,311 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QFrame object at 0x0000021FC07FC040>
+11:46:39,312 PyQt5.uic.uiparser DEBUG pop layout QHBoxLayout horizontalLayout_4
+11:46:39,312 PyQt5.uic.uiparser DEBUG pop widget QFrame frame_3
+11:46:39,312 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QFrame object at 0x0000021FC09CFDC0>
+11:46:39,313 PyQt5.uic.properties DEBUG setting property minimumSize
+11:46:39,314 PyQt5.uic.properties DEBUG setting property text
+11:46:39,314 PyQt5.uic.uiparser DEBUG push QPushButton closeButton
+11:46:39,315 PyQt5.uic.uiparser DEBUG pop widget QPushButton closeButton
+11:46:39,316 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QFrame object at 0x0000021FC09CFDC0>
+11:46:39,317 PyQt5.uic.uiparser DEBUG pop layout QVBoxLayout verticalLayout_2
+11:46:39,317 PyQt5.uic.uiparser DEBUG pop widget QFrame frame
+11:46:39,318 PyQt5.uic.uiparser DEBUG new topwidget <massGui.massless.HistCalibrator object at 0x0000021FC09CFCA0>
+11:46:39,318 PyQt5.uic.uiparser DEBUG pop layout QHBoxLayout horizontalLayout_3
+11:46:39,319 PyQt5.uic.uiparser DEBUG pop widget HistCalibrator Dialog
+11:46:39,320 PyQt5.uic.uiparser DEBUG new topwidget None
+11:46:39,322 massless DEBUG set params for histviewer
+11:46:39,413 matplotlib.font_manager DEBUG findfont: Matching sans\-serif:style=normal:variant=normal:weight=normal:stretch=normal:size=10.0.
+11:46:39,414 matplotlib.font_manager DEBUG findfont: score(<Font 'cmsy10' (cmsy10.ttf) normal normal 400 normal>) = 10.05
+11:46:39,414 matplotlib.font_manager DEBUG findfont: score(<Font 'DejaVu Sans Mono' (DejaVuSansMono.ttf) normal normal 400 normal>) = 10.05
+11:46:39,415 matplotlib.font_manager DEBUG findfont: score(<Font 'STIXSizeOneSym' (STIXSizOneSymReg.ttf) normal normal 400 normal>) = 10.05
+11:46:39,415 matplotlib.font_manager DEBUG findfont: score(<Font 'cmb10' (cmb10.ttf) normal normal 400 normal>) = 10.05
+11:46:39,415 matplotlib.font_manager DEBUG findfont: score(<Font 'DejaVu Sans Mono' (DejaVuSansMono-Bold.ttf) normal normal 700 normal>) = 10.335
+11:46:39,416 matplotlib.font_manager DEBUG findfont: score(<Font 'DejaVu Sans Mono' (DejaVuSansMono-Oblique.ttf) oblique normal 400 normal>) = 11.05
+11:46:39,416 matplotlib.font_manager DEBUG findfont: score(<Font 'STIXGeneral' (STIXGeneralItalic.ttf) italic normal 400 normal>) = 11.05
+11:46:39,416 matplotlib.font_manager DEBUG findfont: score(<Font 'STIXNonUnicode' (STIXNonUniBolIta.ttf) italic normal 700 normal>) = 11.335
+11:46:39,416 matplotlib.font_manager DEBUG findfont: score(<Font 'DejaVu Serif' (DejaVuSerif-Italic.ttf) italic normal 400 normal>) = 11.05
+11:46:39,417 matplotlib.font_manager DEBUG findfont: score(<Font 'STIXGeneral' (STIXGeneral.ttf) normal normal 400 normal>) = 10.05
+11:46:39,417 matplotlib.font_manager DEBUG findfont: score(<Font 'DejaVu Sans' (DejaVuSans-Bold.ttf) normal normal 700 normal>) = 0.33499999999999996
+11:46:39,417 matplotlib.font_manager DEBUG findfont: score(<Font 'cmr10' (cmr10.ttf) normal normal 400 normal>) = 10.05
+11:46:39,417 matplotlib.font_manager DEBUG findfont: score(<Font 'STIXGeneral' (STIXGeneralBolIta.ttf) italic normal 700 normal>) = 11.335
+11:46:39,417 matplotlib.font_manager DEBUG findfont: score(<Font 'DejaVu Sans' (DejaVuSans-Oblique.ttf) oblique normal 400 normal>) = 1.05
+11:46:39,418 matplotlib.font_manager DEBUG findfont: score(<Font 'STIXNonUnicode' (STIXNonUniIta.ttf) italic normal 400 normal>) = 11.05
+11:46:39,418 matplotlib.font_manager DEBUG findfont: score(<Font 'STIXSizeFourSym' (STIXSizFourSymReg.ttf) normal normal 400 normal>) = 10.05
+11:46:39,418 matplotlib.font_manager DEBUG findfont: score(<Font 'DejaVu Sans Display' (DejaVuSansDisplay.ttf) normal normal 400 normal>) = 10.05
+11:46:39,418 matplotlib.font_manager DEBUG findfont: score(<Font 'cmtt10' (cmtt10.ttf) normal normal 400 normal>) = 10.05
+11:46:39,418 matplotlib.font_manager DEBUG findfont: score(<Font 'DejaVu Sans' (DejaVuSans-BoldOblique.ttf) oblique normal 700 normal>) = 1.335
+11:46:39,418 matplotlib.font_manager DEBUG findfont: score(<Font 'STIXSizeThreeSym' (STIXSizThreeSymReg.ttf) normal normal 400 normal>) = 10.05
+11:46:39,418 matplotlib.font_manager DEBUG findfont: score(<Font 'DejaVu Serif' (DejaVuSerif-Bold.ttf) normal normal 700 normal>) = 10.335
+11:46:39,419 matplotlib.font_manager DEBUG findfont: score(<Font 'STIXSizeOneSym' (STIXSizOneSymBol.ttf) normal normal 700 normal>) = 10.335
+11:46:39,419 matplotlib.font_manager DEBUG findfont: score(<Font 'STIXNonUnicode' (STIXNonUniBol.ttf) normal normal 700 normal>) = 10.335
+11:46:39,419 matplotlib.font_manager DEBUG findfont: score(<Font 'STIXSizeFiveSym' (STIXSizFiveSymReg.ttf) normal normal 400 normal>) = 10.05
+11:46:39,419 matplotlib.font_manager DEBUG findfont: score(<Font 'DejaVu Serif Display' (DejaVuSerifDisplay.ttf) normal normal 400 normal>) = 10.05
+11:46:39,419 matplotlib.font_manager DEBUG findfont: score(<Font 'cmss10' (cmss10.ttf) normal normal 400 normal>) = 10.05
+11:46:39,419 matplotlib.font_manager DEBUG findfont: score(<Font 'STIXNonUnicode' (STIXNonUni.ttf) normal normal 400 normal>) = 10.05
+11:46:39,419 matplotlib.font_manager DEBUG findfont: score(<Font 'DejaVu Sans' (DejaVuSans.ttf) normal normal 400 normal>) = 0.05
+11:46:39,419 matplotlib.font_manager DEBUG findfont: score(<Font 'STIXSizeFourSym' (STIXSizFourSymBol.ttf) normal normal 700 normal>) = 10.335
+11:46:39,419 matplotlib.font_manager DEBUG findfont: score(<Font 'STIXSizeThreeSym' (STIXSizThreeSymBol.ttf) normal normal 700 normal>) = 10.335
+11:46:39,420 matplotlib.font_manager DEBUG findfont: score(<Font 'cmmi10' (cmmi10.ttf) normal normal 400 normal>) = 10.05
+11:46:39,420 matplotlib.font_manager DEBUG findfont: score(<Font 'DejaVu Serif' (DejaVuSerif.ttf) normal normal 400 normal>) = 10.05
+11:46:39,420 matplotlib.font_manager DEBUG findfont: score(<Font 'DejaVu Serif' (DejaVuSerif-BoldItalic.ttf) italic normal 700 normal>) = 11.335
+11:46:39,420 matplotlib.font_manager DEBUG findfont: score(<Font 'cmex10' (cmex10.ttf) normal normal 400 normal>) = 10.05
+11:46:39,420 matplotlib.font_manager DEBUG findfont: score(<Font 'DejaVu Sans Mono' (DejaVuSansMono-BoldOblique.ttf) oblique normal 700 normal>) = 11.335
+11:46:39,420 matplotlib.font_manager DEBUG findfont: score(<Font 'STIXGeneral' (STIXGeneralBol.ttf) normal normal 700 normal>) = 10.335
+11:46:39,420 matplotlib.font_manager DEBUG findfont: score(<Font 'STIXSizeTwoSym' (STIXSizTwoSymBol.ttf) normal normal 700 normal>) = 10.335
+11:46:39,420 matplotlib.font_manager DEBUG findfont: score(<Font 'STIXSizeTwoSym' (STIXSizTwoSymReg.ttf) normal normal 400 normal>) = 10.05
+11:46:39,420 matplotlib.font_manager DEBUG findfont: score(<Font 'Verdana' (verdana.ttf) normal normal 400 normal>) = 3.6863636363636365
+11:46:39,421 matplotlib.font_manager DEBUG findfont: score(<Font 'Microsoft JhengHei' (msjh.ttc) normal normal 400 normal>) = 10.05
+11:46:39,421 matplotlib.font_manager DEBUG findfont: score(<Font 'Century Gothic' (GOTHICBI.TTF) italic normal 700 normal>) = 11.335
+11:46:39,421 matplotlib.font_manager DEBUG findfont: score(<Font 'Californian FB' (CALIFB.TTF) normal normal 700 normal>) = 10.335
+11:46:39,421 matplotlib.font_manager DEBUG findfont: score(<Font 'Tw Cen MT' (TCB_____.TTF) normal normal 700 normal>) = 10.335
+11:46:39,421 matplotlib.font_manager DEBUG findfont: score(<Font 'Lucida Bright' (LBRITEDI.TTF) italic normal 600 normal>) = 11.24
+11:46:39,421 matplotlib.font_manager DEBUG findfont: score(<Font 'Javanese Text' (javatext.ttf) normal normal 400 normal>) = 10.05
+11:46:39,421 matplotlib.font_manager DEBUG findfont: score(<Font 'Segoe UI' (segoeuiz.ttf) italic normal 700 normal>) = 11.335
+11:46:39,421 matplotlib.font_manager DEBUG findfont: score(<Font 'Yu Gothic' (YuGothL.ttc) normal normal 300 normal>) = 10.145
+11:46:39,421 matplotlib.font_manager DEBUG findfont: score(<Font 'SimSun' (simsun.ttc) normal normal 400 normal>) = 10.05
+11:46:39,422 matplotlib.font_manager DEBUG findfont: score(<Font 'Candara' (Candaral.ttf) normal normal 400 normal>) = 10.05
+11:46:39,422 matplotlib.font_manager DEBUG findfont: score(<Font 'Cambria' (cambriai.ttf) italic normal 400 normal>) = 11.05
+11:46:39,422 matplotlib.font_manager DEBUG findfont: score(<Font 'Elephant' (ELEPHNTI.TTF) italic normal 400 normal>) = 11.05
+11:46:39,422 matplotlib.font_manager DEBUG findfont: score(<Font 'Algerian' (ALGER.TTF) normal normal 400 normal>) = 10.05
+11:46:39,422 matplotlib.font_manager DEBUG findfont: score(<Font 'Ebrima' (ebrima.ttf) normal normal 400 normal>) = 10.05
+11:46:39,422 matplotlib.font_manager DEBUG findfont: score(<Font 'Segoe Script' (segoescb.ttf) normal normal 700 normal>) = 10.335
+11:46:39,423 matplotlib.font_manager DEBUG findfont: score(<Font 'Eras Light ITC' (ERASLGHT.TTF) normal normal 400 normal>) = 10.05
+11:46:39,423 matplotlib.font_manager DEBUG findfont: score(<Font 'Microsoft New Tai Lue' (ntailub.ttf) normal normal 700 normal>) = 10.335
+11:46:39,423 matplotlib.font_manager DEBUG findfont: score(<Font 'Elephant' (ELEPHNT.TTF) normal normal 400 normal>) = 10.05
+11:46:39,423 matplotlib.font_manager DEBUG findfont: score(<Font 'Felix Titling' (FELIXTI.TTF) normal normal 400 normal>) = 10.05
+11:46:39,423 matplotlib.font_manager DEBUG findfont: score(<Font 'Monotype Corsiva' (MTCORSVA.TTF) normal normal 400 normal>) = 10.05
+11:46:39,423 matplotlib.font_manager DEBUG findfont: score(<Font 'Corbel' (corbelb.ttf) normal normal 700 normal>) = 10.335
+11:46:39,423 matplotlib.font_manager DEBUG findfont: score(<Font 'Arial' (ARIALNB.TTF) normal normal 700 condensed>) = 6.8986363636363635
+11:46:39,423 matplotlib.font_manager DEBUG findfont: score(<Font 'Tahoma' (tahoma.ttf) normal normal 400 normal>) = 10.05
+11:46:39,423 matplotlib.font_manager DEBUG findfont: score(<Font 'Script MT Bold' (SCRIPTBL.TTF) normal normal 700 normal>) = 10.335
+11:46:39,424 matplotlib.font_manager DEBUG findfont: score(<Font 'Malgun Gothic' (malgunsl.ttf) normal normal 300 normal>) = 10.145
+11:46:39,424 matplotlib.font_manager DEBUG findfont: score(<Font 'Georgia' (georgiai.ttf) italic normal 400 normal>) = 11.05
+11:46:39,424 matplotlib.font_manager DEBUG findfont: score(<Font 'Book Antiqua' (ANTQUAI.TTF) italic normal 400 normal>) = 11.05
+11:46:39,424 matplotlib.font_manager DEBUG findfont: score(<Font 'Imprint MT Shadow' (IMPRISHA.TTF) normal normal 400 normal>) = 10.05
+11:46:39,424 matplotlib.font_manager DEBUG findfont: score(<Font 'Gill Sans MT Ext Condensed Bold' (GLSNECB.TTF) normal normal 400 condensed>) = 10.25
+11:46:39,424 matplotlib.font_manager DEBUG findfont: score(<Font 'Tw Cen MT Condensed Extra Bold' (TCCEB.TTF) normal normal 400 condensed>) = 10.25
+11:46:39,424 matplotlib.font_manager DEBUG findfont: score(<Font 'Comic Sans MS' (comic.ttf) normal normal 400 normal>) = 10.05
+11:46:39,425 matplotlib.font_manager DEBUG findfont: score(<Font 'Modern No. 20' (MOD20.TTF) normal normal 400 normal>) = 10.05
+11:46:39,425 matplotlib.font_manager DEBUG findfont: score(<Font 'Bradley Hand ITC' (BRADHITC.TTF) normal normal 400 normal>) = 10.05
+11:46:39,425 matplotlib.font_manager DEBUG findfont: score(<Font 'Leelawadee' (LEELAWAD.TTF) normal normal 400 normal>) = 10.05
+11:46:39,425 matplotlib.font_manager DEBUG findfont: score(<Font 'Bodoni MT' (BOD_CR.TTF) normal normal 400 condensed>) = 10.25
+11:46:39,425 matplotlib.font_manager DEBUG findfont: score(<Font 'Franklin Gothic Medium Cond' (FRAMDCN.TTF) normal normal 400 condensed>) = 10.25
+11:46:39,425 matplotlib.font_manager DEBUG findfont: score(<Font 'Leelawadee' (LEELAWDB.TTF) normal normal 700 normal>) = 10.335
+11:46:39,425 matplotlib.font_manager DEBUG findfont: score(<Font 'Mistral' (MISTRAL.TTF) normal normal 400 normal>) = 10.05
+11:46:39,425 matplotlib.font_manager DEBUG findfont: score(<Font 'Calisto MT' (CALISTB.TTF) normal normal 700 normal>) = 10.335
+11:46:39,425 matplotlib.font_manager DEBUG findfont: score(<Font 'Franklin Gothic Heavy' (FRAHVIT.TTF) italic normal 400 normal>) = 11.05
+11:46:39,426 matplotlib.font_manager DEBUG findfont: score(<Font 'Nirmala UI' (NirmalaB.ttf) normal normal 700 normal>) = 10.335
+11:46:39,426 matplotlib.font_manager DEBUG findfont: score(<Font 'Lucida Sans Typewriter' (LTYPEBO.TTF) oblique normal 600 normal>) = 11.24
+11:46:39,426 matplotlib.font_manager DEBUG findfont: score(<Font 'Eras Bold ITC' (ERASBD.TTF) normal normal 400 normal>) = 10.05
+11:46:39,426 matplotlib.font_manager DEBUG findfont: score(<Font 'Harrington' (HARNGTON.TTF) normal normal 400 normal>) = 10.05
+11:46:39,426 matplotlib.font_manager DEBUG findfont: score(<Font 'Book Antiqua' (ANTQUAB.TTF) normal normal 700 normal>) = 10.335
+11:46:39,426 matplotlib.font_manager DEBUG findfont: score(<Font 'Century' (CENTURY.TTF) normal normal 400 normal>) = 10.05
+11:46:39,426 matplotlib.font_manager DEBUG findfont: score(<Font 'Microsoft New Tai Lue' (ntailu.ttf) normal normal 400 normal>) = 10.05
+11:46:39,426 matplotlib.font_manager DEBUG findfont: score(<Font 'Garamond' (GARAIT.TTF) italic normal 400 normal>) = 11.05
+11:46:39,426 matplotlib.font_manager DEBUG findfont: score(<Font 'Corbel' (corbelz.ttf) italic normal 700 normal>) = 11.335
+11:46:39,427 matplotlib.font_manager DEBUG findfont: score(<Font 'Segoe UI Historic' (seguihis.ttf) normal normal 400 normal>) = 10.05
+11:46:39,427 matplotlib.font_manager DEBUG findfont: score(<Font 'Arial' (ariali.ttf) italic normal 400 normal>) = 7.413636363636363
+11:46:39,427 matplotlib.font_manager DEBUG findfont: score(<Font 'Lucida Handwriting' (LHANDW.TTF) italic normal 400 normal>) = 11.05
+11:46:39,427 matplotlib.font_manager DEBUG findfont: score(<Font 'Arial' (arialbd.ttf) normal normal 700 normal>) = 6.698636363636363
+11:46:39,427 matplotlib.font_manager DEBUG findfont: score(<Font 'Gill Sans Ultra Bold Condensed' (GILLUBCD.TTF) normal normal 400 condensed>) = 10.25
+11:46:39,427 matplotlib.font_manager DEBUG findfont: score(<Font 'Wingdings' (wingding.ttf) normal normal 400 normal>) = 10.05
+11:46:39,427 matplotlib.font_manager DEBUG findfont: score(<Font 'Kunstler Script' (KUNSTLER.TTF) normal normal 400 normal>) = 10.05
+11:46:39,427 matplotlib.font_manager DEBUG findfont: score(<Font 'Lucida Fax' (LFAXI.TTF) italic normal 400 normal>) = 11.05
+11:46:39,428 matplotlib.font_manager DEBUG findfont: score(<Font 'Candara' (Candara.ttf) normal normal 400 normal>) = 10.05
+11:46:39,428 matplotlib.font_manager DEBUG findfont: score(<Font 'Papyrus' (PAPYRUS.TTF) normal normal 400 normal>) = 10.05
+11:46:39,428 matplotlib.font_manager DEBUG findfont: score(<Font 'Trebuchet MS' (trebucit.ttf) italic normal 400 normal>) = 11.05
+11:46:39,429 matplotlib.font_manager DEBUG findfont: score(<Font 'Segoe Print' (segoeprb.ttf) normal normal 700 normal>) = 10.335
+11:46:39,429 matplotlib.font_manager DEBUG findfont: score(<Font 'Gill Sans MT' (GILBI___.TTF) italic normal 700 normal>) = 11.335
+11:46:39,429 matplotlib.font_manager DEBUG findfont: score(<Font 'Gill Sans MT' (GILI____.TTF) italic normal 400 normal>) = 11.05
+11:46:39,429 matplotlib.font_manager DEBUG findfont: score(<Font 'Lucida Sans' (LSANSD.TTF) normal normal 600 normal>) = 10.24
+11:46:39,429 matplotlib.font_manager DEBUG findfont: score(<Font 'Leelawadee UI' (LeelawUI.ttf) normal normal 400 normal>) = 10.05
+11:46:39,429 matplotlib.font_manager DEBUG findfont: score(<Font 'Impact' (impact.ttf) normal normal 400 normal>) = 10.05
+11:46:39,429 matplotlib.font_manager DEBUG findfont: score(<Font 'Agency FB' (AGENCYR.TTF) normal normal 400 normal>) = 10.05
+11:46:39,430 matplotlib.font_manager DEBUG findfont: score(<Font 'Rockwell Condensed' (ROCCB___.TTF) normal normal 700 condensed>) = 10.535
+11:46:39,430 matplotlib.font_manager DEBUG findfont: score(<Font 'Franklin Gothic Medium' (framdit.ttf) italic normal 400 normal>) = 11.05
+11:46:39,430 matplotlib.font_manager DEBUG findfont: score(<Font 'Perpetua Titling MT' (PERTIBD.TTF) normal normal 700 normal>) = 10.335
+11:46:39,430 matplotlib.font_manager DEBUG findfont: score(<Font 'Baskerville Old Face' (BASKVILL.TTF) normal normal 400 normal>) = 10.05
+11:46:39,430 matplotlib.font_manager DEBUG findfont: score(<Font 'Calisto MT' (CALISTBI.TTF) italic normal 700 normal>) = 11.335
+11:46:39,430 matplotlib.font_manager DEBUG findfont: score(<Font 'Microsoft YaHei' (msyhl.ttc) normal normal 290 normal>) = 10.1545
+11:46:39,430 matplotlib.font_manager DEBUG findfont: score(<Font 'Segoe Script' (segoesc.ttf) normal normal 400 normal>) = 10.05
+11:46:39,430 matplotlib.font_manager DEBUG findfont: score(<Font 'Ink Free' (Inkfree.ttf) normal normal 400 normal>) = 10.05
+11:46:39,430 matplotlib.font_manager DEBUG findfont: score(<Font 'Franklin Gothic Demi Cond' (FRADMCN.TTF) normal normal 400 condensed>) = 10.25
+11:46:39,431 matplotlib.font_manager DEBUG findfont: score(<Font 'Bahnschrift' (bahnschrift.ttf) normal normal 400 normal>) = 10.05
+11:46:39,431 matplotlib.font_manager DEBUG findfont: score(<Font 'Lucida Fax' (LFAXD.TTF) normal normal 600 normal>) = 10.24
+11:46:39,431 matplotlib.font_manager DEBUG findfont: score(<Font 'Viner Hand ITC' (VINERITC.TTF) normal normal 400 normal>) = 10.05
+11:46:39,431 matplotlib.font_manager DEBUG findfont: score(<Font 'Calibri' (calibri.ttf) normal normal 400 normal>) = 10.05
+11:46:39,431 matplotlib.font_manager DEBUG findfont: score(<Font 'Webdings' (webdings.ttf) normal normal 400 normal>) = 10.05
+11:46:39,431 matplotlib.font_manager DEBUG findfont: score(<Font 'Forte' (FORTE.TTF) normal normal 400 normal>) = 10.05
+11:46:39,431 matplotlib.font_manager DEBUG findfont: score(<Font 'Garamond' (GARA.TTF) normal normal 400 normal>) = 10.05
+11:46:39,431 matplotlib.font_manager DEBUG findfont: score(<Font 'MingLiU-ExtB' (mingliub.ttc) normal normal 400 normal>) = 10.05
+11:46:39,431 matplotlib.font_manager DEBUG findfont: score(<Font 'Candara' (Candarai.ttf) italic normal 400 normal>) = 11.05
+11:46:39,432 matplotlib.font_manager DEBUG findfont: score(<Font 'Segoe UI' (seguisli.ttf) italic normal 350 normal>) = 11.0975
+11:46:39,432 matplotlib.font_manager DEBUG findfont: score(<Font 'Cooper Black' (COOPBL.TTF) normal normal 400 normal>) = 10.05
+11:46:39,432 matplotlib.font_manager DEBUG findfont: score(<Font 'Juice ITC' (JUICE___.TTF) normal normal 400 normal>) = 10.05
+11:46:39,432 matplotlib.font_manager DEBUG findfont: score(<Font 'Palatino Linotype' (palab.ttf) normal normal 700 normal>) = 10.335
+11:46:39,432 matplotlib.font_manager DEBUG findfont: score(<Font 'Haettenschweiler' (HATTEN.TTF) normal normal 400 normal>) = 10.05
+11:46:39,432 matplotlib.font_manager DEBUG findfont: score(<Font 'Microsoft Uighur' (MSUIGHUB.TTF) normal normal 700 normal>) = 10.335
+11:46:39,432 matplotlib.font_manager DEBUG findfont: score(<Font 'MV Boli' (mvboli.ttf) normal normal 400 normal>) = 10.05
+11:46:39,432 matplotlib.font_manager DEBUG findfont: score(<Font 'Bodoni MT' (BOD_BLAR.TTF) normal normal 900 normal>) = 10.525
+11:46:39,432 matplotlib.font_manager DEBUG findfont: score(<Font 'Calibri' (calibrii.ttf) italic normal 400 normal>) = 11.05
+11:46:39,433 matplotlib.font_manager DEBUG findfont: score(<Font 'Courier New' (courbi.ttf) italic normal 700 normal>) = 11.335
+11:46:39,433 matplotlib.font_manager DEBUG findfont: score(<Font 'Microsoft PhagsPa' (phagspab.ttf) normal normal 700 normal>) = 10.335
+11:46:39,433 matplotlib.font_manager DEBUG findfont: score(<Font 'Constantia' (constan.ttf) normal normal 400 normal>) = 10.05
+11:46:39,433 matplotlib.font_manager DEBUG findfont: score(<Font 'Corbel' (corbelli.ttf) italic normal 300 normal>) = 11.145
+11:46:39,433 matplotlib.font_manager DEBUG findfont: score(<Font 'Chiller' (CHILLER.TTF) normal normal 400 normal>) = 10.05
+11:46:39,433 matplotlib.font_manager DEBUG findfont: score(<Font 'Bodoni MT' (BOD_BLAI.TTF) italic normal 900 normal>) = 11.525
+11:46:39,433 matplotlib.font_manager DEBUG findfont: score(<Font 'Gill Sans MT' (GIL_____.TTF) normal normal 400 normal>) = 10.05
+11:46:39,434 matplotlib.font_manager DEBUG findfont: score(<Font 'Yu Gothic' (YuGothB.ttc) normal normal 700 normal>) = 10.335
+11:46:39,434 matplotlib.font_manager DEBUG findfont: score(<Font 'Lucida Fax' (LFAXDI.TTF) italic normal 600 normal>) = 11.24
+11:46:39,434 matplotlib.font_manager DEBUG findfont: score(<Font 'Gadugi' (gadugi.ttf) normal normal 400 normal>) = 10.05
+11:46:39,434 matplotlib.font_manager DEBUG findfont: score(<Font 'High Tower Text' (HTOWERT.TTF) normal normal 400 normal>) = 10.05
+11:46:39,434 matplotlib.font_manager DEBUG findfont: score(<Font 'Perpetua' (PER_____.TTF) normal normal 400 normal>) = 10.05
+11:46:39,434 matplotlib.font_manager DEBUG findfont: score(<Font 'Malgun Gothic' (malgun.ttf) normal normal 400 normal>) = 10.05
+11:46:39,434 matplotlib.font_manager DEBUG findfont: score(<Font 'Berlin Sans FB Demi' (BRLNSDB.TTF) normal normal 700 normal>) = 10.335
+11:46:39,434 matplotlib.font_manager DEBUG findfont: score(<Font 'Candara' (Candarali.ttf) italic normal 400 normal>) = 11.05
+11:46:39,434 matplotlib.font_manager DEBUG findfont: score(<Font 'Onyx' (ONYX.TTF) normal normal 400 normal>) = 10.05
+11:46:39,435 matplotlib.font_manager DEBUG findfont: score(<Font 'Bodoni MT' (BOD_PSTC.TTF) normal normal 300 normal>) = 10.145
+11:46:39,435 matplotlib.font_manager DEBUG findfont: score(<Font 'Microsoft YaHei' (msyhbd.ttc) normal normal 700 normal>) = 10.335
+11:46:39,435 matplotlib.font_manager DEBUG findfont: score(<Font 'Constantia' (constanb.ttf) normal normal 700 normal>) = 10.335
+11:46:39,435 matplotlib.font_manager DEBUG findfont: score(<Font 'Palatino Linotype' (palabi.ttf) italic normal 700 normal>) = 11.335
+11:46:39,435 matplotlib.font_manager DEBUG findfont: score(<Font 'Californian FB' (CALIFI.TTF) italic normal 400 normal>) = 11.05
+11:46:39,436 matplotlib.font_manager DEBUG findfont: score(<Font 'Cambria' (cambriab.ttf) normal normal 700 normal>) = 10.335
+11:46:39,436 matplotlib.font_manager DEBUG findfont: score(<Font 'Consolas' (consola.ttf) normal normal 400 normal>) = 10.05
+11:46:39,436 matplotlib.font_manager DEBUG findfont: score(<Font 'Goudy Stout' (GOUDYSTO.TTF) normal normal 400 normal>) = 10.05
+11:46:39,436 matplotlib.font_manager DEBUG findfont: score(<Font 'Courier New' (courbd.ttf) normal normal 700 normal>) = 10.335
+11:46:39,436 matplotlib.font_manager DEBUG findfont: score(<Font 'Palatino Linotype' (palai.ttf) italic normal 400 normal>) = 11.05
+11:46:39,436 matplotlib.font_manager DEBUG findfont: score(<Font 'Bookshelf Symbol 7' (BSSYM7.TTF) normal normal 400 normal>) = 10.05
+11:46:39,436 matplotlib.font_manager DEBUG findfont: score(<Font 'Microsoft JhengHei' (msjhbd.ttc) normal normal 700 normal>) = 10.335
+11:46:39,436 matplotlib.font_manager DEBUG findfont: score(<Font 'Lucida Fax' (LFAX.TTF) normal normal 400 normal>) = 10.05
+11:46:39,436 matplotlib.font_manager DEBUG findfont: score(<Font 'Parchment' (PARCHM.TTF) normal normal 400 normal>) = 10.05
+11:46:39,436 matplotlib.font_manager DEBUG findfont: score(<Font 'Perpetua' (PERBI___.TTF) italic normal 700 normal>) = 11.335
+11:46:39,436 matplotlib.font_manager DEBUG findfont: score(<Font 'Bodoni MT' (BOD_I.TTF) italic normal 400 normal>) = 11.05
+11:46:39,437 matplotlib.font_manager DEBUG findfont: score(<Font 'Gloucester MT Extra Condensed' (GLECB.TTF) normal normal 400 condensed>) = 10.25
+11:46:39,437 matplotlib.font_manager DEBUG findfont: score(<Font 'Old English Text MT' (OLDENGL.TTF) normal normal 400 normal>) = 10.05
+11:46:39,437 matplotlib.font_manager DEBUG findfont: score(<Font 'Arial Rounded MT Bold' (ARLRDBD.TTF) normal normal 400 normal>) = 10.05
+11:46:39,437 matplotlib.font_manager DEBUG findfont: score(<Font 'Century Gothic' (GOTHICI.TTF) italic normal 400 normal>) = 11.05
+11:46:39,437 matplotlib.font_manager DEBUG findfont: score(<Font 'Lucida Bright' (LBRITEI.TTF) italic normal 400 normal>) = 11.05
+11:46:39,437 matplotlib.font_manager DEBUG findfont: score(<Font 'Georgia' (georgia.ttf) normal normal 400 normal>) = 10.05
+11:46:39,437 matplotlib.font_manager DEBUG findfont: score(<Font 'Segoe UI Symbol' (seguisym.ttf) normal normal 400 normal>) = 10.05
+11:46:39,437 matplotlib.font_manager DEBUG findfont: score(<Font 'Malgun Gothic' (malgunbd.ttf) normal normal 700 normal>) = 10.335
+11:46:39,437 matplotlib.font_manager DEBUG findfont: score(<Font 'Cambria' (cambriaz.ttf) italic normal 700 normal>) = 11.335
+11:46:39,438 matplotlib.font_manager DEBUG findfont: score(<Font 'Berlin Sans FB' (BRLNSB.TTF) normal normal 700 normal>) = 10.335
+11:46:39,438 matplotlib.font_manager DEBUG findfont: score(<Font 'Century Schoolbook' (SCHLBKB.TTF) normal normal 700 normal>) = 10.335
+11:46:39,438 matplotlib.font_manager DEBUG findfont: score(<Font 'Snap ITC' (SNAP____.TTF) normal normal 400 normal>) = 10.05
+11:46:39,438 matplotlib.font_manager DEBUG findfont: score(<Font 'Jokerman' (JOKERMAN.TTF) normal normal 400 normal>) = 10.05
+11:46:39,438 matplotlib.font_manager DEBUG findfont: score(<Font 'Lucida Sans Typewriter' (LTYPEO.TTF) oblique normal 400 normal>) = 11.05
+11:46:39,438 matplotlib.font_manager DEBUG findfont: score(<Font 'Yu Gothic' (YuGothR.ttc) normal normal 400 normal>) = 10.05
+11:46:39,438 matplotlib.font_manager DEBUG findfont: score(<Font 'Times New Roman' (timesbd.ttf) normal normal 700 normal>) = 10.335
+11:46:39,438 matplotlib.font_manager DEBUG findfont: score(<Font 'Arial' (arial.ttf) normal normal 400 normal>) = 6.413636363636363
+11:46:39,438 matplotlib.font_manager DEBUG findfont: score(<Font 'Century Schoolbook' (SCHLBKI.TTF) italic normal 400 normal>) = 11.05
+11:46:39,439 matplotlib.font_manager DEBUG findfont: score(<Font 'Consolas' (consolab.ttf) normal normal 700 normal>) = 10.335
+11:46:39,439 matplotlib.font_manager DEBUG findfont: score(<Font 'Calibri' (calibrib.ttf) normal normal 700 normal>) = 10.335
+11:46:39,439 matplotlib.font_manager DEBUG findfont: score(<Font 'Trebuchet MS' (trebucbi.ttf) italic normal 700 normal>) = 11.335
+11:46:39,439 matplotlib.font_manager DEBUG findfont: score(<Font 'Bodoni MT' (BOD_BI.TTF) italic normal 700 normal>) = 11.335
+11:46:39,439 matplotlib.font_manager DEBUG findfont: score(<Font 'Mongolian Baiti' (monbaiti.ttf) normal normal 400 normal>) = 10.05
+11:46:39,439 matplotlib.font_manager DEBUG findfont: score(<Font 'Tw Cen MT' (TCM_____.TTF) normal normal 400 normal>) = 10.05
+11:46:39,439 matplotlib.font_manager DEBUG findfont: score(<Font 'Blackadder ITC' (ITCBLKAD.TTF) normal normal 400 normal>) = 10.05
+11:46:39,439 matplotlib.font_manager DEBUG findfont: score(<Font 'Bookman Old Style' (BOOKOS.TTF) normal normal 300 normal>) = 10.145
+11:46:39,439 matplotlib.font_manager DEBUG findfont: score(<Font 'Franklin Gothic Book' (FRABKIT.TTF) italic normal 400 normal>) = 11.05
+11:46:39,440 matplotlib.font_manager DEBUG findfont: score(<Font 'Yu Gothic' (YuGothM.ttc) normal normal 500 normal>) = 10.145
+11:46:39,440 matplotlib.font_manager DEBUG findfont: score(<Font 'Rockwell' (ROCKI.TTF) italic normal 400 normal>) = 11.05
+11:46:39,440 matplotlib.font_manager DEBUG findfont: score(<Font 'Informal Roman' (INFROMAN.TTF) normal normal 400 normal>) = 10.05
+11:46:39,440 matplotlib.font_manager DEBUG findfont: score(<Font 'Stencil' (STENCIL.TTF) normal normal 400 normal>) = 10.05
+11:46:39,440 matplotlib.font_manager DEBUG findfont: score(<Font 'Ebrima' (ebrimabd.ttf) normal normal 700 normal>) = 10.335
+11:46:39,440 matplotlib.font_manager DEBUG findfont: score(<Font 'Segoe UI' (seguisb.ttf) normal normal 600 normal>) = 10.24
+11:46:39,440 matplotlib.font_manager DEBUG findfont: score(<Font 'Berlin Sans FB' (BRLNSR.TTF) normal normal 400 normal>) = 10.05
+11:46:39,440 matplotlib.font_manager DEBUG findfont: score(<Font 'Copperplate Gothic Bold' (COPRGTB.TTF) normal normal 400 normal>) = 10.05
+11:46:39,441 matplotlib.font_manager DEBUG findfont: score(<Font 'Myanmar Text' (mmrtextb.ttf) normal normal 700 normal>) = 10.335
+11:46:39,441 matplotlib.font_manager DEBUG findfont: score(<Font 'Palatino Linotype' (pala.ttf) normal normal 400 normal>) = 10.05
+11:46:39,441 matplotlib.font_manager DEBUG findfont: score(<Font 'Lucida Sans' (LSANSI.TTF) italic normal 400 normal>) = 11.05
+11:46:39,441 matplotlib.font_manager DEBUG findfont: score(<Font 'Segoe UI' (seguibl.ttf) normal normal 900 normal>) = 10.525
+11:46:39,441 matplotlib.font_manager DEBUG findfont: score(<Font 'Tempus Sans ITC' (TEMPSITC.TTF) normal normal 400 normal>) = 10.05
+11:46:39,441 matplotlib.font_manager DEBUG findfont: score(<Font 'Microsoft YaHei' (msyh.ttc) normal normal 400 normal>) = 10.05
+11:46:39,441 matplotlib.font_manager DEBUG findfont: score(<Font 'OCR A Extended' (OCRAEXT.TTF) normal normal 400 expanded>) = 10.25
+11:46:39,441 matplotlib.font_manager DEBUG findfont: score(<Font 'Bell MT' (BELLI.TTF) italic normal 400 normal>) = 11.05
+11:46:39,441 matplotlib.font_manager DEBUG findfont: score(<Font 'Palace Script MT' (PALSCRI.TTF) normal normal 400 normal>) = 10.05
+11:46:39,441 matplotlib.font_manager DEBUG findfont: score(<Font 'Myanmar Text' (mmrtext.ttf) normal normal 400 normal>) = 10.05
+11:46:39,442 matplotlib.font_manager DEBUG findfont: score(<Font 'Leelawadee UI' (LeelUIsl.ttf) normal normal 350 normal>) = 10.0975
+11:46:39,442 matplotlib.font_manager DEBUG findfont: score(<Font 'Wingdings 3' (WINGDNG3.TTF) normal normal 400 normal>) = 10.05
+11:46:39,442 matplotlib.font_manager DEBUG findfont: score(<Font 'Rockwell Extra Bold' (ROCKEB.TTF) normal normal 800 normal>) = 10.43
+11:46:39,442 matplotlib.font_manager DEBUG findfont: score(<Font 'Corbel' (corbell.ttf) normal normal 300 normal>) = 10.145
+11:46:39,443 matplotlib.font_manager DEBUG findfont: score(<Font 'Calisto MT' (CALIST.TTF) normal normal 400 normal>) = 10.05
+11:46:39,443 matplotlib.font_manager DEBUG findfont: score(<Font 'Brush Script MT' (BRUSHSCI.TTF) italic normal 400 normal>) = 11.05
+11:46:39,443 matplotlib.font_manager DEBUG findfont: score(<Font 'Arial' (ARIALNBI.TTF) italic normal 700 condensed>) = 7.8986363636363635
+11:46:39,444 matplotlib.font_manager DEBUG findfont: score(<Font 'Segoe Print' (segoepr.ttf) normal normal 400 normal>) = 10.05
+11:46:39,444 matplotlib.font_manager DEBUG findfont: score(<Font 'Wingdings 2' (WINGDNG2.TTF) normal normal 400 normal>) = 10.05
+11:46:39,444 matplotlib.font_manager DEBUG findfont: score(<Font 'Segoe MDL2 Assets' (segmdl2.ttf) normal normal 400 normal>) = 10.05
+11:46:39,444 matplotlib.font_manager DEBUG findfont: score(<Font 'MS Gothic' (msgothic.ttc) normal normal 400 normal>) = 10.05
+11:46:39,444 matplotlib.font_manager DEBUG findfont: score(<Font 'High Tower Text' (HTOWERTI.TTF) italic normal 400 normal>) = 11.05
+11:46:39,444 matplotlib.font_manager DEBUG findfont: score(<Font 'Arial' (ariblk.ttf) normal normal 900 normal>) = 6.888636363636364
+11:46:39,444 matplotlib.font_manager DEBUG findfont: score(<Font 'Nirmala UI' (NirmalaS.ttf) normal normal 350 normal>) = 10.0975
+11:46:39,444 matplotlib.font_manager DEBUG findfont: score(<Font 'Microsoft JhengHei' (msjhl.ttc) normal normal 290 normal>) = 10.1545
+11:46:39,444 matplotlib.font_manager DEBUG findfont: score(<Font 'Curlz MT' (CURLZ___.TTF) normal normal 400 normal>) = 10.05
+11:46:39,445 matplotlib.font_manager DEBUG findfont: score(<Font 'Consolas' (consolai.ttf) italic normal 400 normal>) = 11.05
+11:46:39,445 matplotlib.font_manager DEBUG findfont: score(<Font 'Rockwell' (ROCKB.TTF) normal normal 700 normal>) = 10.335
+11:46:39,445 matplotlib.font_manager DEBUG findfont: score(<Font 'Dubai' (DUBAI-LIGHT.TTF) normal normal 300 normal>) = 10.145
+11:46:39,445 matplotlib.font_manager DEBUG findfont: score(<Font 'Bookman Old Style' (BOOKOSB.TTF) normal normal 600 normal>) = 10.24
+11:46:39,445 matplotlib.font_manager DEBUG findfont: score(<Font 'Book Antiqua' (BKANT.TTF) normal normal 400 normal>) = 10.05
+11:46:39,445 matplotlib.font_manager DEBUG findfont: score(<Font 'Times New Roman' (timesi.ttf) italic normal 400 normal>) = 11.05
+11:46:39,445 matplotlib.font_manager DEBUG findfont: score(<Font 'Gadugi' (gadugib.ttf) normal normal 700 normal>) = 10.335
+11:46:39,445 matplotlib.font_manager DEBUG findfont: score(<Font 'Wide Latin' (LATINWD.TTF) normal normal 400 expanded>) = 10.25
+11:46:39,445 matplotlib.font_manager DEBUG findfont: score(<Font 'Britannic Bold' (BRITANIC.TTF) normal normal 400 normal>) = 10.05
+11:46:39,446 matplotlib.font_manager DEBUG findfont: score(<Font 'Leelawadee UI' (LeelaUIb.ttf) normal normal 700 normal>) = 10.335
+11:46:39,446 matplotlib.font_manager DEBUG findfont: score(<Font 'Candara' (Candarab.ttf) normal normal 700 normal>) = 10.335
+11:46:39,446 matplotlib.font_manager DEBUG findfont: score(<Font 'Marlett' (marlett.ttf) normal normal 500 normal>) = 10.145
+11:46:39,446 matplotlib.font_manager DEBUG findfont: score(<Font 'Bernard MT Condensed' (BERNHC.TTF) normal normal 400 condensed>) = 10.25
+11:46:39,446 matplotlib.font_manager DEBUG findfont: score(<Font 'Microsoft Tai Le' (taile.ttf) normal normal 400 normal>) = 10.05
+11:46:39,446 matplotlib.font_manager DEBUG findfont: score(<Font 'Bodoni MT' (BOD_B.TTF) normal normal 700 normal>) = 10.335
+11:46:39,446 matplotlib.font_manager DEBUG findfont: score(<Font 'Comic Sans MS' (comici.ttf) italic normal 400 normal>) = 11.05
+11:46:39,446 matplotlib.font_manager DEBUG findfont: score(<Font 'MS Reference Sans Serif' (REFSAN.TTF) normal normal 400 normal>) = 10.05
+11:46:39,446 matplotlib.font_manager DEBUG findfont: score(<Font 'Magneto' (MAGNETOB.TTF) normal normal 700 normal>) = 10.335
+11:46:39,446 matplotlib.font_manager DEBUG findfont: score(<Font 'Lucida Console' (lucon.ttf) normal normal 400 normal>) = 10.05
+11:46:39,447 matplotlib.font_manager DEBUG findfont: score(<Font 'Trebuchet MS' (trebuc.ttf) normal normal 400 normal>) = 10.05
+11:46:39,447 matplotlib.font_manager DEBUG findfont: score(<Font 'Segoe UI' (seguili.ttf) italic normal 300 normal>) = 11.145
+11:46:39,447 matplotlib.font_manager DEBUG findfont: score(<Font 'Bookman Old Style' (BOOKOSI.TTF) italic normal 300 normal>) = 11.145
+11:46:39,447 matplotlib.font_manager DEBUG findfont: score(<Font 'HoloLens MDL2 Assets' (holomdl2.ttf) normal normal 400 normal>) = 10.05
+11:46:39,447 matplotlib.font_manager DEBUG findfont: score(<Font 'Lucida Sans' (LSANS.TTF) normal normal 400 normal>) = 10.05
+11:46:39,447 matplotlib.font_manager DEBUG findfont: score(<Font 'Eras Medium ITC' (ERASMD.TTF) normal normal 400 normal>) = 10.05
+11:46:39,447 matplotlib.font_manager DEBUG findfont: score(<Font 'Pristina' (PRISTINA.TTF) normal normal 400 normal>) = 10.05
+11:46:39,447 matplotlib.font_manager DEBUG findfont: score(<Font 'Verdana' (verdanaz.ttf) italic normal 700 normal>) = 4.971363636363637
+11:46:39,447 matplotlib.font_manager DEBUG findfont: score(<Font 'Bodoni MT' (BOD_R.TTF) normal normal 400 normal>) = 10.05
+11:46:39,447 matplotlib.font_manager DEBUG findfont: score(<Font 'Kristen ITC' (ITCKRIST.TTF) normal normal 400 normal>) = 10.05
+11:46:39,448 matplotlib.font_manager DEBUG findfont: score(<Font 'Playbill' (PLAYBILL.TTF) normal normal 400 normal>) = 10.05
+11:46:39,448 matplotlib.font_manager DEBUG findfont: score(<Font 'Bookman Old Style' (BOOKOSBI.TTF) italic normal 600 normal>) = 11.24
+11:46:39,448 matplotlib.font_manager DEBUG findfont: score(<Font 'Gill Sans MT' (GILB____.TTF) normal normal 700 normal>) = 10.335
+11:46:39,448 matplotlib.font_manager DEBUG findfont: score(<Font 'Times New Roman' (timesbi.ttf) italic normal 700 normal>) = 11.335
+11:46:39,448 matplotlib.font_manager DEBUG findfont: score(<Font 'Rockwell Condensed' (ROCC____.TTF) normal normal 400 condensed>) = 10.25
+11:46:39,448 matplotlib.font_manager DEBUG findfont: score(<Font 'Calibri' (calibriz.ttf) italic normal 700 normal>) = 11.335
+11:46:39,448 matplotlib.font_manager DEBUG findfont: score(<Font 'SimSun-ExtB' (simsunb.ttf) normal normal 400 normal>) = 10.05
+11:46:39,448 matplotlib.font_manager DEBUG findfont: score(<Font 'Arial' (arialbi.ttf) italic normal 700 normal>) = 7.698636363636363
+11:46:39,448 matplotlib.font_manager DEBUG findfont: score(<Font 'Book Antiqua' (ANTQUABI.TTF) italic normal 700 normal>) = 11.335
+11:46:39,449 matplotlib.font_manager DEBUG findfont: score(<Font 'Sitka Small' (SitkaI.ttc) italic normal 400 normal>) = 11.05
+11:46:39,449 matplotlib.font_manager DEBUG findfont: score(<Font 'Niagara Engraved' (NIAGENG.TTF) normal normal 400 normal>) = 10.05
+11:46:39,449 matplotlib.font_manager DEBUG findfont: score(<Font 'Segoe UI' (segoeuib.ttf) normal normal 700 normal>) = 10.335
+11:46:39,449 matplotlib.font_manager DEBUG findfont: score(<Font 'Courier New' (cour.ttf) normal normal 400 normal>) = 10.05
+11:46:39,450 matplotlib.font_manager DEBUG findfont: score(<Font 'Tw Cen MT' (TCBI____.TTF) italic normal 700 normal>) = 11.335
+11:46:39,450 matplotlib.font_manager DEBUG findfont: score(<Font 'Bodoni MT' (BOD_CBI.TTF) italic normal 700 condensed>) = 11.535
+11:46:39,450 matplotlib.font_manager DEBUG findfont: score(<Font 'Gabriola' (Gabriola.ttf) normal normal 400 normal>) = 10.05
+11:46:39,450 matplotlib.font_manager DEBUG findfont: score(<Font 'Corbel' (corbeli.ttf) italic normal 400 normal>) = 11.05
+11:46:39,450 matplotlib.font_manager DEBUG findfont: score(<Font 'Freestyle Script' (FREESCPT.TTF) normal normal 400 normal>) = 10.05
+11:46:39,450 matplotlib.font_manager DEBUG findfont: score(<Font 'Gill Sans MT Condensed' (GILC____.TTF) normal normal 400 condensed>) = 10.25
+11:46:39,450 matplotlib.font_manager DEBUG findfont: score(<Font 'Franklin Gothic Book' (FRABK.TTF) normal normal 400 normal>) = 10.05
+11:46:39,450 matplotlib.font_manager DEBUG findfont: score(<Font 'Franklin Gothic Demi' (FRADM.TTF) normal normal 400 normal>) = 10.05
+11:46:39,450 matplotlib.font_manager DEBUG findfont: score(<Font 'Sitka Small' (SitkaB.ttc) normal normal 700 normal>) = 10.335
+11:46:39,451 matplotlib.font_manager DEBUG findfont: score(<Font 'Franklin Gothic Demi' (FRADMIT.TTF) italic normal 400 normal>) = 11.05
+11:46:39,451 matplotlib.font_manager DEBUG findfont: score(<Font 'Comic Sans MS' (comicbd.ttf) normal normal 700 normal>) = 10.335
+11:46:39,451 matplotlib.font_manager DEBUG findfont: score(<Font 'Century Schoolbook' (CENSCBK.TTF) normal normal 400 normal>) = 10.05
+11:46:39,451 matplotlib.font_manager DEBUG findfont: score(<Font 'Microsoft Himalaya' (himalaya.ttf) normal normal 400 normal>) = 10.05
+11:46:39,451 matplotlib.font_manager DEBUG findfont: score(<Font 'Lucida Sans Typewriter' (LTYPE.TTF) normal normal 400 normal>) = 10.05
+11:46:39,451 matplotlib.font_manager DEBUG findfont: score(<Font 'Segoe UI' (segoeuii.ttf) italic normal 400 normal>) = 11.05
+11:46:39,451 matplotlib.font_manager DEBUG findfont: score(<Font 'Georgia' (georgiab.ttf) normal normal 700 normal>) = 10.335
+11:46:39,451 matplotlib.font_manager DEBUG findfont: score(<Font 'Californian FB' (CALIFR.TTF) normal normal 400 normal>) = 10.05
+11:46:39,451 matplotlib.font_manager DEBUG findfont: score(<Font 'Tw Cen MT Condensed' (TCCM____.TTF) normal normal 400 condensed>) = 10.25
+11:46:39,451 matplotlib.font_manager DEBUG findfont: score(<Font 'Harlow Solid Italic' (HARLOWSI.TTF) italic normal 400 normal>) = 11.05
+11:46:39,452 matplotlib.font_manager DEBUG findfont: score(<Font 'Consolas' (consolaz.ttf) italic normal 700 normal>) = 11.335
+11:46:39,452 matplotlib.font_manager DEBUG findfont: score(<Font 'Calisto MT' (CALISTI.TTF) italic normal 400 normal>) = 11.05
+11:46:39,452 matplotlib.font_manager DEBUG findfont: score(<Font 'Gigi' (GIGI.TTF) normal normal 400 normal>) = 10.05
+11:46:39,452 matplotlib.font_manager DEBUG findfont: score(<Font 'Goudy Old Style' (GOUDOS.TTF) normal normal 400 normal>) = 10.05
+11:46:39,452 matplotlib.font_manager DEBUG findfont: score(<Font 'Bodoni MT' (BOD_CI.TTF) italic normal 400 condensed>) = 11.25
+11:46:39,452 matplotlib.font_manager DEBUG findfont: score(<Font 'Copperplate Gothic Light' (COPRGTL.TTF) normal normal 400 normal>) = 10.05
+11:46:39,452 matplotlib.font_manager DEBUG findfont: score(<Font 'Segoe UI' (segoeuisl.ttf) normal normal 350 normal>) = 10.0975
+11:46:39,452 matplotlib.font_manager DEBUG findfont: score(<Font 'Dubai' (DUBAI-MEDIUM.TTF) normal normal 500 normal>) = 10.145
+11:46:39,452 matplotlib.font_manager DEBUG findfont: score(<Font 'Perpetua Titling MT' (PERTILI.TTF) normal normal 300 normal>) = 10.145
+11:46:39,453 matplotlib.font_manager DEBUG findfont: score(<Font 'Arial' (ARIALN.TTF) normal normal 400 condensed>) = 6.613636363636363
+11:46:39,453 matplotlib.font_manager DEBUG findfont: score(<Font 'Times New Roman' (times.ttf) normal normal 400 normal>) = 10.05
+11:46:39,453 matplotlib.font_manager DEBUG findfont: score(<Font 'Poor Richard' (POORICH.TTF) normal normal 400 normal>) = 10.05
+11:46:39,453 matplotlib.font_manager DEBUG findfont: score(<Font 'Calibri' (calibril.ttf) normal normal 300 normal>) = 10.145
+11:46:39,453 matplotlib.font_manager DEBUG findfont: score(<Font 'Franklin Gothic Medium' (framd.ttf) normal normal 400 normal>) = 10.05
+11:46:39,453 matplotlib.font_manager DEBUG findfont: score(<Font 'Nirmala UI' (Nirmala.ttf) normal normal 400 normal>) = 10.05
+11:46:39,453 matplotlib.font_manager DEBUG findfont: score(<Font 'Lucida Sans Typewriter' (LTYPEB.TTF) normal normal 600 normal>) = 10.24
+11:46:39,453 matplotlib.font_manager DEBUG findfont: score(<Font 'Constantia' (constani.ttf) italic normal 400 normal>) = 11.05
+11:46:39,454 matplotlib.font_manager DEBUG findfont: score(<Font 'Vivaldi' (VIVALDII.TTF) italic normal 400 normal>) = 11.05
+11:46:39,454 matplotlib.font_manager DEBUG findfont: score(<Font 'Microsoft Yi Baiti' (msyi.ttf) normal normal 400 normal>) = 10.05
+11:46:39,454 matplotlib.font_manager DEBUG findfont: score(<Font 'Microsoft Uighur' (MSUIGHUR.TTF) normal normal 400 normal>) = 10.05
+11:46:39,454 matplotlib.font_manager DEBUG findfont: score(<Font 'Candara' (Candaraz.ttf) italic normal 700 normal>) = 11.335
+11:46:39,454 matplotlib.font_manager DEBUG findfont: score(<Font 'Verdana' (verdanab.ttf) normal normal 700 normal>) = 3.9713636363636367
+11:46:39,454 matplotlib.font_manager DEBUG findfont: score(<Font 'Bell MT' (BELL.TTF) normal normal 400 normal>) = 10.05
+11:46:39,454 matplotlib.font_manager DEBUG findfont: score(<Font 'MT Extra' (MTEXTRA.TTF) normal normal 400 normal>) = 10.05
+11:46:39,454 matplotlib.font_manager DEBUG findfont: score(<Font 'Calibri' (calibrili.ttf) italic normal 300 normal>) = 11.145
+11:46:39,454 matplotlib.font_manager DEBUG findfont: score(<Font 'Segoe UI' (seguibli.ttf) italic normal 900 normal>) = 11.525
+11:46:39,455 matplotlib.font_manager DEBUG findfont: score(<Font 'Microsoft PhagsPa' (phagspa.ttf) normal normal 400 normal>) = 10.05
+11:46:39,455 matplotlib.font_manager DEBUG findfont: score(<Font 'Courier New' (couri.ttf) italic normal 400 normal>) = 11.05
+11:46:39,455 matplotlib.font_manager DEBUG findfont: score(<Font 'Franklin Gothic Heavy' (FRAHV.TTF) normal normal 400 normal>) = 10.05
+11:46:39,455 matplotlib.font_manager DEBUG findfont: score(<Font 'Georgia' (georgiaz.ttf) italic normal 700 normal>) = 11.335
+11:46:39,455 matplotlib.font_manager DEBUG findfont: score(<Font 'Dubai' (DUBAI-BOLD.TTF) normal normal 700 normal>) = 10.335
+11:46:39,455 matplotlib.font_manager DEBUG findfont: score(<Font 'Corbel' (corbel.ttf) normal normal 400 normal>) = 10.05
+11:46:39,455 matplotlib.font_manager DEBUG findfont: score(<Font 'Segoe UI Emoji' (seguiemj.ttf) normal normal 400 normal>) = 10.05
+11:46:39,455 matplotlib.font_manager DEBUG findfont: score(<Font 'Goudy Old Style' (GOUDOSB.TTF) normal normal 700 normal>) = 10.335
+11:46:39,455 matplotlib.font_manager DEBUG findfont: score(<Font 'Constantia' (constanz.ttf) italic normal 700 normal>) = 11.335
+11:46:39,456 matplotlib.font_manager DEBUG findfont: score(<Font 'Agency FB' (AGENCYB.TTF) normal normal 700 normal>) = 10.335
+11:46:39,456 matplotlib.font_manager DEBUG findfont: score(<Font 'Verdana' (verdanai.ttf) italic normal 400 normal>) = 4.6863636363636365
+11:46:39,456 matplotlib.font_manager DEBUG findfont: score(<Font 'Lucida Bright' (LBRITED.TTF) normal normal 600 normal>) = 10.24
+11:46:39,457 matplotlib.font_manager DEBUG findfont: score(<Font 'Lucida Sans' (LSANSDI.TTF) italic normal 600 normal>) = 11.24
+11:46:39,457 matplotlib.font_manager DEBUG findfont: score(<Font 'Colonna MT' (COLONNA.TTF) normal normal 400 normal>) = 10.05
+11:46:39,457 matplotlib.font_manager DEBUG findfont: score(<Font 'Centaur' (CENTAUR.TTF) normal normal 400 normal>) = 10.05
+11:46:39,457 matplotlib.font_manager DEBUG findfont: score(<Font 'Century Gothic' (GOTHIC.TTF) normal normal 400 normal>) = 10.05
+11:46:39,457 matplotlib.font_manager DEBUG findfont: score(<Font 'Microsoft Sans Serif' (micross.ttf) normal normal 400 normal>) = 10.05
+11:46:39,457 matplotlib.font_manager DEBUG findfont: score(<Font 'Dubai' (DUBAI-REGULAR.TTF) normal normal 400 normal>) = 10.05
+11:46:39,457 matplotlib.font_manager DEBUG findfont: score(<Font 'Tw Cen MT' (TCMI____.TTF) italic normal 400 normal>) = 11.05
+11:46:39,457 matplotlib.font_manager DEBUG findfont: score(<Font 'Segoe UI' (segoeui.ttf) normal normal 400 normal>) = 10.05
+11:46:39,457 matplotlib.font_manager DEBUG findfont: score(<Font 'Lucida Calligraphy' (LCALLIG.TTF) italic normal 400 normal>) = 11.05
+11:46:39,458 matplotlib.font_manager DEBUG findfont: score(<Font 'Rockwell' (ROCK.TTF) normal normal 400 normal>) = 10.05
+11:46:39,458 matplotlib.font_manager DEBUG findfont: score(<Font 'Footlight MT Light' (FTLTLT.TTF) normal normal 300 normal>) = 10.145
+11:46:39,458 matplotlib.font_manager DEBUG findfont: score(<Font 'Comic Sans MS' (comicz.ttf) italic normal 700 normal>) = 11.335
+11:46:39,458 matplotlib.font_manager DEBUG findfont: score(<Font 'Perpetua' (PERB____.TTF) normal normal 700 normal>) = 10.335
+11:46:39,458 matplotlib.font_manager DEBUG findfont: score(<Font 'Goudy Old Style' (GOUDOSI.TTF) italic normal 400 normal>) = 11.05
+11:46:39,458 matplotlib.font_manager DEBUG findfont: score(<Font 'Segoe UI' (segoeuil.ttf) normal normal 300 normal>) = 10.145
+11:46:39,458 matplotlib.font_manager DEBUG findfont: score(<Font 'Rage Italic' (RAGE.TTF) italic normal 400 normal>) = 11.05
+11:46:39,458 matplotlib.font_manager DEBUG findfont: score(<Font 'Edwardian Script ITC' (ITCEDSCR.TTF) normal normal 400 normal>) = 10.05
+11:46:39,458 matplotlib.font_manager DEBUG findfont: score(<Font 'Broadway' (BROADW.TTF) normal normal 400 normal>) = 10.05
+11:46:39,459 matplotlib.font_manager DEBUG findfont: score(<Font 'Engravers MT' (ENGR.TTF) normal normal 500 normal>) = 10.145
+11:46:39,459 matplotlib.font_manager DEBUG findfont: score(<Font 'Bell MT' (BELLB.TTF) normal normal 700 normal>) = 10.335
+11:46:39,459 matplotlib.font_manager DEBUG findfont: score(<Font 'Lucida Bright' (LBRITE.TTF) normal normal 400 normal>) = 10.05
+11:46:39,459 matplotlib.font_manager DEBUG findfont: score(<Font 'MS Outlook' (OUTLOOK.TTF) normal normal 400 normal>) = 10.05
+11:46:39,459 matplotlib.font_manager DEBUG findfont: score(<Font 'Century Schoolbook' (SCHLBKBI.TTF) italic normal 700 normal>) = 11.335
+11:46:39,459 matplotlib.font_manager DEBUG findfont: score(<Font 'Rockwell' (ROCKBI.TTF) italic normal 700 normal>) = 11.335
+11:46:39,459 matplotlib.font_manager DEBUG findfont: score(<Font 'Arial' (ARIALNI.TTF) italic normal 400 condensed>) = 7.613636363636363
+11:46:39,459 matplotlib.font_manager DEBUG findfont: score(<Font 'Cambria' (cambria.ttc) normal normal 400 normal>) = 10.05
+11:46:39,459 matplotlib.font_manager DEBUG findfont: score(<Font 'Bauhaus 93' (BAUHS93.TTF) normal normal 400 normal>) = 10.05
+11:46:39,459 matplotlib.font_manager DEBUG findfont: score(<Font 'French Script MT' (FRSCRIPT.TTF) normal normal 400 normal>) = 10.05
+11:46:39,460 matplotlib.font_manager DEBUG findfont: score(<Font 'Tw Cen MT Condensed' (TCCB____.TTF) normal normal 700 condensed>) = 10.535
+11:46:39,460 matplotlib.font_manager DEBUG findfont: score(<Font 'Sitka Small' (SitkaZ.ttc) italic normal 700 normal>) = 11.335
+11:46:39,460 matplotlib.font_manager DEBUG findfont: score(<Font 'Lucida Sans Unicode' (l_10646.ttf) normal normal 400 normal>) = 10.05
+11:46:39,460 matplotlib.font_manager DEBUG findfont: score(<Font 'Matura MT Script Capitals' (MATURASC.TTF) normal normal 400 normal>) = 10.05
+11:46:39,460 matplotlib.font_manager DEBUG findfont: score(<Font 'Bodoni MT' (BOD_CB.TTF) normal normal 700 condensed>) = 10.535
+11:46:39,460 matplotlib.font_manager DEBUG findfont: score(<Font 'Segoe UI' (seguisbi.ttf) italic normal 600 normal>) = 11.24
+11:46:39,460 matplotlib.font_manager DEBUG findfont: score(<Font 'Niagara Solid' (NIAGSOL.TTF) normal normal 400 normal>) = 10.05
+11:46:39,460 matplotlib.font_manager DEBUG findfont: score(<Font 'Vladimir Script' (VLADIMIR.TTF) normal normal 400 normal>) = 10.05
+11:46:39,460 matplotlib.font_manager DEBUG findfont: score(<Font 'Sylfaen' (sylfaen.ttf) normal normal 400 normal>) = 10.05
+11:46:39,460 matplotlib.font_manager DEBUG findfont: score(<Font 'Trebuchet MS' (trebucbd.ttf) normal normal 700 normal>) = 10.335
+11:46:39,461 matplotlib.font_manager DEBUG findfont: score(<Font 'Perpetua' (PERI____.TTF) italic normal 400 normal>) = 11.05
+11:46:39,461 matplotlib.font_manager DEBUG findfont: score(<Font 'Tahoma' (tahomabd.ttf) normal normal 700 normal>) = 10.335
+11:46:39,461 matplotlib.font_manager DEBUG findfont: score(<Font 'Microsoft Tai Le' (taileb.ttf) normal normal 700 normal>) = 10.335
+11:46:39,461 matplotlib.font_manager DEBUG findfont: score(<Font 'Gill Sans Ultra Bold' (GILSANUB.TTF) normal normal 400 normal>) = 10.05
+11:46:39,461 matplotlib.font_manager DEBUG findfont: score(<Font 'MS Reference Specialty' (REFSPCL.TTF) normal normal 400 normal>) = 10.05
+11:46:39,461 matplotlib.font_manager DEBUG findfont: score(<Font 'Symbol' (symbol.ttf) normal normal 400 normal>) = 10.05
+11:46:39,461 matplotlib.font_manager DEBUG findfont: score(<Font 'Eras Demi ITC' (ERASDEMI.TTF) normal normal 400 normal>) = 10.05
+11:46:39,461 matplotlib.font_manager DEBUG findfont: score(<Font 'Showcard Gothic' (SHOWG.TTF) normal normal 400 normal>) = 10.05
+11:46:39,461 matplotlib.font_manager DEBUG findfont: score(<Font 'Sitka Small' (Sitka.ttc) normal normal 400 normal>) = 10.05
+11:46:39,462 matplotlib.font_manager DEBUG findfont: score(<Font 'Ravie' (RAVIE.TTF) normal normal 400 normal>) = 10.05
+11:46:39,462 matplotlib.font_manager DEBUG findfont: score(<Font 'Castellar' (CASTELAR.TTF) normal normal 400 normal>) = 10.05
+11:46:39,462 matplotlib.font_manager DEBUG findfont: score(<Font 'Maiandra GD' (MAIAN.TTF) normal normal 400 normal>) = 10.05
+11:46:39,462 matplotlib.font_manager DEBUG findfont: score(<Font 'Garamond' (GARABD.TTF) normal normal 700 normal>) = 10.335
+11:46:39,462 matplotlib.font_manager DEBUG findfont: score(<Font 'Century Gothic' (GOTHICB.TTF) normal normal 700 normal>) = 10.335
+11:46:39,462 matplotlib.font_manager DEBUG findfont: Matching sans\-serif:style=normal:variant=normal:weight=normal:stretch=normal:size=10.0 to DejaVu Sans ('C:\\anaconda\\envs\\TEShci\\lib\\matplotlib\\mpl-data\\fonts\\ttf\\DejaVuSans.ttf') with score of 0.050000.
+11:46:53,556 root INFO Massless Log
+11:46:53,582 PyQt5.uic.uiparser DEBUG uiname is Form
+11:46:53,582 PyQt5.uic.uiparser DEBUG toplevel widget is MainWindow
+11:46:53,582 PyQt5.uic.properties DEBUG setting property geometry
+11:46:53,583 PyQt5.uic.properties DEBUG setting property minimumSize
+11:46:53,583 PyQt5.uic.properties DEBUG setting property windowTitle
+11:46:53,583 PyQt5.uic.uiparser DEBUG push MainWindow Form
+11:46:53,584 PyQt5.uic.uiparser DEBUG push QVBoxLayout verticalLayout
+11:46:53,587 PyQt5.uic.properties DEBUG setting property minimumSize
+11:46:53,587 PyQt5.uic.properties DEBUG setting property maximumSize
+11:46:53,587 PyQt5.uic.properties DEBUG setting property html
+11:46:53,588 PyQt5.uic.uiparser DEBUG push QTextBrowser Title
+11:46:53,588 PyQt5.uic.uiparser DEBUG pop widget QTextBrowser Title
+11:46:53,588 PyQt5.uic.uiparser DEBUG new topwidget <massGui.massGui.MainWindow object at 0x0000024D0159A280>
+11:46:53,588 PyQt5.uic.properties DEBUG setting property minimumSize
+11:46:53,589 PyQt5.uic.properties DEBUG setting property maximumSize
+11:46:53,589 PyQt5.uic.properties DEBUG setting property title
+11:46:53,589 PyQt5.uic.uiparser DEBUG push QGroupBox fileSelectionGroup
+11:46:53,589 PyQt5.uic.uiparser DEBUG push QHBoxLayout horizontalLayout
+11:46:53,589 PyQt5.uic.properties DEBUG setting property minimumSize
+11:46:53,589 PyQt5.uic.properties DEBUG setting property text
+11:46:53,590 PyQt5.uic.uiparser DEBUG push QPushButton selectFileButton
+11:46:53,590 PyQt5.uic.uiparser DEBUG pop widget QPushButton selectFileButton
+11:46:53,590 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QGroupBox object at 0x0000024D26D1B1F0>
+11:46:53,590 PyQt5.uic.properties DEBUG setting property enabled
+11:46:53,590 PyQt5.uic.properties DEBUG setting property minimumSize
+11:46:53,590 PyQt5.uic.properties DEBUG setting property maximumSize
+11:46:53,591 PyQt5.uic.uiparser DEBUG push QTextBrowser fileTextBox
+11:46:53,591 PyQt5.uic.uiparser DEBUG pop widget QTextBrowser fileTextBox
+11:46:53,591 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QGroupBox object at 0x0000024D26D1B1F0>
+11:46:53,591 PyQt5.uic.properties DEBUG setting property minimumSize
+11:46:53,591 PyQt5.uic.properties DEBUG setting property text
+11:46:53,591 PyQt5.uic.uiparser DEBUG push QLabel label_4
+11:46:53,591 PyQt5.uic.uiparser DEBUG pop widget QLabel label_4
+11:46:53,592 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QGroupBox object at 0x0000024D26D1B1F0>
+11:46:53,593 PyQt5.uic.properties DEBUG setting property minimumSize
+11:46:53,593 PyQt5.uic.properties DEBUG setting property minimum
+11:46:53,756 PyQt5.uic.properties DEBUG setting property maximum
+11:46:53,756 PyQt5.uic.properties DEBUG setting property value
+11:46:53,757 PyQt5.uic.uiparser DEBUG push QSpinBox maxChansSpinBox
+11:46:53,757 PyQt5.uic.uiparser DEBUG pop widget QSpinBox maxChansSpinBox
+11:46:53,757 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QGroupBox object at 0x0000024D26D1B1F0>
+11:46:53,757 PyQt5.uic.uiparser DEBUG pop layout QHBoxLayout horizontalLayout
+11:46:53,757 PyQt5.uic.uiparser DEBUG pop widget QGroupBox fileSelectionGroup
+11:46:53,757 PyQt5.uic.uiparser DEBUG new topwidget <massGui.massGui.MainWindow object at 0x0000024D0159A280>
+11:46:53,758 PyQt5.uic.properties DEBUG setting property minimumSize
+11:46:53,758 PyQt5.uic.properties DEBUG setting property maximumSize
+11:46:53,758 PyQt5.uic.properties DEBUG setting property title
+11:46:53,758 PyQt5.uic.uiparser DEBUG push QGroupBox calibrationGroup
+11:46:53,758 PyQt5.uic.uiparser DEBUG push QGridLayout gridLayout_2
+11:46:53,758 PyQt5.uic.properties DEBUG setting property text
+11:46:53,758 PyQt5.uic.uiparser DEBUG push QCheckBox HCIonCheckbox
+11:46:53,759 PyQt5.uic.uiparser DEBUG pop widget QCheckBox HCIonCheckbox
+11:46:53,759 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QGroupBox object at 0x0000024D26D1B670>
+11:46:53,759 PyQt5.uic.properties DEBUG setting property text
+11:46:53,759 PyQt5.uic.uiparser DEBUG push QPushButton lineIDButton
+11:46:53,759 PyQt5.uic.uiparser DEBUG pop widget QPushButton lineIDButton
+11:46:53,759 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QGroupBox object at 0x0000024D26D1B670>
+11:46:53,759 PyQt5.uic.properties DEBUG setting property title
+11:46:53,759 PyQt5.uic.uiparser DEBUG push QGroupBox calibrationStepsBox
+11:46:53,760 PyQt5.uic.uiparser DEBUG push QVBoxLayout verticalLayout_2
+11:46:53,760 PyQt5.uic.properties DEBUG setting property text
+11:46:53,760 PyQt5.uic.properties DEBUG setting property checked
+11:46:53,760 PyQt5.uic.uiparser DEBUG push QCheckBox DCcheckbox
+11:46:53,760 PyQt5.uic.uiparser DEBUG pop widget QCheckBox DCcheckbox
+11:46:53,760 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QGroupBox object at 0x0000024D26D1B8B0>
+11:46:53,760 PyQt5.uic.properties DEBUG setting property text
+11:46:53,761 PyQt5.uic.properties DEBUG setting property checked
+11:46:53,761 PyQt5.uic.uiparser DEBUG push QCheckBox PCcheckbox
+11:46:53,761 PyQt5.uic.uiparser DEBUG pop widget QCheckBox PCcheckbox
+11:46:53,761 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QGroupBox object at 0x0000024D26D1B8B0>
+11:46:53,761 PyQt5.uic.properties DEBUG setting property text
+11:46:53,761 PyQt5.uic.properties DEBUG setting property checked
+11:46:53,761 PyQt5.uic.uiparser DEBUG push QCheckBox TDCcheckbox
+11:46:53,761 PyQt5.uic.uiparser DEBUG pop widget QCheckBox TDCcheckbox
+11:46:53,761 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QGroupBox object at 0x0000024D26D1B8B0>
+11:46:53,762 PyQt5.uic.uiparser DEBUG pop layout QVBoxLayout verticalLayout_2
+11:46:53,762 PyQt5.uic.uiparser DEBUG pop widget QGroupBox calibrationStepsBox
+11:46:53,762 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QGroupBox object at 0x0000024D26D1B670>
+11:46:53,762 PyQt5.uic.properties DEBUG setting property minimumSize
+11:46:53,762 PyQt5.uic.uiparser DEBUG push QWidget calButtonGroup
+11:46:53,762 PyQt5.uic.uiparser DEBUG push QVBoxLayout verticalLayout_6
+11:46:53,762 PyQt5.uic.properties DEBUG setting property minimumSize
+11:46:53,763 PyQt5.uic.properties DEBUG setting property text
+11:46:53,763 PyQt5.uic.uiparser DEBUG push QPushButton oneChanCalButton
+11:46:53,763 PyQt5.uic.uiparser DEBUG pop widget QPushButton oneChanCalButton
+11:46:53,763 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QWidget object at 0x0000024D26D1BB80>
+11:46:53,763 PyQt5.uic.properties DEBUG setting property minimumSize
+11:46:53,763 PyQt5.uic.properties DEBUG setting property text
+11:46:53,764 PyQt5.uic.uiparser DEBUG push QPushButton allChanCalButton
+11:46:53,764 PyQt5.uic.uiparser DEBUG pop widget QPushButton allChanCalButton
+11:46:53,764 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QWidget object at 0x0000024D26D1BB80>
+11:46:53,764 PyQt5.uic.properties DEBUG setting property minimumSize
+11:46:53,764 PyQt5.uic.properties DEBUG setting property baseSize
+11:46:53,764 PyQt5.uic.properties DEBUG setting property text
+11:46:53,764 PyQt5.uic.uiparser DEBUG push QPushButton resetCalButton
+11:46:53,764 PyQt5.uic.uiparser DEBUG pop widget QPushButton resetCalButton
+11:46:53,765 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QWidget object at 0x0000024D26D1BB80>
+11:46:53,765 PyQt5.uic.uiparser DEBUG pop layout QVBoxLayout verticalLayout_6
+11:46:53,765 PyQt5.uic.uiparser DEBUG pop widget QWidget calButtonGroup
+11:46:53,765 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QGroupBox object at 0x0000024D26D1B670>
+11:46:53,765 PyQt5.uic.properties DEBUG setting property minimumSize
+11:46:53,765 PyQt5.uic.properties DEBUG setting property text
+11:46:53,765 PyQt5.uic.uiparser DEBUG push QLabel label
+11:46:53,765 PyQt5.uic.uiparser DEBUG pop widget QLabel label
+11:46:53,765 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QGroupBox object at 0x0000024D26D1B670>
+11:46:53,766 PyQt5.uic.properties DEBUG setting property enabled
+11:46:53,766 PyQt5.uic.uiparser DEBUG push QLineEdit refChannelBox
+11:46:53,766 PyQt5.uic.uiparser DEBUG pop widget QLineEdit refChannelBox
+11:46:53,766 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QGroupBox object at 0x0000024D26D1B670>
+11:46:53,767 PyQt5.uic.properties DEBUG setting property enabled
+11:46:53,768 PyQt5.uic.properties DEBUG setting property editTriggers
+11:46:53,768 PyQt5.uic.uiparser DEBUG push QTableWidget calTable
+11:46:53,771 PyQt5.uic.uiparser DEBUG pop widget QTableWidget calTable
+11:46:53,771 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QGroupBox object at 0x0000024D26D1B670>
+11:46:53,772 PyQt5.uic.uiparser DEBUG pop layout QGridLayout gridLayout_2
+11:46:53,772 PyQt5.uic.uiparser DEBUG pop widget QGroupBox calibrationGroup
+11:46:53,772 PyQt5.uic.uiparser DEBUG new topwidget <massGui.massGui.MainWindow object at 0x0000024D0159A280>
+11:46:53,772 PyQt5.uic.properties DEBUG setting property enabled
+11:46:53,773 PyQt5.uic.properties DEBUG setting property maximumSize
+11:46:53,773 PyQt5.uic.properties DEBUG setting property currentIndex
+11:46:53,773 PyQt5.uic.uiparser DEBUG push QTabWidget tabWidget
+11:46:53,773 PyQt5.uic.uiparser DEBUG push QWidget plotsTab
+11:46:53,773 PyQt5.uic.uiparser DEBUG push QVBoxLayout verticalLayout_4
+11:46:53,774 PyQt5.uic.properties DEBUG setting property title
+11:46:53,774 PyQt5.uic.uiparser DEBUG push QGroupBox plotsGroup
+11:46:53,774 PyQt5.uic.uiparser DEBUG push QVBoxLayout verticalLayout_3
+11:46:53,774 PyQt5.uic.properties DEBUG setting property frameShape
+11:46:53,774 PyQt5.uic.properties DEBUG setting property frameShadow
+11:46:53,774 PyQt5.uic.uiparser DEBUG push QFrame frame
+11:46:53,774 PyQt5.uic.uiparser DEBUG push QGridLayout gridLayout
+11:46:53,775 PyQt5.uic.properties DEBUG setting property minimumSize
+11:46:53,775 PyQt5.uic.properties DEBUG setting property text
+11:46:53,775 PyQt5.uic.uiparser DEBUG push QPushButton energyHistButton
+11:46:53,775 PyQt5.uic.uiparser DEBUG pop widget QPushButton energyHistButton
+11:46:53,775 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QFrame object at 0x0000024D26EF34C0>
+11:46:53,775 PyQt5.uic.properties DEBUG setting property minimumSize
+11:46:53,775 PyQt5.uic.properties DEBUG setting property text
+11:46:53,775 PyQt5.uic.uiparser DEBUG push QPushButton AvsBbutton
+11:46:53,776 PyQt5.uic.uiparser DEBUG pop widget QPushButton AvsBbutton
+11:46:53,776 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QFrame object at 0x0000024D26EF34C0>
+11:46:53,776 PyQt5.uic.properties DEBUG setting property minimumSize
+11:46:53,776 PyQt5.uic.properties DEBUG setting property text
+11:46:53,776 PyQt5.uic.uiparser DEBUG push QPushButton diagCalButton
+11:46:53,776 PyQt5.uic.uiparser DEBUG pop widget QPushButton diagCalButton
+11:46:53,776 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QFrame object at 0x0000024D26EF34C0>
+11:46:53,777 PyQt5.uic.properties DEBUG setting property minimumSize
+11:46:53,777 PyQt5.uic.properties DEBUG setting property text
+11:46:53,777 PyQt5.uic.uiparser DEBUG push QPushButton AvsB2Dbutton
+11:46:53,777 PyQt5.uic.uiparser DEBUG pop widget QPushButton AvsB2Dbutton
+11:46:53,777 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QFrame object at 0x0000024D26EF34C0>
+11:46:53,777 PyQt5.uic.properties DEBUG setting property minimumSize
+11:46:53,777 PyQt5.uic.properties DEBUG setting property text
+11:46:53,777 PyQt5.uic.uiparser DEBUG push QPushButton ptmButton
+11:46:53,778 PyQt5.uic.uiparser DEBUG pop widget QPushButton ptmButton
+11:46:53,778 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QFrame object at 0x0000024D26EF34C0>
+11:46:53,778 PyQt5.uic.uiparser DEBUG pop layout QGridLayout gridLayout
+11:46:53,778 PyQt5.uic.uiparser DEBUG pop widget QFrame frame
+11:46:53,778 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QGroupBox object at 0x0000024D26EF33A0>
+11:46:53,778 PyQt5.uic.properties DEBUG setting property frameShape
+11:46:53,778 PyQt5.uic.properties DEBUG setting property frameShadow
+11:46:53,778 PyQt5.uic.uiparser DEBUG push QFrame lineFitFrame
+11:46:53,778 PyQt5.uic.uiparser DEBUG push QHBoxLayout horizontalLayout_4
+11:46:53,779 PyQt5.uic.properties DEBUG setting property minimumSize
+11:46:53,779 PyQt5.uic.properties DEBUG setting property text
+11:46:53,779 PyQt5.uic.uiparser DEBUG push QLabel label_2
+11:46:53,779 PyQt5.uic.uiparser DEBUG pop widget QLabel label_2
+11:46:53,779 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QFrame object at 0x0000024D26EF38B0>
+11:46:53,779 PyQt5.uic.properties DEBUG setting property enabled
+11:46:53,779 PyQt5.uic.properties DEBUG setting property minimumSize
+11:46:53,780 PyQt5.uic.uiparser DEBUG push QComboBox lineFitComboBox
+11:46:53,780 PyQt5.uic.uiparser DEBUG pop widget QComboBox lineFitComboBox
+11:46:53,780 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QFrame object at 0x0000024D26EF38B0>
+11:46:53,780 PyQt5.uic.properties DEBUG setting property minimumSize
+11:46:53,780 PyQt5.uic.properties DEBUG setting property maximumSize
+11:46:53,780 PyQt5.uic.properties DEBUG setting property text
+11:46:53,780 PyQt5.uic.uiparser DEBUG push QPushButton lineFitComboButton
+11:46:53,781 PyQt5.uic.uiparser DEBUG pop widget QPushButton lineFitComboButton
+11:46:53,781 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QFrame object at 0x0000024D26EF38B0>
+11:46:53,781 PyQt5.uic.properties DEBUG setting property minimumSize
+11:46:53,781 PyQt5.uic.properties DEBUG setting property text
+11:46:53,781 PyQt5.uic.uiparser DEBUG push QLabel label_3
+11:46:53,781 PyQt5.uic.uiparser DEBUG pop widget QLabel label_3
+11:46:53,781 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QFrame object at 0x0000024D26EF38B0>
+11:46:53,781 PyQt5.uic.properties DEBUG setting property minimumSize
+11:46:53,782 PyQt5.uic.properties DEBUG setting property text
+11:46:53,782 PyQt5.uic.properties DEBUG setting property placeholderText
+11:46:53,782 PyQt5.uic.uiparser DEBUG push QLineEdit lineFitTextBox
+11:46:53,782 PyQt5.uic.uiparser DEBUG pop widget QLineEdit lineFitTextBox
+11:46:53,782 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QFrame object at 0x0000024D26EF38B0>
+11:46:53,782 PyQt5.uic.properties DEBUG setting property minimumSize
+11:46:53,783 PyQt5.uic.properties DEBUG setting property maximumSize
+11:46:53,783 PyQt5.uic.properties DEBUG setting property text
+11:46:53,783 PyQt5.uic.uiparser DEBUG push QPushButton lineFitTextButton
+11:46:53,783 PyQt5.uic.uiparser DEBUG pop widget QPushButton lineFitTextButton
+11:46:53,783 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QFrame object at 0x0000024D26EF38B0>
+11:46:53,783 PyQt5.uic.uiparser DEBUG pop layout QHBoxLayout horizontalLayout_4
+11:46:53,783 PyQt5.uic.uiparser DEBUG pop widget QFrame lineFitFrame
+11:46:53,784 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QGroupBox object at 0x0000024D26EF33A0>
+11:46:53,784 PyQt5.uic.uiparser DEBUG pop layout QVBoxLayout verticalLayout_3
+11:46:53,784 PyQt5.uic.uiparser DEBUG pop widget QGroupBox plotsGroup
+11:46:53,784 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QWidget object at 0x0000024D26EF3280>
+11:46:53,784 PyQt5.uic.uiparser DEBUG pop layout QVBoxLayout verticalLayout_4
+11:46:53,784 PyQt5.uic.uiparser DEBUG pop widget QWidget plotsTab
+11:46:53,784 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QTabWidget object at 0x0000024D26EF31F0>
+11:46:53,786 PyQt5.uic.uiparser DEBUG push QWidget rtpTab
+11:46:53,786 PyQt5.uic.uiparser DEBUG push QVBoxLayout verticalLayout_5
+11:46:53,786 PyQt5.uic.properties DEBUG setting property frameShape
+11:46:53,786 PyQt5.uic.properties DEBUG setting property frameShadow
+11:46:53,786 PyQt5.uic.uiparser DEBUG push QFrame frame_3
+11:46:53,786 PyQt5.uic.uiparser DEBUG push QHBoxLayout horizontalLayout_6
+11:46:53,786 PyQt5.uic.properties DEBUG setting property text
+11:46:53,786 PyQt5.uic.uiparser DEBUG push QPushButton startRTPButton
+11:46:53,787 PyQt5.uic.uiparser DEBUG pop widget QPushButton startRTPButton
+11:46:53,787 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QFrame object at 0x0000024D26EFF280>
+11:46:53,787 PyQt5.uic.properties DEBUG setting property text
+11:46:53,787 PyQt5.uic.uiparser DEBUG push QPushButton stopRTPButton
+11:46:53,787 PyQt5.uic.uiparser DEBUG pop widget QPushButton stopRTPButton
+11:46:53,787 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QFrame object at 0x0000024D26EFF280>
+11:46:53,787 PyQt5.uic.uiparser DEBUG pop layout QHBoxLayout horizontalLayout_6
+11:46:53,787 PyQt5.uic.uiparser DEBUG pop widget QFrame frame_3
+11:46:53,788 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QWidget object at 0x0000024D26EFF160>
+11:46:53,788 PyQt5.uic.uiparser DEBUG pop layout QVBoxLayout verticalLayout_5
+11:46:53,788 PyQt5.uic.uiparser DEBUG pop widget QWidget rtpTab
+11:46:53,788 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QTabWidget object at 0x0000024D26EF31F0>
+11:46:53,788 PyQt5.uic.uiparser DEBUG pop widget QTabWidget tabWidget
+11:46:53,788 PyQt5.uic.uiparser DEBUG new topwidget <massGui.massGui.MainWindow object at 0x0000024D0159A280>
+11:46:53,788 PyQt5.uic.properties DEBUG setting property maximumSize
+11:46:53,788 PyQt5.uic.properties DEBUG setting property frameShape
+11:46:53,789 PyQt5.uic.properties DEBUG setting property frameShadow
+11:46:53,789 PyQt5.uic.uiparser DEBUG push QFrame frame_2
+11:46:53,789 PyQt5.uic.uiparser DEBUG push QHBoxLayout horizontalLayout_5
+11:46:53,789 PyQt5.uic.properties DEBUG setting property minimumSize
+11:46:53,789 PyQt5.uic.properties DEBUG setting property text
+11:46:53,789 PyQt5.uic.uiparser DEBUG push QPushButton saveCalButton
+11:46:53,789 PyQt5.uic.uiparser DEBUG pop widget QPushButton saveCalButton
+11:46:53,790 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QFrame object at 0x0000024D26EFF4C0>
+11:46:53,790 PyQt5.uic.properties DEBUG setting property minimumSize
+11:46:53,790 PyQt5.uic.properties DEBUG setting property text
+11:46:53,790 PyQt5.uic.uiparser DEBUG push QPushButton loadCalButton
+11:46:53,790 PyQt5.uic.uiparser DEBUG pop widget QPushButton loadCalButton
+11:46:53,790 PyQt5.uic.uiparser DEBUG new topwidget <PyQt5.QtWidgets.QFrame object at 0x0000024D26EFF4C0>
+11:46:53,790 PyQt5.uic.uiparser DEBUG pop layout QHBoxLayout horizontalLayout_5
+11:46:53,790 PyQt5.uic.uiparser DEBUG pop widget QFrame frame_2
+11:46:53,791 PyQt5.uic.uiparser DEBUG new topwidget <massGui.massGui.MainWindow object at 0x0000024D0159A280>
+11:46:53,791 PyQt5.uic.uiparser DEBUG pop layout QVBoxLayout verticalLayout
+11:46:53,791 PyQt5.uic.uiparser DEBUG pop widget MainWindow Form
+11:46:53,791 PyQt5.uic.uiparser DEBUG new topwidget None

@@ -274,7 +274,9 @@ class MainWindow(QtWidgets.QWidget):
             pass
         self.data.calibrateFollowingPlan(self.newestName, dlo=15,dhi=15, binsize=1, _rethrow=True) #add dlo, dhi, binsize options later
         self.plotter = HistPlotter(self) 
+        self._selected_window = self.plotter
         self.plotter.setParams(self.data, self.ds.channum, "energy", self.ds.stateLabels)
+        
         self.plotter.exec_()
 
     def diagnoseCalibration(self):
