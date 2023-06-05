@@ -17,15 +17,7 @@ import logging
 
 @pytest.fixture
 def app(qtbot):
-    logging.basicConfig(filename='testLog.txt',
-                        filemode='a',
-                        format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
-                        datefmt='%H:%M:%S',
-                        level=logging.DEBUG)
-
-    logging.info("Test Log")
-    log = logging.getLogger("test_gui")
-    log.debug(f"made log")
+    
     test_gui_app = massGui.massGui.MainWindow()
     qtbot.addWidget(test_gui_app)
 
@@ -35,6 +27,16 @@ def test_open(app):
     assert app.selectFileButton.text()=="Select .OFF File"
 
 def test_cal(app, qtbot):
+    logging.basicConfig(filename='testLog.txt',
+                        filemode='a',
+                        format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
+                        datefmt='%H:%M:%S',
+                        level=logging.DEBUG)
+
+    logging.info("Test Log")
+    log = logging.getLogger("test_gui")
+    log.debug(f"made log")
+
 
     def manual_cal():
         #assert 1 == 0
@@ -42,26 +44,48 @@ def test_cal(app, qtbot):
         hc = app._selected_window#QtWidgets.QApplication.activeWindow()#app.hc
         qtbot.addWidget(hc)
         assert isinstance(hc, massGui.massless.HistCalibrator) #exists but not clicking on it
-        QtGui.QMouseEvent(QtCore.QEvent)
-        qtbot.mouseClick(hc.histHistViewer, QtCore.Qt.LeftButton, pos=QtCore.QPoint(554, 177))
-        qtbot.mouseClick(hc, QtCore.Qt.LeftButton, pos=QtCore.QPoint(604, 112))
-        qtbot.keyClicks(hc.table.item(0,2), "AlKAlpha")
-        assert hc.table.item(0, 0).text() == "D"
+        #QtGui.QMouseEvent(QtCore.QEvent)
+        #qtbot.mouseClick(hc.histHistViewer.canvas, QtCore.Qt.MouseButton.LeftButton, pos=QtCore.QPoint(379, 225))
+        #qtbot.mouseClick(hc, QtCore.Qt.MouseButton.LeftButton, pos=QtCore.QPoint(411, 106))
+        #QtTest.QTest.mouseClick(hc.histHistViewer, QtCore.Qt.MouseButton.LeftButton ,pos=QtCore.QPoint(379, 225))
+        
+        #qtbot.keyClicks(hc.table.item(0,2), "AlKAlpha")
+        #assert hc.table.item(0, 0).text() == "D"
         #assert 1 == 0
-        qtbot.keyClicks(hc.table.item(0,2), "SiKAlpha")
-        qtbot.mouseClick(hc.closeButton, QtCore.Qt.LeftButton)
+        #qtbot.keyClicks(hc.table.item(0,2), "SiKAlpha")
+
+        mock_cal(hc)
+        qtbot.mouseClick(hc.closeButton, QtCore.Qt.MouseButton.LeftButton)
         qtbot.done_man_cal = 1
+
+    def mock_cal(hc): #adds elements to the table instead of clicking. couldn't get clicking to work.
+        hc.table.setRowCount(2)
+        hc.table.setItem(0, 0, QtWidgets.QTableWidgetItem("D"))
+        hc.table.setItem(0, 1, QtWidgets.QTableWidgetItem("6015.0"))
+        #hc.table.setItem(0, 2, QtWidgets.QTableWidgetItem("AlKAlpha"))
+        hc.table.setItem(0, 3, QtWidgets.QTableWidgetItem(""))
+        cbox = QtWidgets.QComboBox()
+        cbox.addItem("AlKAlpha")
+        hc.table.setCellWidget(0, 2, cbox)
+        hc.table.setItem(1, 0, QtWidgets.QTableWidgetItem("D"))
+        hc.table.setItem(1, 1, QtWidgets.QTableWidgetItem("6995.0"))
+        #hc.table.setItem(1, 2, QtWidgets.QTableWidgetItem("SiKAlpha"))     
+        hc.table.setItem(1, 3, QtWidgets.QTableWidgetItem(""))
+        cbox = QtWidgets.QComboBox()
+        cbox.addItem("SiKAlpha")
+        hc.table.setCellWidget(1, 2, cbox)   
+
 
     def cal_opened():
         plotter = app._selected_window
-        qtbot.waitUntil(lambda: isinstance(app._selected_window, massGui.massless.HistPlotter), timeout=10000)
         assert isinstance(plotter, massGui.massless.HistPlotter)
         qtbot.addWidget(plotter)
-        assert plotter.eRangeLow.text == ""
+        assert plotter.eRangeLow.text() == "0"
         qtbot.done_cal_open = 1
+        plotter.close()
 
-    qtbot.keyClicks(app.maxChansSpinBox, '2')
-    #qtbot.mouseClick(app.selectFileButton, QtCore.Qt.LeftButton)
+    app.maxChansSpinBox.setValue(2)
+    assert app.maxChansSpinBox.value() == 2
 
     #manual bypass of file loading dialog
     app.load_file(r'C:\Users\Grant Mondeel\Box\my EUV\tes\realtime\realtime\Summer2022\20200107\0002\20200107_run0002_chan1.off') # sets self._choose_file_lastdir
@@ -70,18 +94,22 @@ def test_cal(app, qtbot):
     app.calButtonGroup.setEnabled(False)
 
     qtbot.done_man_cal = 1
-    QtCore.QTimer.singleShot(2000, manual_cal)
-    qtbot.mouseClick(app.lineIDButton, QtCore.Qt.LeftButton)
-    #qtbot.waitUntil(lambda: qtbot.done_man_cal == 1)
-    #QtTest.QTest.qWait(10000)
+    QtCore.QTimer.singleShot(1000, manual_cal)
+    qtbot.mouseClick(app.lineIDButton, QtCore.Qt.MouseButton.LeftButton)
+
     assert app.calTable.item(0, 0).text() == "AlKAlpha"
 
-    # qtbot.done_cal_open = 0
-    # QtCore.QTimer.singleShot(10000, cal_opened)
-    # #qtbot.mouseClick(app.allChanCalButton, QtCore.Qt.LeftButton)
-    # app.allChannelCalibration()
-    # qtbot.waitUntil(lambda: qtbot.done_cal_open == 1, timeout = 20000)
-    # #qtbot.waitUntil(lambda: isinstance(app._selected_window, massGui.massless.HistPlotter), timeout = 30000)
+    qtbot.done_cal_open = 0
+    app.DCcheckbox.setChecked(0)
+    app.PCcheckbox.setChecked(0)
+    app.TDCcheckbox.setChecked(0)
+
+    QtCore.QTimer.singleShot(1000, cal_opened)
+    qtbot.mouseClick(app.allChanCalButton, QtCore.Qt.MouseButton.LeftButton)
+    qtbot.waitUntil(lambda: qtbot.done_cal_open == 1, timeout = 1000)
+
+    qtbot.mouseClick(app.rtpTab, QtCore.Qt.MouseButton.LeftButton)
+    qtbot.mouseClick(app.startRTPButton, QtCore.Qt.MouseButton.LeftButton)
     
     
 

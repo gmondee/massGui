@@ -90,7 +90,7 @@ class HistCalibrator(QtWidgets.QDialog):
             row = []
             row.append(self.table.item(i, 0).text())
             row.append(self.table.item(i, 1).text())
-            row.append(self.table.cellWidget(i, 2).currentText()) # this is a combobos
+            row.append(self.table.cellWidget(i, 2).currentText()) # this is a combobox
             row.append(self.table.item(i, 3).text())
             rows.append(row)
         return rows
@@ -467,11 +467,6 @@ class diagnoseViewer(QtWidgets.QDialog):
         #ax.vlines(ds.calibrationPlan.uncalibratedVals, 0, self.canvas.fig.ylim()[1])
         #plt.tight_layout()
 
-    # def clear(self):
-    #     print(self.canvas.fig.get_axes())
-    #     for ax in enumerate(self.canvas.fig.get_axes()):
-    #         print(ax)
-    #         ax[1].clf()
 
 
 

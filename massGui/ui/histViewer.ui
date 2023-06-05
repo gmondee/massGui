@@ -91,7 +91,7 @@
       <item>
        <widget class="QLabel" name="label_4">
         <property name="text">
-         <string>eV     Photon count:</string>
+         <string>eV    Counts in energy range:</string>
         </property>
        </widget>
       </item>

@@ -128,16 +128,17 @@ class MainWindow(QtWidgets.QWidget):
         self.ds.calibrationPlanInit("filtValue")
         for (states, fv, line, energy) in self.cal_info: 
             # # log.debug(f"states {states}, fv {fv}, line {line}, energy {energy}")
+            print(states.split(","))
             if line and not energy:
-                self.ds.calibrationPlanAddPoint(float(fv), line, states=states)
+                self.ds.calibrationPlanAddPoint(float(fv), line, states=states.split(","))
                 # try:
                 #     self.ds.calibrationPlanAddPoint(float(fv), line, states=states)
                 # finally:
                 #     self.ds.calibrationPlanAddPoint(float(fv),self.common_models[str(line)], states=states)
             elif energy and not line:  
-                self.ds.calibrationPlanAddPoint(float(fv), energy, states=states, energy=float(energy))
+                self.ds.calibrationPlanAddPoint(float(fv), energy, states=states.split(","), energy=float(energy))
             elif line and energy:
-                self.ds.calibrationPlanAddPoint(float(fv), line, states=states, energy=float(energy))
+                self.ds.calibrationPlanAddPoint(float(fv), line, states=states.split(","), energy=float(energy))
         self.data.referenceDs = self.ds
         # log.debug(f"{ds.calibrationPlan}")
         self.tabWidget.setEnabled(True) 
