@@ -8,3 +8,6 @@ If you do not want an editable installation, you can use:
 `pip install git+https://github.com/gmondee/massGui.git` 
 
 and it should appear with the rest of your installed packages. 
+
+
+Once massGui is installed, you can run the GUI anywhere by running `massGui` in the terminal.
