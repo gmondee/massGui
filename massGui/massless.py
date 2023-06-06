@@ -633,3 +633,82 @@ class rtpViewer(QtWidgets.QDialog):
             cIndex=cIndex-maxColors
         #print(s, cIndex)
         return c[cIndex]
+    
+
+class AvsBSetup(QtWidgets.QDialog):
+    def __init__(self, parent=None):
+        super(AvsBSetup, self).__init__(parent)
+        QtWidgets.QDialog.__init__(self)
+        plt.ion()
+    def setParams(self, parent, AvsBDict, states_list, channels, data, mode):
+        self.colors = MPL_DEFAULT_COLORS[0]
+        self.parent = parent
+        self.states_list = states_list
+        self.AvsBDict = AvsBDict
+        self.channels = channels
+        self.data = data
+        self.mode = mode
+        self.build()
+        self.connect()
+
+
+    def build(self):
+        PyQt6.uic.loadUi(os.path.join(os.path.dirname(__file__), "ui/avsbSetup.ui"), self) 
+        self.statesGrid.setParams(state_labels=self.states_list, colors=MPL_DEFAULT_COLORS[:1], one_state_per_line=False)
+        self.statesGrid.fill_simple()
+        for channum in self.channels:
+            self.channelBox.addItem("{}".format(channum))
+        self.channelBox.setCurrentIndex(0)
+
+        for A in self.AvsBDict:
+            self.Abox.addItem("{}".format(A))
+        self.Abox.setCurrentIndex(0)   
+
+        for B in self.AvsBDict:
+            self.Bbox.addItem("{}".format(B))
+        self.Bbox.setCurrentIndex(0)   
+
+    def connect(self):
+        self.plotButton.clicked.connect(self.handlePlot)
+
+    def handlePlot(self):
+        #self.plotter = AvsBViewer(self)
+        A = self.Abox.currentText()
+        B = self.Bbox.currentText()
+        _colors, states = self.statesGrid.get_colors_and_states_list()
+        states=states[0]
+        # if self.channelCheckbox.isChecked():
+        #     channels = self.data
+        # else:
+        channel = self.data[int(self.channelBox.currentText())]
+        channel.plotAvsB(A, B, axis=None, states=states)
+        # self.plotter.setParams(self, A, B, states, channels, self.data, self.mode)
+        # self.plotter.show()
+
+
+# class AvsBViewer(QtWidgets.QDialog):      #not used. avsb is plotted in a popup plt window so you can have many at once.
+#     def __init__(self, parent=None):
+#         super(AvsBViewer, self).__init__(parent)
+#         QtWidgets.QDialog.__init__(self)
+#         plt.ion()
+#     def setParams(self, parent, A, B, States, channels, data, mode):
+#         self.parent = parent
+#         self.states = States
+#         self.A = A
+#         self.B = B
+#         self.channels = channels
+#         self.data = data
+#         self.build(mode)
+
+#     def build(self, mode):
+#         PyQt6.uic.loadUi(os.path.join(os.path.dirname(__file__), "ui/avsbViewer.ui"), self) 
+#         self.canvas.fig.clear()
+#         self.axis = self.canvas.fig.add_subplot(111)
+#         self.axis.grid()
+#         if mode == "1D":
+#             self.axis = self.channels.plotAvsB(self.A, self.B, axis=self.axis, states=self.states)
+#         if mode == "2D":
+#             pass
+#         self.canvas.draw()
+
+

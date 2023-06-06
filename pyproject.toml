@@ -17,7 +17,6 @@ dependencies = [
   "numpy",
   "PyQt6",
   "pytest-qt",
-  "logging",
   "matplotlib"
 ]
 
@@ -36,4 +35,3 @@ minversion = "6.0"
 addopts = ["-ra", "--showlocals", "--strict-markers", "--strict-config", "--import-mode=importlib"]
 testpaths = [
     "tests"]
-log_cli = 1

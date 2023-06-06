@@ -10,7 +10,7 @@ from pytestqt.qtbot import QtBot
 import pytest
 import pytestqt
 from matplotlib.lines import Line2D
-from .massless import HistCalibrator, HistPlotter, diagnoseViewer, rtpViewer
+from .massless import HistCalibrator, HistPlotter, diagnoseViewer, rtpViewer, AvsBSetup
 from .canvas import MplCanvas
 
 
@@ -54,9 +54,7 @@ class MainWindow(QtWidgets.QWidget):
         self.allChanCalButton.clicked.connect(self.allChannelCalibration)
         self.diagCalButton.clicked.connect(self.diagnoseCalibration)
         self.startRTPButton.clicked.connect(self.startRTP)
-        # self.pushButton_calibrate.clicked.connect(self.handle_calibrate)
-        # self.pushButton_plotEnergy.clicked.connect(self.handle_plot)
-        # self.pushButton_refresh.clicked.connect(self.handle_refresh)
+        self.AvsBbutton.clicked.connect(self.startAvsB)
 
     def load_file(self, filename, maxChans = None):
         self._choose_file_lastdir = os.path.dirname(filename)
@@ -295,6 +293,17 @@ class MainWindow(QtWidgets.QWidget):
         self.plotter.setParams(self)
         self.plotter.exec()
 
+    def startAvsB(self):
+        self.handleAvsB("1D")
+
+    def handleAvsB(self, type):
+        keys = list(self.ds.recipes.craftedIngredients) + list(self.ds.recipes.baseIngredients)
+        if type == "1D":
+            self.AvsBsetup = AvsBSetup(self) 
+            self.AvsBsetup.setParams(self, keys, self.ds.stateLabels, self.data.keys(), self.data, mode = "1D")
+            self.AvsBsetup.show()
+
+        
     @property
     def selected_window(self):
         return self._selected_window

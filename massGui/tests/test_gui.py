@@ -84,6 +84,7 @@ def test_cal(app, qtbot):
         qtbot.done_cal_open = 1
         plotter.close()
 
+
     app.maxChansSpinBox.setValue(2)
     assert app.maxChansSpinBox.value() == 2
 
@@ -108,8 +109,12 @@ def test_cal(app, qtbot):
     qtbot.mouseClick(app.allChanCalButton, QtCore.Qt.MouseButton.LeftButton)
     qtbot.waitUntil(lambda: qtbot.done_cal_open == 1, timeout = 1000)
 
-    qtbot.mouseClick(app.rtpTab, QtCore.Qt.MouseButton.LeftButton)
-    qtbot.mouseClick(app.startRTPButton, QtCore.Qt.MouseButton.LeftButton)
+    # qtbot.mouseClick(app.rtpTab, QtCore.Qt.MouseButton.LeftButton)
+    # qtbot.mouseClick(app.startRTPButton, QtCore.Qt.MouseButton.LeftButton)
+
+    qtbot.mouseClick(app.AvsBbutton, QtCore.Qt.MouseButton.LeftButton)
+    qtbot.addWidget(app.AvsBsetup)
+    qtbot.stop()
     
     
 

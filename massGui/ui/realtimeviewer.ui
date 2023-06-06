@@ -91,7 +91,7 @@
          <set>Qt::ImhPreferNumbers</set>
         </property>
         <property name="text">
-         <string>5</string>
+         <string>15</string>
         </property>
        </widget>
       </item>
