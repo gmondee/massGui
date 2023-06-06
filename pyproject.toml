@@ -1,6 +1,6 @@
 [project]
 name = "massGui"
-version = "0.0.1"
+version = "0.1.1"
 authors = [
   { name="Grant Mondeel", email="gmondee@g.clemson.edu" },
 ]
@@ -17,7 +17,8 @@ dependencies = [
   "numpy",
   "PyQt6",
   "pytest-qt",
-  "matplotlib"
+  "matplotlib",
+  "numpy"
 ]
 
 [project.scripts]

@@ -6,9 +6,9 @@ from PyQt6.QtCore import QSettings, pyqtSlot
 from PyQt6.QtWidgets import QFileDialog
 import sys
 import os
-from pytestqt.qtbot import QtBot
-import pytest
-import pytestqt
+#from pytestqt.qtbot import QtBot
+#import pytest
+#import pytestqt
 from matplotlib.lines import Line2D
 from .massless import HistCalibrator, HistPlotter, diagnoseViewer, rtpViewer, AvsBSetup, linefitSetup
 from .canvas import MplCanvas
