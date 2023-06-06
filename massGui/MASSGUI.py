@@ -55,6 +55,7 @@ class MainWindow(QtWidgets.QWidget):
         self.diagCalButton.clicked.connect(self.diagnoseCalibration)
         self.startRTPButton.clicked.connect(self.startRTP)
         self.AvsBbutton.clicked.connect(self.startAvsB)
+        self.ptmButton.clicked.connect(self.plotPTM)
 
     def load_file(self, filename, maxChans = None):
         self._choose_file_lastdir = os.path.dirname(filename)
@@ -302,6 +303,14 @@ class MainWindow(QtWidgets.QWidget):
             self.AvsBsetup = AvsBSetup(self) 
             self.AvsBsetup.setParams(self, keys, self.ds.stateLabels, self.data.keys(), self.data, mode = "1D")
             self.AvsBsetup.show()
+
+    def plotPTM(self):
+        keys = list(self.ds.recipes.craftedIngredients) + list(self.ds.recipes.baseIngredients)
+        self.AvsBsetup = AvsBSetup(self) 
+        self.AvsBsetup.setParams(self, keys, self.ds.stateLabels, self.data.keys(), self.data, mode = "1D")
+        self.AvsBsetup.Abox.setCurrentText("relTimeSec")
+        self.AvsBsetup.Bbox.setCurrentText("pretriggerMean")
+        self.AvsBsetup.show()
 
         
     @property

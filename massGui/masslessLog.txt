@@ -1,1 +1,247 @@
-11:34:00,222 root INFO Massless Log
+12:44:59,630 root INFO Massless Log
+12:44:59,665 PyQt6.uic.uiparser DEBUG toplevel widget is MainWindow
+12:44:59,665 PyQt6.uic.properties DEBUG setting property geometry
+12:44:59,665 PyQt6.uic.properties DEBUG setting property minimumSize
+12:44:59,666 PyQt6.uic.properties DEBUG setting property windowTitle
+12:44:59,666 PyQt6.uic.uiparser DEBUG push MainWindow Form
+12:44:59,666 PyQt6.uic.uiparser DEBUG push QVBoxLayout verticalLayout
+12:44:59,671 PyQt6.uic.properties DEBUG setting property minimumSize
+12:44:59,671 PyQt6.uic.properties DEBUG setting property maximumSize
+12:44:59,672 PyQt6.uic.properties DEBUG setting property html
+12:44:59,672 PyQt6.uic.uiparser DEBUG push QTextBrowser Title
+12:44:59,672 PyQt6.uic.uiparser DEBUG pop widget QTextBrowser Title
+12:44:59,672 PyQt6.uic.uiparser DEBUG new topwidget <massGui.massGui.MainWindow object at 0x0000017F7E9B7550>
+12:44:59,673 PyQt6.uic.properties DEBUG setting property minimumSize
+12:44:59,673 PyQt6.uic.properties DEBUG setting property maximumSize
+12:44:59,673 PyQt6.uic.properties DEBUG setting property title
+12:44:59,673 PyQt6.uic.uiparser DEBUG push QGroupBox fileSelectionGroup
+12:44:59,673 PyQt6.uic.uiparser DEBUG push QHBoxLayout horizontalLayout
+12:44:59,673 PyQt6.uic.properties DEBUG setting property minimumSize
+12:44:59,674 PyQt6.uic.properties DEBUG setting property text
+12:44:59,674 PyQt6.uic.uiparser DEBUG push QPushButton selectFileButton
+12:44:59,674 PyQt6.uic.uiparser DEBUG pop widget QPushButton selectFileButton
+12:44:59,674 PyQt6.uic.uiparser DEBUG new topwidget <PyQt6.QtWidgets.QGroupBox object at 0x0000017F23E555E0>
+12:44:59,674 PyQt6.uic.properties DEBUG setting property enabled
+12:44:59,674 PyQt6.uic.properties DEBUG setting property minimumSize
+12:44:59,674 PyQt6.uic.properties DEBUG setting property maximumSize
+12:44:59,675 PyQt6.uic.uiparser DEBUG push QTextBrowser fileTextBox
+12:44:59,675 PyQt6.uic.uiparser DEBUG pop widget QTextBrowser fileTextBox
+12:44:59,675 PyQt6.uic.uiparser DEBUG new topwidget <PyQt6.QtWidgets.QGroupBox object at 0x0000017F23E555E0>
+12:44:59,675 PyQt6.uic.properties DEBUG setting property minimumSize
+12:44:59,675 PyQt6.uic.properties DEBUG setting property text
+12:44:59,675 PyQt6.uic.uiparser DEBUG push QLabel label_4
+12:44:59,675 PyQt6.uic.uiparser DEBUG pop widget QLabel label_4
+12:44:59,676 PyQt6.uic.uiparser DEBUG new topwidget <PyQt6.QtWidgets.QGroupBox object at 0x0000017F23E555E0>
+12:44:59,676 PyQt6.uic.properties DEBUG setting property minimumSize
+12:44:59,676 PyQt6.uic.properties DEBUG setting property minimum
+12:44:59,677 PyQt6.uic.properties DEBUG setting property maximum
+12:44:59,677 PyQt6.uic.properties DEBUG setting property value
+12:44:59,677 PyQt6.uic.uiparser DEBUG push QSpinBox maxChansSpinBox
+12:44:59,677 PyQt6.uic.uiparser DEBUG pop widget QSpinBox maxChansSpinBox
+12:44:59,678 PyQt6.uic.uiparser DEBUG new topwidget <PyQt6.QtWidgets.QGroupBox object at 0x0000017F23E555E0>
+12:44:59,678 PyQt6.uic.uiparser DEBUG pop layout QHBoxLayout horizontalLayout
+12:44:59,678 PyQt6.uic.uiparser DEBUG pop widget QGroupBox fileSelectionGroup
+12:44:59,678 PyQt6.uic.uiparser DEBUG new topwidget <massGui.massGui.MainWindow object at 0x0000017F7E9B7550>
+12:44:59,678 PyQt6.uic.properties DEBUG setting property minimumSize
+12:44:59,678 PyQt6.uic.properties DEBUG setting property maximumSize
+12:44:59,678 PyQt6.uic.properties DEBUG setting property title
+12:44:59,678 PyQt6.uic.uiparser DEBUG push QGroupBox calibrationGroup
+12:44:59,679 PyQt6.uic.uiparser DEBUG push QGridLayout gridLayout_2
+12:44:59,679 PyQt6.uic.properties DEBUG setting property text
+12:44:59,679 PyQt6.uic.uiparser DEBUG push QCheckBox HCIonCheckbox
+12:44:59,679 PyQt6.uic.uiparser DEBUG pop widget QCheckBox HCIonCheckbox
+12:44:59,679 PyQt6.uic.uiparser DEBUG new topwidget <PyQt6.QtWidgets.QGroupBox object at 0x0000017F23E55AF0>
+12:44:59,679 PyQt6.uic.properties DEBUG setting property text
+12:44:59,680 PyQt6.uic.uiparser DEBUG push QPushButton lineIDButton
+12:44:59,680 PyQt6.uic.uiparser DEBUG pop widget QPushButton lineIDButton
+12:44:59,680 PyQt6.uic.uiparser DEBUG new topwidget <PyQt6.QtWidgets.QGroupBox object at 0x0000017F23E55AF0>
+12:44:59,680 PyQt6.uic.properties DEBUG setting property title
+12:44:59,680 PyQt6.uic.uiparser DEBUG push QGroupBox calibrationStepsBox
+12:44:59,680 PyQt6.uic.uiparser DEBUG push QVBoxLayout verticalLayout_2
+12:44:59,681 PyQt6.uic.properties DEBUG setting property text
+12:44:59,681 PyQt6.uic.properties DEBUG setting property checked
+12:44:59,681 PyQt6.uic.uiparser DEBUG push QCheckBox DCcheckbox
+12:44:59,681 PyQt6.uic.uiparser DEBUG pop widget QCheckBox DCcheckbox
+12:44:59,681 PyQt6.uic.uiparser DEBUG new topwidget <PyQt6.QtWidgets.QGroupBox object at 0x0000017F23E55D30>
+12:44:59,681 PyQt6.uic.properties DEBUG setting property text
+12:44:59,681 PyQt6.uic.properties DEBUG setting property checked
+12:44:59,681 PyQt6.uic.uiparser DEBUG push QCheckBox PCcheckbox
+12:44:59,682 PyQt6.uic.uiparser DEBUG pop widget QCheckBox PCcheckbox
+12:44:59,682 PyQt6.uic.uiparser DEBUG new topwidget <PyQt6.QtWidgets.QGroupBox object at 0x0000017F23E55D30>
+12:44:59,682 PyQt6.uic.properties DEBUG setting property text
+12:44:59,682 PyQt6.uic.properties DEBUG setting property checked
+12:44:59,682 PyQt6.uic.uiparser DEBUG push QCheckBox TDCcheckbox
+12:44:59,682 PyQt6.uic.uiparser DEBUG pop widget QCheckBox TDCcheckbox
+12:44:59,682 PyQt6.uic.uiparser DEBUG new topwidget <PyQt6.QtWidgets.QGroupBox object at 0x0000017F23E55D30>
+12:44:59,682 PyQt6.uic.uiparser DEBUG pop layout QVBoxLayout verticalLayout_2
+12:44:59,683 PyQt6.uic.uiparser DEBUG pop widget QGroupBox calibrationStepsBox
+12:44:59,683 PyQt6.uic.uiparser DEBUG new topwidget <PyQt6.QtWidgets.QGroupBox object at 0x0000017F23E55AF0>
+12:44:59,683 PyQt6.uic.properties DEBUG setting property minimumSize
+12:44:59,683 PyQt6.uic.uiparser DEBUG push QWidget calButtonGroup
+12:44:59,683 PyQt6.uic.uiparser DEBUG push QVBoxLayout verticalLayout_6
+12:44:59,683 PyQt6.uic.properties DEBUG setting property minimumSize
+12:44:59,683 PyQt6.uic.properties DEBUG setting property text
+12:44:59,684 PyQt6.uic.uiparser DEBUG push QPushButton oneChanCalButton
+12:44:59,684 PyQt6.uic.uiparser DEBUG pop widget QPushButton oneChanCalButton
+12:44:59,684 PyQt6.uic.uiparser DEBUG new topwidget <PyQt6.QtWidgets.QWidget object at 0x0000017F26546040>
+12:44:59,684 PyQt6.uic.properties DEBUG setting property minimumSize
+12:44:59,684 PyQt6.uic.properties DEBUG setting property text
+12:44:59,684 PyQt6.uic.uiparser DEBUG push QPushButton allChanCalButton
+12:44:59,684 PyQt6.uic.uiparser DEBUG pop widget QPushButton allChanCalButton
+12:44:59,684 PyQt6.uic.uiparser DEBUG new topwidget <PyQt6.QtWidgets.QWidget object at 0x0000017F26546040>
+12:44:59,685 PyQt6.uic.properties DEBUG setting property minimumSize
+12:44:59,685 PyQt6.uic.properties DEBUG setting property baseSize
+12:44:59,685 PyQt6.uic.properties DEBUG setting property text
+12:44:59,685 PyQt6.uic.uiparser DEBUG push QPushButton resetCalButton
+12:44:59,685 PyQt6.uic.uiparser DEBUG pop widget QPushButton resetCalButton
+12:44:59,685 PyQt6.uic.uiparser DEBUG new topwidget <PyQt6.QtWidgets.QWidget object at 0x0000017F26546040>
+12:44:59,686 PyQt6.uic.uiparser DEBUG pop layout QVBoxLayout verticalLayout_6
+12:44:59,686 PyQt6.uic.uiparser DEBUG pop widget QWidget calButtonGroup
+12:44:59,686 PyQt6.uic.uiparser DEBUG new topwidget <PyQt6.QtWidgets.QGroupBox object at 0x0000017F23E55AF0>
+12:44:59,686 PyQt6.uic.properties DEBUG setting property minimumSize
+12:44:59,686 PyQt6.uic.properties DEBUG setting property text
+12:44:59,686 PyQt6.uic.uiparser DEBUG push QLabel label
+12:44:59,686 PyQt6.uic.uiparser DEBUG pop widget QLabel label
+12:44:59,686 PyQt6.uic.uiparser DEBUG new topwidget <PyQt6.QtWidgets.QGroupBox object at 0x0000017F23E55AF0>
+12:44:59,687 PyQt6.uic.properties DEBUG setting property enabled
+12:44:59,687 PyQt6.uic.uiparser DEBUG push QLineEdit refChannelBox
+12:44:59,687 PyQt6.uic.uiparser DEBUG pop widget QLineEdit refChannelBox
+12:44:59,687 PyQt6.uic.uiparser DEBUG new topwidget <PyQt6.QtWidgets.QGroupBox object at 0x0000017F23E55AF0>
+12:44:59,689 PyQt6.uic.properties DEBUG setting property enabled
+12:44:59,689 PyQt6.uic.properties DEBUG setting property editTriggers
+12:44:59,689 PyQt6.uic.uiparser DEBUG push QTableWidget calTable
+12:44:59,692 PyQt6.uic.uiparser DEBUG pop widget QTableWidget calTable
+12:44:59,692 PyQt6.uic.uiparser DEBUG new topwidget <PyQt6.QtWidgets.QGroupBox object at 0x0000017F23E55AF0>
+12:44:59,692 PyQt6.uic.uiparser DEBUG pop layout QGridLayout gridLayout_2
+12:44:59,693 PyQt6.uic.uiparser DEBUG pop widget QGroupBox calibrationGroup
+12:44:59,693 PyQt6.uic.uiparser DEBUG new topwidget <massGui.massGui.MainWindow object at 0x0000017F7E9B7550>
+12:44:59,693 PyQt6.uic.properties DEBUG setting property enabled
+12:44:59,693 PyQt6.uic.properties DEBUG setting property maximumSize
+12:44:59,694 PyQt6.uic.properties DEBUG setting property currentIndex
+12:44:59,694 PyQt6.uic.uiparser DEBUG push QTabWidget tabWidget
+12:44:59,694 PyQt6.uic.uiparser DEBUG push QWidget plotsTab
+12:44:59,694 PyQt6.uic.uiparser DEBUG push QVBoxLayout verticalLayout_4
+12:44:59,694 PyQt6.uic.properties DEBUG setting property title
+12:44:59,694 PyQt6.uic.uiparser DEBUG push QGroupBox plotsGroup
+12:44:59,694 PyQt6.uic.uiparser DEBUG push QVBoxLayout verticalLayout_3
+12:44:59,695 PyQt6.uic.properties DEBUG setting property frameShape
+12:44:59,695 PyQt6.uic.properties DEBUG setting property frameShadow
+12:44:59,695 PyQt6.uic.uiparser DEBUG push QFrame frame
+12:44:59,695 PyQt6.uic.uiparser DEBUG push QGridLayout gridLayout
+12:44:59,695 PyQt6.uic.properties DEBUG setting property minimumSize
+12:44:59,695 PyQt6.uic.properties DEBUG setting property text
+12:44:59,696 PyQt6.uic.uiparser DEBUG push QPushButton energyHistButton
+12:44:59,696 PyQt6.uic.uiparser DEBUG pop widget QPushButton energyHistButton
+12:44:59,696 PyQt6.uic.uiparser DEBUG new topwidget <PyQt6.QtWidgets.QFrame object at 0x0000017F26546940>
+12:44:59,696 PyQt6.uic.properties DEBUG setting property minimumSize
+12:44:59,696 PyQt6.uic.properties DEBUG setting property text
+12:44:59,696 PyQt6.uic.uiparser DEBUG push QPushButton AvsBbutton
+12:44:59,696 PyQt6.uic.uiparser DEBUG pop widget QPushButton AvsBbutton
+12:44:59,696 PyQt6.uic.uiparser DEBUG new topwidget <PyQt6.QtWidgets.QFrame object at 0x0000017F26546940>
+12:44:59,697 PyQt6.uic.properties DEBUG setting property minimumSize
+12:44:59,697 PyQt6.uic.properties DEBUG setting property text
+12:44:59,697 PyQt6.uic.uiparser DEBUG push QPushButton diagCalButton
+12:44:59,697 PyQt6.uic.uiparser DEBUG pop widget QPushButton diagCalButton
+12:44:59,697 PyQt6.uic.uiparser DEBUG new topwidget <PyQt6.QtWidgets.QFrame object at 0x0000017F26546940>
+12:44:59,697 PyQt6.uic.properties DEBUG setting property minimumSize
+12:44:59,697 PyQt6.uic.properties DEBUG setting property text
+12:44:59,698 PyQt6.uic.uiparser DEBUG push QPushButton AvsB2Dbutton
+12:44:59,698 PyQt6.uic.uiparser DEBUG pop widget QPushButton AvsB2Dbutton
+12:44:59,698 PyQt6.uic.uiparser DEBUG new topwidget <PyQt6.QtWidgets.QFrame object at 0x0000017F26546940>
+12:44:59,698 PyQt6.uic.properties DEBUG setting property minimumSize
+12:44:59,698 PyQt6.uic.properties DEBUG setting property text
+12:44:59,698 PyQt6.uic.uiparser DEBUG push QPushButton ptmButton
+12:44:59,698 PyQt6.uic.uiparser DEBUG pop widget QPushButton ptmButton
+12:44:59,698 PyQt6.uic.uiparser DEBUG new topwidget <PyQt6.QtWidgets.QFrame object at 0x0000017F26546940>
+12:44:59,699 PyQt6.uic.uiparser DEBUG pop layout QGridLayout gridLayout
+12:44:59,699 PyQt6.uic.uiparser DEBUG pop widget QFrame frame
+12:44:59,699 PyQt6.uic.uiparser DEBUG new topwidget <PyQt6.QtWidgets.QGroupBox object at 0x0000017F26546820>
+12:44:59,699 PyQt6.uic.properties DEBUG setting property frameShape
+12:44:59,699 PyQt6.uic.properties DEBUG setting property frameShadow
+12:44:59,699 PyQt6.uic.uiparser DEBUG push QFrame lineFitFrame
+12:44:59,699 PyQt6.uic.uiparser DEBUG push QHBoxLayout horizontalLayout_4
+12:44:59,700 PyQt6.uic.properties DEBUG setting property minimumSize
+12:44:59,700 PyQt6.uic.properties DEBUG setting property text
+12:44:59,700 PyQt6.uic.uiparser DEBUG push QLabel label_2
+12:44:59,700 PyQt6.uic.uiparser DEBUG pop widget QLabel label_2
+12:44:59,700 PyQt6.uic.uiparser DEBUG new topwidget <PyQt6.QtWidgets.QFrame object at 0x0000017F26546D30>
+12:44:59,701 PyQt6.uic.properties DEBUG setting property enabled
+12:44:59,701 PyQt6.uic.properties DEBUG setting property minimumSize
+12:44:59,701 PyQt6.uic.uiparser DEBUG push QComboBox lineFitComboBox
+12:44:59,701 PyQt6.uic.uiparser DEBUG pop widget QComboBox lineFitComboBox
+12:44:59,701 PyQt6.uic.uiparser DEBUG new topwidget <PyQt6.QtWidgets.QFrame object at 0x0000017F26546D30>
+12:44:59,701 PyQt6.uic.properties DEBUG setting property minimumSize
+12:44:59,701 PyQt6.uic.properties DEBUG setting property maximumSize
+12:44:59,701 PyQt6.uic.properties DEBUG setting property text
+12:44:59,702 PyQt6.uic.uiparser DEBUG push QPushButton lineFitComboButton
+12:44:59,702 PyQt6.uic.uiparser DEBUG pop widget QPushButton lineFitComboButton
+12:44:59,702 PyQt6.uic.uiparser DEBUG new topwidget <PyQt6.QtWidgets.QFrame object at 0x0000017F26546D30>
+12:44:59,702 PyQt6.uic.properties DEBUG setting property minimumSize
+12:44:59,703 PyQt6.uic.properties DEBUG setting property text
+12:44:59,703 PyQt6.uic.uiparser DEBUG push QLabel label_3
+12:44:59,703 PyQt6.uic.uiparser DEBUG pop widget QLabel label_3
+12:44:59,703 PyQt6.uic.uiparser DEBUG new topwidget <PyQt6.QtWidgets.QFrame object at 0x0000017F26546D30>
+12:44:59,703 PyQt6.uic.properties DEBUG setting property minimumSize
+12:44:59,703 PyQt6.uic.properties DEBUG setting property text
+12:44:59,703 PyQt6.uic.properties DEBUG setting property placeholderText
+12:44:59,703 PyQt6.uic.uiparser DEBUG push QLineEdit lineFitTextBox
+12:44:59,704 PyQt6.uic.uiparser DEBUG pop widget QLineEdit lineFitTextBox
+12:44:59,704 PyQt6.uic.uiparser DEBUG new topwidget <PyQt6.QtWidgets.QFrame object at 0x0000017F26546D30>
+12:44:59,704 PyQt6.uic.properties DEBUG setting property minimumSize
+12:44:59,704 PyQt6.uic.properties DEBUG setting property maximumSize
+12:44:59,704 PyQt6.uic.properties DEBUG setting property text
+12:44:59,704 PyQt6.uic.uiparser DEBUG push QPushButton lineFitTextButton
+12:44:59,705 PyQt6.uic.uiparser DEBUG pop widget QPushButton lineFitTextButton
+12:44:59,705 PyQt6.uic.uiparser DEBUG new topwidget <PyQt6.QtWidgets.QFrame object at 0x0000017F26546D30>
+12:44:59,705 PyQt6.uic.uiparser DEBUG pop layout QHBoxLayout horizontalLayout_4
+12:44:59,705 PyQt6.uic.uiparser DEBUG pop widget QFrame lineFitFrame
+12:44:59,705 PyQt6.uic.uiparser DEBUG new topwidget <PyQt6.QtWidgets.QGroupBox object at 0x0000017F26546820>
+12:44:59,705 PyQt6.uic.uiparser DEBUG pop layout QVBoxLayout verticalLayout_3
+12:44:59,705 PyQt6.uic.uiparser DEBUG pop widget QGroupBox plotsGroup
+12:44:59,705 PyQt6.uic.uiparser DEBUG new topwidget <PyQt6.QtWidgets.QWidget object at 0x0000017F26546700>
+12:44:59,705 PyQt6.uic.uiparser DEBUG pop layout QVBoxLayout verticalLayout_4
+12:44:59,705 PyQt6.uic.uiparser DEBUG pop widget QWidget plotsTab
+12:44:59,706 PyQt6.uic.uiparser DEBUG new topwidget <PyQt6.QtWidgets.QTabWidget object at 0x0000017F26546670>
+12:44:59,706 PyQt6.uic.uiparser DEBUG push QWidget rtpTab
+12:44:59,706 PyQt6.uic.uiparser DEBUG push QVBoxLayout verticalLayout_5
+12:44:59,706 PyQt6.uic.properties DEBUG setting property frameShape
+12:44:59,707 PyQt6.uic.properties DEBUG setting property frameShadow
+12:44:59,707 PyQt6.uic.uiparser DEBUG push QFrame frame_3
+12:44:59,707 PyQt6.uic.uiparser DEBUG push QHBoxLayout horizontalLayout_6
+12:44:59,707 PyQt6.uic.properties DEBUG setting property text
+12:44:59,707 PyQt6.uic.uiparser DEBUG push QPushButton startRTPButton
+12:44:59,707 PyQt6.uic.uiparser DEBUG pop widget QPushButton startRTPButton
+12:44:59,707 PyQt6.uic.uiparser DEBUG new topwidget <PyQt6.QtWidgets.QFrame object at 0x0000017F26567700>
+12:44:59,708 PyQt6.uic.properties DEBUG setting property text
+12:44:59,708 PyQt6.uic.uiparser DEBUG push QPushButton stopRTPButton
+12:44:59,708 PyQt6.uic.uiparser DEBUG pop widget QPushButton stopRTPButton
+12:44:59,708 PyQt6.uic.uiparser DEBUG new topwidget <PyQt6.QtWidgets.QFrame object at 0x0000017F26567700>
+12:44:59,708 PyQt6.uic.uiparser DEBUG pop layout QHBoxLayout horizontalLayout_6
+12:44:59,708 PyQt6.uic.uiparser DEBUG pop widget QFrame frame_3
+12:44:59,708 PyQt6.uic.uiparser DEBUG new topwidget <PyQt6.QtWidgets.QWidget object at 0x0000017F265675E0>
+12:44:59,708 PyQt6.uic.uiparser DEBUG pop layout QVBoxLayout verticalLayout_5
+12:44:59,709 PyQt6.uic.uiparser DEBUG pop widget QWidget rtpTab
+12:44:59,709 PyQt6.uic.uiparser DEBUG new topwidget <PyQt6.QtWidgets.QTabWidget object at 0x0000017F26546670>
+12:44:59,709 PyQt6.uic.uiparser DEBUG pop widget QTabWidget tabWidget
+12:44:59,709 PyQt6.uic.uiparser DEBUG new topwidget <massGui.massGui.MainWindow object at 0x0000017F7E9B7550>
+12:44:59,709 PyQt6.uic.properties DEBUG setting property maximumSize
+12:44:59,709 PyQt6.uic.properties DEBUG setting property frameShape
+12:44:59,709 PyQt6.uic.properties DEBUG setting property frameShadow
+12:44:59,709 PyQt6.uic.uiparser DEBUG push QFrame frame_2
+12:44:59,710 PyQt6.uic.uiparser DEBUG push QHBoxLayout horizontalLayout_5
+12:44:59,710 PyQt6.uic.properties DEBUG setting property minimumSize
+12:44:59,710 PyQt6.uic.properties DEBUG setting property text
+12:44:59,710 PyQt6.uic.uiparser DEBUG push QPushButton saveCalButton
+12:44:59,710 PyQt6.uic.uiparser DEBUG pop widget QPushButton saveCalButton
+12:44:59,710 PyQt6.uic.uiparser DEBUG new topwidget <PyQt6.QtWidgets.QFrame object at 0x0000017F26567940>
+12:44:59,710 PyQt6.uic.properties DEBUG setting property minimumSize
+12:44:59,711 PyQt6.uic.properties DEBUG setting property text
+12:44:59,711 PyQt6.uic.uiparser DEBUG push QPushButton loadCalButton
+12:44:59,711 PyQt6.uic.uiparser DEBUG pop widget QPushButton loadCalButton
+12:44:59,712 PyQt6.uic.uiparser DEBUG new topwidget <PyQt6.QtWidgets.QFrame object at 0x0000017F26567940>
+12:44:59,712 PyQt6.uic.uiparser DEBUG pop layout QHBoxLayout horizontalLayout_5
+12:44:59,712 PyQt6.uic.uiparser DEBUG pop widget QFrame frame_2
+12:44:59,713 PyQt6.uic.uiparser DEBUG new topwidget <massGui.massGui.MainWindow object at 0x0000017F7E9B7550>
+12:44:59,713 PyQt6.uic.uiparser DEBUG pop layout QVBoxLayout verticalLayout
+12:44:59,713 PyQt6.uic.uiparser DEBUG pop widget MainWindow Form
+12:44:59,713 PyQt6.uic.uiparser DEBUG new topwidget None

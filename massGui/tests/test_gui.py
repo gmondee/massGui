@@ -114,6 +114,9 @@ def test_cal(app, qtbot):
 
     qtbot.mouseClick(app.AvsBbutton, QtCore.Qt.MouseButton.LeftButton)
     qtbot.addWidget(app.AvsBsetup)
+
+    qtbot.mouseClick(app.ptmButton, QtCore.Qt.MouseButton.LeftButton)
+    qtbot.addWidget(app.AvsBsetup)
     qtbot.stop()
     
     

@@ -351,6 +351,12 @@ class StatesGrid(QtWidgets.QWidget):
                 states_list.append(states)
         return colors, states_list
     
+    def fill_all(self): #intended for cases where you only have one row of states
+        for (j, color) in enumerate(self.colors):
+            for (i, state) in enumerate(self.state_labels):
+                box = self.boxes[i][j] 
+                box.setChecked(True) 
+    
 
 
 
@@ -655,7 +661,7 @@ class AvsBSetup(QtWidgets.QDialog):
     def build(self):
         PyQt6.uic.loadUi(os.path.join(os.path.dirname(__file__), "ui/avsbSetup.ui"), self) 
         self.statesGrid.setParams(state_labels=self.states_list, colors=MPL_DEFAULT_COLORS[:1], one_state_per_line=False)
-        self.statesGrid.fill_simple()
+        self.statesGrid.fill_all()
         for channum in self.channels:
             self.channelBox.addItem("{}".format(channum))
         self.channelBox.setCurrentIndex(0)
