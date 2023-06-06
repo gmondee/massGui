@@ -674,6 +674,9 @@ class AvsBSetup(QtWidgets.QDialog):
             self.Bbox.addItem("{}".format(B))
         self.Bbox.setCurrentIndex(0)   
 
+        if self.mode == "1D":
+            self.binsFrame.hide()
+
     def connect(self):
         self.plotButton.clicked.connect(self.handlePlot)
 
@@ -687,7 +690,21 @@ class AvsBSetup(QtWidgets.QDialog):
         #     channels = self.data
         # else:
         channel = self.data[int(self.channelBox.currentText())]
-        channel.plotAvsB(A, B, axis=None, states=states)
+
+        if self.mode == "1D":
+            channel.plotAvsB(A, B, axis=None, states=states)
+        if self.mode == "2D":
+            Ahi = max(channel.getAttr(A, states))
+            Alo = min(channel.getAttr(A, states))
+            
+            Bhi = max(channel.getAttr(B, states))
+            Blo = min(channel.getAttr(B, states))
+
+            num = int(self.binsBox.text())#500
+
+            bins = [np.linspace(Alo, Ahi, num=num), np.linspace(Blo,Bhi,num=num)]#self.binsBox.text()
+            channel.plotAvsB2d(A, B, binEdgesAB = bins, axis=None, states=states)
+            #plotAvsB2d(self, nameA, nameB, binEdgesAB, axis=None, states=None, cutRecipeName=None, norm=None)
         # self.plotter.setParams(self, A, B, states, channels, self.data, self.mode)
         # self.plotter.show()
 
@@ -740,17 +757,10 @@ class linefitSetup(QtWidgets.QDialog):
             dhi = abs(int(self.dhi.text()))
         else:
             dhi = 15
-        # if self.channelCheckbox.isChecked():
-        #     channels = self.data
-        # else:
+
         channel = self.data[int(self.channelBox.currentText())]
         channel.linefit(lineNameOrEnergy=line, attr="energy", states=states, has_linear_background=has_linear_background, has_tails=has_tails, dlo=dlo, dhi=dhi)
-        # linefit(self, lineNameOrEnergy="MnKAlpha", attr="energy", states=None, axis=None, dlo=50, dhi=50,
-        #         binsize=None, binEdges=None, label="full", plot=True,
-        #         params_fixed=None, cutRecipeName=None, calibration=None, require_errorbars=True, method="leastsq_refit",
-        #         has_linear_background=True, has_tails=False, params_update=lmfit.Parameters())
-        # self.plotter.setParams(self, A, B, states, channels, self.data, self.mode)
-        # self.plotter.show()
+
 
 # class AvsBViewer(QtWidgets.QDialog):      #not used. avsb is plotted in a popup plt window so you can have many at once.
 #     def __init__(self, parent=None):

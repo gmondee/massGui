@@ -112,14 +112,14 @@ def test_cal(app, qtbot):
     # qtbot.mouseClick(app.rtpTab, QtCore.Qt.MouseButton.LeftButton)
     # qtbot.mouseClick(app.startRTPButton, QtCore.Qt.MouseButton.LeftButton)
 
-    # qtbot.mouseClick(app.AvsBbutton, QtCore.Qt.MouseButton.LeftButton)
-    # qtbot.addWidget(app.AvsBsetup)
+    qtbot.mouseClick(app.AvsB2Dbutton, QtCore.Qt.MouseButton.LeftButton)
+    qtbot.addWidget(app.AvsBsetup)
 
     # qtbot.mouseClick(app.ptmButton, QtCore.Qt.MouseButton.LeftButton)
     # qtbot.addWidget(app.AvsBsetup)
 
-    qtbot.mouseClick(app.linefitButton, QtCore.Qt.MouseButton.LeftButton)
-    qtbot.addWidget(app.lfsetup)
+    # qtbot.mouseClick(app.linefitButton, QtCore.Qt.MouseButton.LeftButton)
+    # qtbot.addWidget(app.lfsetup)
     qtbot.stop()
     
     

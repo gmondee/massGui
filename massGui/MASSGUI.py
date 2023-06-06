@@ -55,6 +55,7 @@ class MainWindow(QtWidgets.QWidget):
         self.diagCalButton.clicked.connect(self.diagnoseCalibration)
         self.startRTPButton.clicked.connect(self.startRTP)
         self.AvsBbutton.clicked.connect(self.startAvsB)
+        self.AvsB2Dbutton.clicked.connect(self.startAvsB2D)
         self.ptmButton.clicked.connect(self.plotPTM)
         self.linefitButton.clicked.connect(self.startLineFit)
         self.energyHistButton.clicked.connect(self.viewEnergyPlot)
@@ -301,11 +302,18 @@ class MainWindow(QtWidgets.QWidget):
     def startAvsB(self):
         self.handleAvsB("1D")
 
+    def startAvsB2D(self):
+        self.handleAvsB("2D")
+
     def handleAvsB(self, type):
         keys = list(self.ds.recipes.craftedIngredients) + list(self.ds.recipes.baseIngredients)
         if type == "1D":
             self.AvsBsetup = AvsBSetup(self) 
             self.AvsBsetup.setParams(self, keys, self.ds.stateLabels, self.data.keys(), self.data, mode = "1D")
+            self.AvsBsetup.show()
+        if type == "2D":
+            self.AvsBsetup = AvsBSetup(self) 
+            self.AvsBsetup.setParams(self, keys, self.ds.stateLabels, self.data.keys(), self.data, mode = "2D")
             self.AvsBsetup.show()
 
     def plotPTM(self):
