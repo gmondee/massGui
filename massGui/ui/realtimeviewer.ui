@@ -27,7 +27,7 @@
    <item>
     <widget class="QFrame" name="frame_2">
      <property name="enabled">
-      <bool>false</bool>
+      <bool>true</bool>
      </property>
      <property name="maximumSize">
       <size>
@@ -50,12 +50,9 @@
        </widget>
       </item>
       <item>
-       <widget class="QSpinBox" name="rtpChannelSpinBox">
-        <property name="minimum">
-         <number>1</number>
-        </property>
-        <property name="maximum">
-         <number>99999</number>
+       <widget class="QComboBox" name="channelBox">
+        <property name="currentText">
+         <string/>
         </property>
        </widget>
       </item>
@@ -94,7 +91,7 @@
          <set>Qt::ImhPreferNumbers</set>
         </property>
         <property name="text">
-         <string>15</string>
+         <string>5</string>
         </property>
        </widget>
       </item>

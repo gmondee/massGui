@@ -128,7 +128,7 @@ class MainWindow(QtWidgets.QWidget):
         self.ds.calibrationPlanInit("filtValue")
         for (states, fv, line, energy) in self.cal_info: 
             # # log.debug(f"states {states}, fv {fv}, line {line}, energy {energy}")
-            print(states.split(","))
+            #print(states.split(","))
             if line and not energy:
                 self.ds.calibrationPlanAddPoint(float(fv), line, states=states.split(","))
                 # try:

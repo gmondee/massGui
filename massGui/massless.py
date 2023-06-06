@@ -19,7 +19,7 @@ from matplotlib.lines import Line2D
 import massGui
 
 logging.basicConfig(filename='masslessLog.txt',
-                    filemode='a',
+                    filemode='w',
                     format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
                     datefmt='%H:%M:%S',
                     level=logging.DEBUG)
@@ -477,26 +477,32 @@ class rtpViewer(QtWidgets.QDialog):
         plt.ion()
     def setParams(self, parent):
         self.colors =MPL_DEFAULT_COLORS[1]
-        self.RTPdelay = 15 #will be in seconds
+        
         self.parent = parent
         self.stateLabels = self.parent.ds.stateLabels
+        self.dataToPlot = self.parent.data
         self.build()
         self.connect()
 
 
     def build(self):
         PyQt6.uic.loadUi(os.path.join(os.path.dirname(__file__), "ui/realtimeviewer.ui"), self)
-        print(self.stateLabels, MPL_DEFAULT_COLORS[:1])
+        self.RTPdelay = self.intervalBox.text() 
         self.statesGrid.setParams(state_labels=self.stateLabels, colors=MPL_DEFAULT_COLORS[:1], one_state_per_line=False)
         self.statesGrid.fill_simple()
+        for channum in self.parent.data.keys():
+            self.channelBox.addItem("{}".format(channum))
+        self.channelBox.setCurrentIndex(0)
         self.initRTP()
 
     def connect(self):
         self.updateButton.clicked.connect(self.updateButtonClicked)
 
-
     def updateButtonClicked(self):
-        pass
+        self.timer.stop()
+        self.UpdatePlots()
+        #assert 1 == 0
+
     #####################################| Real-time plotting routine|#####################################
     def initRTP(self): #creates axes, clears variables, and starts real-time plotting routine
 
@@ -506,31 +512,83 @@ class rtpViewer(QtWidgets.QDialog):
         self.plottedStates=[]               #used for the RTP legend
         
         #self.energyPlot=plt.figure()        #everything is plotted onto this figure
+        self.canvas.fig.clear()
         self.energyAxis = self.canvas.fig.add_subplot(111)
-        # self.energyAxis = plt.gca()
         self.energyAxis.grid()
-        self.canvas.set_title('Real-time energy')
-        self.canvas.set_xlabel('Energy (eV)')
-        self.canvas.set_ylabel('Counts per'+str(self.parent.binSize)+'eV bin')
+        
+        self.energyAxis.set_title('Real-time energy')
+        self.energyAxis.set_xlabel('Energy (eV)')
+        self.energyAxis.set_ylabel('Counts per'+str(self.parent.binSize)+'eV bin')
         self.rate = 0.1                     #how much to lower the transparency of lines each update
-        self.updateFreq = int(self.RTPdelay)*1000             #in ms after the multiplication
-        self.continueRTP = True             #toggle to keep updating plots
+        
+        self.timer = QTimer(self)    
+        #self.timer.setSingleShot(True)    
+        self.timer.timeout.connect(self.UpdatePlots)        
+        #self.timer.start(self.updateFreq)
         self.UpdatePlots()
 
     def stopRTP(self):
-        self.continueRTP = False
+        try:
+            self.timer.stop()
+        finally:
+            pass
 
-    def UpdatePlots(self):  #real-time plotting routine. refreshes data, adjust alphas, and replots graphs
-        print(f"iteration {self.updateIndex}")
-        self.parent.data.refreshFromFiles()                #Mass function to refresh .off files as they are updated
-        #self.parent.ds.stateLabels #how to update grid's list of states?
-        States, _colors = self.statesGrid.get_colors_and_states_list()
-        # States = str.split(self.FullCalStates.Val)  #Gets last-submitted states from the lower states text box
+    def getDataToPlot(self):
+        old = self.dataToPlot
+        if self.rtpChannelCheckbox.isChecked():
+            new = self.parent.data
+        else:
+            new = self.parent.data[int(self.channelBox.currentText())]
+        if old != new: #if channel is changed, or if user goes from all channels to one channel, we need to clear the plot.
+            print(new, old)
+            print("Restarting RTP because channel selection has changed.")
+            self.restartRTP()
+            return new
+        else:
+            return new
+
+    def restartRTP(self):   #this function resets necessary parameters to start monitoring another data set
+
+        self.updateIndex=0                  #tracks how many updates have happened
+        self.alphas=[]                      #transparencies of lines
+        self.rtpline=[]                     #list of all plotted lines
+        self.plottedStates=[]               #used for the RTP legend
+        
+        #self.energyPlot=plt.figure()        #everything is plotted onto this figure
+        self.canvas.fig.clear()
+        self.energyAxis = self.canvas.fig.add_subplot(111)
+        self.energyAxis.grid()
+        
+        self.energyAxis.set_title('Real-time energy')
+        self.energyAxis.set_xlabel('Energy (eV)')
+        self.energyAxis.set_ylabel('Counts per'+str(self.parent.binSize)+'eV bin')
         self.rtpdata=[]                             #temporary storage of data points
         self.rtpline.append([])                     #stores every line that is plotted according to the updateIndex
 
+
+
+    def UpdatePlots(self):  #real-time plotting routine. refreshes data, adjust alphas, and replots graphs
+        print(f"iteration {self.updateIndex}")
+        
+        self.RTPdelay = self.intervalBox.text() 
+        self.updateFreq = int(self.RTPdelay)*1000             #in ms after the multiplication
+        self.timer.start(self.updateFreq)
+
+        self.parent.data.refreshFromFiles()                #Mass function to refresh .off files as they are updated
+        _colors, States = self.statesGrid.get_colors_and_states_list()
+        try: #if the user has all states unchecked during a refresh, use the last set of states.
+            States = States[0]
+            self.oldStates = States
+        except:
+            States = self.oldStates
+
+        
+        self.rtpdata=[]                             #temporary storage of data points
+        self.rtpline.append([])                     #stores every line that is plotted according to the updateIndex
+        self.dataToPlot = self.getDataToPlot()
         for s in range(len(States)):    #looping over each state passed in
-            self.rtpdata.append(self.parent.data.hist(np.arange(0, 14000, float(self.parent.binSize)), "energy", states=States[s]))   #[x,y] points of current energy spectrum, one state at a time
+            #self.rtpdata.append(self.parent.data.hist(np.arange(0, 14000, float(self.parent.binSize)), "energy", states=States[s]))   #[x,y] points of current energy spectrum, one state at a time
+            self.rtpdata.append(self.dataToPlot.hist(np.arange(0, 14000, float(self.parent.binSize)), "energy", states=States[s]))
             self.energyAxis.plot(self.rtpdata[s][0],self.rtpdata[s][1],alpha=1, color=self.getColorfromState(States[s]))    #plots the [x,y] points and assigns color based on the state
             if States[s] not in self.plottedStates:     #new states are added to the legend; old ones are already there                      
                 self.plottedStates.append(States[s])
@@ -550,8 +608,7 @@ class rtpViewer(QtWidgets.QDialog):
                 self.rtpline[lineI][setI].set_alpha(self.alphas[lineI])     #sets adjusted alpha values
         self.canvas.draw()
         self.updateIndex=self.updateIndex+1
-        if self.continueRTP==True:  #if off button hasn't been pressed
-            QTimer.singleShot(self.updateFreq, self.UpdatePlots)   #calls the UpdatePlots function again after time has passed
+
 
     def getColorfromState(self, s): #pass in a state label string like 'A' or 'AC' (for states past Z) and get a color index using plt.colormaps() 
         # c = plt.cm.get_cmap('gist_rainbow')     #can be other colormaps, rainbow is most distinct
@@ -566,11 +623,13 @@ class rtpViewer(QtWidgets.QDialog):
         #     cIndex=cIndex-maxColors
         # #print(c(cinter[cIndex]))
         # return c(cinter[cIndex])        #returns values that can be assigned as a plt color, looks like (X,Y,Z,...) or something similar    
-        c=MPL_DEFAULT_COLORS[0:7]
-        maxColors = 8
+        c=MPL_DEFAULT_COLORS
+        maxColors = len(c)
+
         cIndex =  ord(s[-1])-ord('A')
         if len(s)!=1:   #for states like AA, AB, etc., 27 is added to the value of the ones place
             cIndex=cIndex+26+ord(s[0])-ord('A')+1 #26 + value of first letter (making A=1 so AA != Z)
         while cIndex >= maxColors:       #colors repeat after maxColors states. loops until there is a valid interpolated index from cinter
             cIndex=cIndex-maxColors
+        #print(s, cIndex)
         return c[cIndex]
