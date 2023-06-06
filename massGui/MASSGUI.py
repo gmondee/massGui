@@ -57,6 +57,7 @@ class MainWindow(QtWidgets.QWidget):
         self.AvsBbutton.clicked.connect(self.startAvsB)
         self.ptmButton.clicked.connect(self.plotPTM)
         self.linefitButton.clicked.connect(self.startLineFit)
+        self.energyHistButton.clicked.connect(self.viewEnergyPlot)
 
     def load_file(self, filename, maxChans = None):
         self._choose_file_lastdir = os.path.dirname(filename)
@@ -142,7 +143,7 @@ class MainWindow(QtWidgets.QWidget):
         self.data.referenceDs = self.ds
         # log.debug(f"{ds.calibrationPlan}")
         self.tabWidget.setEnabled(True) 
-        self.lineFitComboBox.setEnabled(True)
+        #self.lineFitComboBox.setEnabled(True)
 
   
 
@@ -177,7 +178,7 @@ class MainWindow(QtWidgets.QWidget):
     def importTableRows(self):
         rowPosition = None
         allowCal = True
-        self.lineFitComboBox.clear()
+        #self.lineFitComboBox.clear()
         for i in range(len(self.cal_info)):
             rowPosition = self.calTable.rowCount()
             rowData = self.cal_info[i] #data like       [state, filtVal, name]
@@ -187,7 +188,7 @@ class MainWindow(QtWidgets.QWidget):
             
             if rowData[2] != '':
                 self.calTable.setItem(rowPosition, 0, QtWidgets.QTableWidgetItem(rowData[2]))   #name
-                self.lineFitComboBox.addItem(rowData[2])
+                #self.lineFitComboBox.addItem(rowData[2])
             else:
                 self.calTable.setItem(rowPosition, 0, QtWidgets.QTableWidgetItem('Name?'))
                 self.calTable.item(rowPosition, 0).setBackground(QtGui.QColor(255,10,10))  #name
@@ -280,14 +281,16 @@ class MainWindow(QtWidgets.QWidget):
         
         self.plotter.exec()
 
+    def viewEnergyPlot(self):
+        self._selected_window = self.plotter
+        self.plotter.setParams(self.data, self.ds.channum, "energy", self.ds.stateLabels)
+        self.plotter.exec()
+
     def diagnoseCalibration(self):
         self.plotter = diagnoseViewer(self)
         self.plotter.setParams(self.data, self.ds.channum)
         self.plotter.exec()
 
-    def handle_line_fit(self, method): #unfinished
-        if method == 'comboBox':
-            self.line = self.lineFitComboBox.currentText()
 
     def startRTP(self):
         self.binSize = 1

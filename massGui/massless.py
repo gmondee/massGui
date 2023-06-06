@@ -728,11 +728,23 @@ class linefitSetup(QtWidgets.QDialog):
         line = self.lineBox.currentText()
         has_linear_background = self.lbCheckbox.isChecked()
         has_tails = self.tailCheckbox.isChecked()
+
+        dlo = self.dlo.text()
+        if dlo != '': #not empty
+            dlo = abs(int(self.dlo.text()))
+        else:
+            dlo = 15
+
+        dhi = self.dhi.text()
+        if dhi != '': #not empty
+            dhi = abs(int(self.dhi.text()))
+        else:
+            dhi = 15
         # if self.channelCheckbox.isChecked():
         #     channels = self.data
         # else:
         channel = self.data[int(self.channelBox.currentText())]
-        channel.linefit(lineNameOrEnergy=line, attr="energy", states=states, has_linear_background=has_linear_background, has_tails=has_tails)
+        channel.linefit(lineNameOrEnergy=line, attr="energy", states=states, has_linear_background=has_linear_background, has_tails=has_tails, dlo=dlo, dhi=dhi)
         # linefit(self, lineNameOrEnergy="MnKAlpha", attr="energy", states=None, axis=None, dlo=50, dhi=50,
         #         binsize=None, binEdges=None, label="full", plot=True,
         #         params_fixed=None, cutRecipeName=None, calibration=None, require_errorbars=True, method="leastsq_refit",
