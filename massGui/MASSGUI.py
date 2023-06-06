@@ -10,7 +10,7 @@ from pytestqt.qtbot import QtBot
 import pytest
 import pytestqt
 from matplotlib.lines import Line2D
-from .massless import HistCalibrator, HistPlotter, diagnoseViewer, rtpViewer, AvsBSetup
+from .massless import HistCalibrator, HistPlotter, diagnoseViewer, rtpViewer, AvsBSetup, linefitSetup
 from .canvas import MplCanvas
 
 
@@ -56,6 +56,7 @@ class MainWindow(QtWidgets.QWidget):
         self.startRTPButton.clicked.connect(self.startRTP)
         self.AvsBbutton.clicked.connect(self.startAvsB)
         self.ptmButton.clicked.connect(self.plotPTM)
+        self.linefitButton.clicked.connect(self.startLineFit)
 
     def load_file(self, filename, maxChans = None):
         self._choose_file_lastdir = os.path.dirname(filename)
@@ -311,6 +312,12 @@ class MainWindow(QtWidgets.QWidget):
         self.AvsBsetup.Abox.setCurrentText("relTimeSec")
         self.AvsBsetup.Bbox.setCurrentText("pretriggerMean")
         self.AvsBsetup.show()
+
+    def startLineFit(self):
+        self.lfsetup = linefitSetup(self) 
+        lines = list(mass.spectra.keys())
+        self.lfsetup.setParams(self, lines, states_list=self.ds.stateLabels, channels=self.data.keys(), data=self.data)
+        self.lfsetup.show()
 
         
     @property

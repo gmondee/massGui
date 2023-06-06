@@ -38,7 +38,7 @@ class HistCalibrator(QtWidgets.QDialog):
         super(HistCalibrator, self).__init__(parent)
         #self.setWindowModality(QtCore.Qt.ApplicationModal)
         QtWidgets.QDialog.__init__(self)
-        self.lines = self.TOptionsDict=list(mass.spectra.keys())
+        self.lines = list(mass.spectra.keys())
 
     def setParams(self, data, channum, attr, state_labels, colors=MPL_DEFAULT_COLORS[:6], lines=DEFAULT_LINES):
         self.build(data, channum, attr, state_labels, colors)
@@ -691,6 +691,54 @@ class AvsBSetup(QtWidgets.QDialog):
         # self.plotter.setParams(self, A, B, states, channels, self.data, self.mode)
         # self.plotter.show()
 
+class linefitSetup(QtWidgets.QDialog):
+    def __init__(self, parent=None):
+        super(linefitSetup, self).__init__(parent)
+        QtWidgets.QDialog.__init__(self)
+        plt.ion()
+    def setParams(self, parent, lines, states_list, channels, data):
+        self.colors = MPL_DEFAULT_COLORS[0]
+        self.parent = parent
+        self.states_list = states_list
+        self.lines = lines
+        self.channels = channels
+        self.data = data
+        self.build()
+        self.connect()
+
+
+    def build(self):
+        PyQt6.uic.loadUi(os.path.join(os.path.dirname(__file__), "ui/linefitSetup.ui"), self) 
+        self.statesGrid.setParams(state_labels=self.states_list, colors=MPL_DEFAULT_COLORS[:1], one_state_per_line=False)
+        self.statesGrid.fill_simple()
+        for channum in self.channels:
+            self.channelBox.addItem("{}".format(channum))
+        self.channelBox.setCurrentIndex(0)
+
+        for line in self.lines:
+            self.lineBox.addItem("{}".format(line))
+        self.lineBox.setCurrentIndex(0)     
+
+    def connect(self):
+        self.plotButton.clicked.connect(self.handlePlot)
+
+    def handlePlot(self):
+        _colors, states = self.statesGrid.get_colors_and_states_list()
+        states=states[0]
+        line = self.lineBox.currentText()
+        has_linear_background = self.lbCheckbox.isChecked()
+        has_tails = self.tailCheckbox.isChecked()
+        # if self.channelCheckbox.isChecked():
+        #     channels = self.data
+        # else:
+        channel = self.data[int(self.channelBox.currentText())]
+        channel.linefit(lineNameOrEnergy=line, attr="energy", states=states, has_linear_background=has_linear_background, has_tails=has_tails)
+        # linefit(self, lineNameOrEnergy="MnKAlpha", attr="energy", states=None, axis=None, dlo=50, dhi=50,
+        #         binsize=None, binEdges=None, label="full", plot=True,
+        #         params_fixed=None, cutRecipeName=None, calibration=None, require_errorbars=True, method="leastsq_refit",
+        #         has_linear_background=True, has_tails=False, params_update=lmfit.Parameters())
+        # self.plotter.setParams(self, A, B, states, channels, self.data, self.mode)
+        # self.plotter.show()
 
 # class AvsBViewer(QtWidgets.QDialog):      #not used. avsb is plotted in a popup plt window so you can have many at once.
 #     def __init__(self, parent=None):
