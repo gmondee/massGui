@@ -17,7 +17,7 @@ from .canvas import MplCanvas
 import mass
 from matplotlib.lines import Line2D
 import massGui
-
+import h5py
 logging.basicConfig(filename='masslessLog.txt',
                     filemode='w',
                     format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
@@ -127,7 +127,7 @@ class HistViewer(QtWidgets.QWidget): #widget. plots clickable hist.
         self.plotAllChans = False #used to switch between self.plot and self.plotAll
         self.binLo = 0
         self.binHi = 20000
-        self.binSize = 10
+        self.binSize = 1
         self.channum = channum
         self.lastUsedChannel = channum
         self.data=data
@@ -278,12 +278,6 @@ class HistViewer(QtWidgets.QWidget): #widget. plots clickable hist.
         return i
     
 
-        
-
-            
-
-
-
 class StatesGrid(QtWidgets.QWidget):
     def __init__(self, parent=None, state_labels=None, colors=None, one_state_per_line=True):
         QtWidgets.QWidget.__init__(self, parent)
@@ -316,7 +310,8 @@ class StatesGrid(QtWidgets.QWidget):
                 boxes.append(box)
             self.boxes.append(boxes)
         self.setLayout(self.grid) 
-        self.setSizePolicy(QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Fixed,QtWidgets.QSizePolicy.Policy.Fixed))
+        #self.setSizePolicy(QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Fixed,QtWidgets.QSizePolicy.Policy.Fixed))
+        self.numberOfStates = i+1
     
     def connect(self):
         for (j, color) in enumerate(self.colors):
@@ -356,6 +351,25 @@ class StatesGrid(QtWidgets.QWidget):
             for (i, state) in enumerate(self.state_labels):
                 box = self.boxes[i][j] 
                 box.setChecked(True) 
+    
+    def appendStates(self, newStates): #for real-time plotting: add more state boxes as more states are added during an experiment.
+        for (i, state) in enumerate(newStates, self.numberOfStates): #start on i = numberOfStates so we don't override the existing boxes.
+            boxes = []
+            for (j, color) in enumerate(self.colors):
+                if j== 0:
+                    self.grid.addWidget(QtWidgets.QLabel(state), 0, i+1)
+                if i==0:
+                    label = QtWidgets.QLabel("|") 
+                    label.setStyleSheet("color:{}".format(color))                
+                    self.grid.addWidget(label, j+1, 0)
+                box = QtWidgets.QCheckBox()
+                # bpalette = box.palette()
+                # bpalette.setColor(QtGui.QPalette.WindowText, QtGui.QColor(color))
+                # label.setPalette(bpalette) 
+                box.setStyleSheet("background-color: {}".format(color))
+                self.grid.addWidget(box, j+1, i+1)
+                boxes.append(box)
+            self.boxes.append(boxes)
     
 
 
@@ -525,8 +539,9 @@ class rtpViewer(QtWidgets.QDialog):
         self.energyAxis.set_title('Real-time energy')
         self.energyAxis.set_xlabel('Energy (eV)')
         self.energyAxis.set_ylabel('Counts per'+str(self.parent.binSize)+'eV bin')
+        self.energyAxis.autoscale(enable=True)
         self.rate = 0.1                     #how much to lower the transparency of lines each update
-        
+        self.setAttribute(QtCore.Qt.WidgetAttribute.WA_DeleteOnClose)
         self.timer = QTimer(self)    
         #self.timer.setSingleShot(True)    
         self.timer.timeout.connect(self.UpdatePlots)        
@@ -580,7 +595,8 @@ class rtpViewer(QtWidgets.QDialog):
         self.updateFreq = int(self.RTPdelay)*1000             #in ms after the multiplication
         self.timer.start(self.updateFreq)
 
-        self.parent.data.refreshFromFiles()                #Mass function to refresh .off files as they are updated
+        self.updateFilesAndStates()
+        
         _colors, States = self.statesGrid.get_colors_and_states_list()
         try: #if the user has all states unchecked during a refresh, use the last set of states.
             States = States[0]
@@ -629,7 +645,7 @@ class rtpViewer(QtWidgets.QDialog):
         #     cIndex=cIndex-maxColors
         # #print(c(cinter[cIndex]))
         # return c(cinter[cIndex])        #returns values that can be assigned as a plt color, looks like (X,Y,Z,...) or something similar    
-        c=MPL_DEFAULT_COLORS
+        c=['#d8434e', '#f67a49', '#fdbf6f', '#feeda1', '#f1f9a9', '#bfe5a0', '#74c7a5', '#378ebb'] #8 colors from seaborn's Spectral_r colormap
         maxColors = len(c)
 
         cIndex =  ord(s[-1])-ord('A')
@@ -639,6 +655,15 @@ class rtpViewer(QtWidgets.QDialog):
             cIndex=cIndex-maxColors
         #print(s, cIndex)
         return c[cIndex]
+    
+    def updateFilesAndStates(self):
+        oldStates = self.parent.ds.stateLabels
+        self.parent.data.refreshFromFiles()                #Mass function to refresh .off files as they are updated
+        newStates = list(set(oldStates).symmetric_difference(set(self.parent.ds.stateLabels)))
+        if len(newStates)>0:
+            print("New states found: ",newStates)
+            self.statesGrid.appendStates(newStates)
+
     
 
 class AvsBSetup(QtWidgets.QDialog):
@@ -787,4 +812,33 @@ class linefitSetup(QtWidgets.QDialog):
 #             pass
 #         self.canvas.draw()
 
+
+class hdf5Opener(QtWidgets.QDialog):
+    def __init__(self, parent=None):
+        super(hdf5Opener, self).__init__(parent)
+        QtWidgets.QDialog.__init__(self)
+        plt.ion()
+    def setParams(self, parent):
+        self.parent = parent
+        self.build()
+        self.connect()
+
+    def build(self):
+        PyQt6.uic.loadUi(os.path.join(os.path.dirname(__file__), "ui/hdf5Opener.ui"), self) 
+        cals = self.getFileList()
+        for cal in cals:
+            self.fileBox.addItem("{}".format(cal))
+
+    def connect(self):
+        self.openButton.clicked.connect(self.close)
+
+    def getFileList(self):
+        calList = []
+        with h5py.File('saves.h5', 'r') as file:
+            runs = list(file.keys())
+            for run in runs:
+                for cal in list(file[run].keys()):
+                    calList.append(f'{run} {cal}')
+        print(calList)
+        return calList
 

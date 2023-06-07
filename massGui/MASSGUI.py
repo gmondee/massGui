@@ -10,7 +10,7 @@ import os
 #import pytest
 #import pytestqt
 from matplotlib.lines import Line2D
-from .massless import HistCalibrator, HistPlotter, diagnoseViewer, rtpViewer, AvsBSetup, linefitSetup
+from .massless import HistCalibrator, HistPlotter, diagnoseViewer, rtpViewer, AvsBSetup, linefitSetup, hdf5Opener
 from .canvas import MplCanvas
 
 
@@ -18,6 +18,7 @@ import mass
 from mass.off import ChannelGroup, Channel, getOffFileListFromOneFile
 
 import numpy as np
+import h5py
 
 # def main():
 #     app = qt.QApplication([])
@@ -59,6 +60,8 @@ class MainWindow(QtWidgets.QWidget):
         self.ptmButton.clicked.connect(self.plotPTM)
         self.linefitButton.clicked.connect(self.startLineFit)
         self.energyHistButton.clicked.connect(self.viewEnergyPlot)
+        self.saveCalButton.clicked.connect(self.save_to_hdf5)
+        self.loadCalButton.clicked.connect(self.handle_load_from_hdf5)
 
     def load_file(self, filename, maxChans = None):
         self._choose_file_lastdir = os.path.dirname(filename)
@@ -69,6 +72,7 @@ class MainWindow(QtWidgets.QWidget):
         self.data = ChannelGroup(filenames, verbose=False)
         #self.label_loadedChans.setText("loaded {} chans".format(len(self.data)))
         self.fileTextBox.setText("Curret dataset: {}".format(self.data.shortName)) 
+         
         self.channels = []
         for channum in self.data.keys():
             self.channels.append(channum)
@@ -103,6 +107,7 @@ class MainWindow(QtWidgets.QWidget):
 
     def launch_channel(self, data, channum):
         self.checkHCI()
+        self.plotsGroup.setEnabled(False)
         self.fileSelectionGroup.setEnabled(False)
         self.hc = HistCalibrator(self, data, channum, "filtValue", data[channum].stateLabels) 
         self.hc.setParams(data, channum, "filtValue", data[channum].stateLabels)
@@ -143,14 +148,14 @@ class MainWindow(QtWidgets.QWidget):
                 self.ds.calibrationPlanAddPoint(float(fv), line, states=states.split(","), energy=float(energy))
         self.data.referenceDs = self.ds
         # log.debug(f"{ds.calibrationPlan}")
-        self.tabWidget.setEnabled(True) 
+        self.plotsGroup.setEnabled(True) 
         #self.lineFitComboBox.setEnabled(True)
 
   
 
     def resetCalibration(self):
         self.calButtonGroup.setEnabled(False)
-        self.tabWidget.setEnabled(False)
+        self.plotsGroup.setEnabled(False)
         self.clear_table()
 
     def get_line_names(self):
@@ -283,9 +288,10 @@ class MainWindow(QtWidgets.QWidget):
         self.plotter.exec()
 
     def viewEnergyPlot(self):
-        self._selected_window = self.plotter
-        self.plotter.setParams(self.data, self.ds.channum, "energy", self.ds.stateLabels)
-        self.plotter.exec()
+        plotter = HistPlotter(self)
+        self._selected_window = plotter
+        plotter.setParams(self.data, self.ds.channum, "energy", self.ds.stateLabels)
+        plotter.exec()
 
     def diagnoseCalibration(self):
         self.plotter = diagnoseViewer(self)
@@ -297,7 +303,9 @@ class MainWindow(QtWidgets.QWidget):
         self.binSize = 1
         self.plotter = rtpViewer(self)
         self.plotter.setParams(self)
-        self.plotter.exec()
+        self.plotter.show()
+        # self.plotter.timer.stop()
+        # self.plotter.close()
 
     def startAvsB(self):
         self.handleAvsB("1D")
@@ -330,7 +338,76 @@ class MainWindow(QtWidgets.QWidget):
         self.lfsetup.setParams(self, lines, states_list=self.ds.stateLabels, channels=self.data.keys(), data=self.data)
         self.lfsetup.show()
 
+    def save_to_hdf5(self, name=None):
+        with  h5py.File('saves.h5', 'a') as hf:
+
+            str.split(self.ds.shortName)
+            run_filename = str.split(self.ds.shortName)[0] +" "+ str(self.ds.channum) +" "+ str(len(self.data.values()))
+            if run_filename in hf:
+                hdf5_group = hf[run_filename]
+            else:
+                hdf5_group = hf.create_group(run_filename)
+
+            name = 'testing'
+            if name in hdf5_group:
+                del hdf5_group[name]
+
+
+            cal = self.ds.recipes['energy'].f
+            print(name)
+            cal_group = hdf5_group.create_group(name) #like a nested folder, as in .saves/shortName/name/[saved calibration]
+            cal_group["name"] = [_name.encode() for _name in cal._names]
+            cal_group["ph"] = cal._ph
+            cal_group["energy"] = cal._energies
+            cal_group["dph"] = cal._dph
+            cal_group["de"] = cal._de
+            cal_group.attrs['nonlinearity'] = cal.nonlinearity
+            cal_group.attrs['curvetype'] = cal.CURVETYPE[cal._curvetype]
+            cal_group.attrs['approximate'] = cal._use_approximation
+            print('saved')
+
+
+    def handle_load_from_hdf5(self):
+        self.hdf5Opener = hdf5Opener(self) 
+        self.hdf5Opener.setParams(self)
+        self.hdf5Opener.exec()
+        cal_name = str.split(self.hdf5Opener.fileBox.currentText(), " ")
+        group_name = f'{cal_name[0]} {cal_name[1]} {cal_name[2]}'
+        with h5py.File('saves.h5', 'r') as hf:
+            group = hf[group_name]
+            self.load_from_hdf5(group, cal_name[3], int(cal_name[1]))
+        self.plotsGroup.setEnabled(True)
+
+
+    def load_from_hdf5(self, hdf5_group, name, channum):
+        cal_group = hdf5_group[name]
+        cal = mass.EnergyCalibration(cal_group.attrs['nonlinearity'],
+                  cal_group.attrs['curvetype'],
+                  cal_group.attrs['approximate'])
+        print((cal_group.attrs['nonlinearity'],
+                  cal_group.attrs['curvetype'],
+                  cal_group.attrs['approximate']))
         
+        _names = cal_group["name"][:]
+        _ph = cal_group["ph"][:]
+        _energies = cal_group["energy"][:]
+        _dph = cal_group["dph"][:]
+        _de = cal_group["de"][:]
+
+        for thisname, ph, e, dph, de in zip(_names, _ph, _energies, _dph, _de):
+            cal.add_cal_point(ph, e, thisname.decode(), dph, de)
+        self.ds = self.data[channum]
+
+        self.ds.calibrationPlanInit("filtValue")
+        self.data.alignToReferenceChannel(referenceChannel=self.ds, binEdges=np.arange(0,35000,10), attr="filtValue", states=self.ds.stateLabels)
+        for channel in self.data.keys():
+            self.data[channel].recipes.add("energy", cal, ["filtValue"], overwrite=True)
+        
+        # self.ds.recipes.add("energy", cal,
+        #                  ["filtValue"], overwrite=True)
+        
+        return cal
+    
     @property
     def selected_window(self):
         return self._selected_window

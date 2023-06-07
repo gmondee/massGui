@@ -109,17 +109,21 @@ def test_cal(app, qtbot):
     qtbot.mouseClick(app.allChanCalButton, QtCore.Qt.MouseButton.LeftButton)
     qtbot.waitUntil(lambda: qtbot.done_cal_open == 1, timeout = 1000)
 
-    # qtbot.mouseClick(app.rtpTab, QtCore.Qt.MouseButton.LeftButton)
     # qtbot.mouseClick(app.startRTPButton, QtCore.Qt.MouseButton.LeftButton)
+    # qtbot.addWidget(app.plotter)
 
-    qtbot.mouseClick(app.AvsB2Dbutton, QtCore.Qt.MouseButton.LeftButton)
-    qtbot.addWidget(app.AvsBsetup)
+    # qtbot.mouseClick(app.AvsB2Dbutton, QtCore.Qt.MouseButton.LeftButton)
+    # qtbot.addWidget(app.AvsBsetup)
 
     # qtbot.mouseClick(app.ptmButton, QtCore.Qt.MouseButton.LeftButton)
     # qtbot.addWidget(app.AvsBsetup)
 
     # qtbot.mouseClick(app.linefitButton, QtCore.Qt.MouseButton.LeftButton)
     # qtbot.addWidget(app.lfsetup)
+
+    qtbot.mouseClick(app.saveCalButton, QtCore.Qt.MouseButton.LeftButton)
+    qtbot.mouseClick(app.loadCalButton, QtCore.Qt.MouseButton.LeftButton)
+    qtbot.addWidget(app.hdf5Opener)
     qtbot.stop()
     
     
