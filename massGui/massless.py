@@ -34,13 +34,14 @@ MPL_DEFAULT_COLORS = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728',
 DEFAULT_LINES = list(mass.spectra.keys())
 
 class HistCalibrator(QtWidgets.QDialog):
-    def __init__(self, parent=None,s=None, attr=None, state_labels=None, colors=MPL_DEFAULT_COLORS[:6], lines=DEFAULT_LINES):
+    def __init__(self, parent=None):
         super(HistCalibrator, self).__init__(parent)
         #self.setWindowModality(QtCore.Qt.ApplicationModal)
         QtWidgets.QDialog.__init__(self)
         self.lines = list(mass.spectra.keys())
 
-    def setParams(self, data, channum, attr, state_labels, colors=MPL_DEFAULT_COLORS[:6], lines=DEFAULT_LINES):
+    def setParams(self, data, channum, attr, state_labels, binSize, colors=MPL_DEFAULT_COLORS[:6], lines=DEFAULT_LINES):
+        self.binSize=binSize
         self.build(data, channum, attr, state_labels, colors)
         self.connect()
 
@@ -51,7 +52,7 @@ class HistCalibrator(QtWidgets.QDialog):
         self.channum = channum
         for channel in self.data.keys():
             self.channelBox.addItem("{}".format(channel))
-        self.histHistViewer.setParams(self, data, channum, attr, state_labels, colors)
+        self.histHistViewer.setParams(self, data, channum, attr, state_labels, colors, self.binSize)
 
 
     def connect(self):
@@ -119,7 +120,7 @@ class HistViewer(QtWidgets.QWidget): #widget. plots clickable hist.
  
         # PyQt6.uic.loadUi(os.path.join(os.path.dirname(__file__), "ui/channel.ui"), self) 
 
-    def setParams(self, parent, data, channum, attr, state_labels, colors, clickable=True):
+    def setParams(self, parent, data, channum, attr, state_labels, colors, binSize, clickable=True):
         # QtWidgets.QWidget.__init__(self, parent)#, s, attr, state_labels, colors)
         #super(HistViewer, self).__init__(parent)
         log.debug(f"set params for histviewer")
@@ -127,7 +128,7 @@ class HistViewer(QtWidgets.QWidget): #widget. plots clickable hist.
         self.plotAllChans = False #used to switch between self.plot and self.plotAll
         self.binLo = 0
         self.binHi = 20000
-        self.binSize = 1
+        self.binSize = binSize
         self.channum = channum
         self.lastUsedChannel = channum
         self.data=data
@@ -156,6 +157,7 @@ class HistViewer(QtWidgets.QWidget): #widget. plots clickable hist.
     def handle_plot(self): #needs to use channel
         #self.channum = self.parent().getChannum()  #can't use parent properly b/c initialised with .ui file. Use an update signal instead.
         colors, states_list = self.statesGrid.get_colors_and_states_list() 
+        print(self.binSize)
         # log.debug(f"handle_plot: color: {colors}")
         # log.debug(f"handle_plot: states_list: {states_list}")
         if len(colors) == 0:
@@ -346,12 +348,18 @@ class StatesGrid(QtWidgets.QWidget):
                 states_list.append(states)
         return colors, states_list
     
-    def fill_all(self): #intended for cases where you only have one row of states
+    def fill_all(self): #intended for cases where you only have one row of states. can be modified to fill one row of any states grid...
         for (j, color) in enumerate(self.colors):
             for (i, state) in enumerate(self.state_labels):
                 box = self.boxes[i][j] 
                 box.setChecked(True) 
-    
+
+    def unfill_all(self): #same as fill_all, but unchecks boxes
+        for (j, color) in enumerate(self.colors):
+            for (i, state) in enumerate(self.state_labels):
+                box = self.boxes[i][j] 
+                box.setChecked(False) 
+
     def appendStates(self, newStates): #for real-time plotting: add more state boxes as more states are added during an experiment.
         for (i, state) in enumerate(newStates, self.numberOfStates): #start on i = numberOfStates so we don't override the existing boxes.
             boxes = []
@@ -380,7 +388,8 @@ class HistPlotter(QtWidgets.QDialog):
         #self.setWindowModality(QtCore.Qt.ApplicationModal)
         QtWidgets.QDialog.__init__(self)
 
-    def setParams(self, data, channum, attr, state_labels, colors=MPL_DEFAULT_COLORS[:6], lines=DEFAULT_LINES):
+    def setParams(self, data, channum, attr, state_labels, binSize, colors=MPL_DEFAULT_COLORS[:6], lines=DEFAULT_LINES):
+        self.binsize=binSize
         self.build(data, channum, attr, state_labels, colors)
         self.connect()
 
@@ -394,7 +403,7 @@ class HistPlotter(QtWidgets.QDialog):
         self.channelBox.setCurrentText(str(self.channum))
         self.eRangeLow.insert(str(0))
         self.eRangeHi.insert(str(20000))
-        self.pHistViewer.setParams(self, data, int(self.channum), attr, state_labels, colors, clickable=False)
+        self.pHistViewer.setParams(self, data, int(self.channum), attr, state_labels, colors,binSize=self.binsize, clickable=False)
 
 
     def connect(self):
@@ -704,34 +713,45 @@ class AvsBSetup(QtWidgets.QDialog):
 
     def connect(self):
         self.plotButton.clicked.connect(self.handlePlot)
+        self.uncheckAllButton.clicked.connect(self.uncheckAll)
+        self.checkAllButton.clicked.connect(self.checkAll)
 
     def handlePlot(self):
         #self.plotter = AvsBViewer(self)
         A = self.Abox.currentText()
         B = self.Bbox.currentText()
         _colors, states = self.statesGrid.get_colors_and_states_list()
-        states=states[0]
-        # if self.channelCheckbox.isChecked():
-        #     channels = self.data
-        # else:
-        channel = self.data[int(self.channelBox.currentText())]
+        if len(states) == 0: #if no states are checked, don't try to plot 
+            print("Error: Select one or more states to plot.")
+        else:
+            states=states[0]
+            # if self.channelCheckbox.isChecked():
+            #     channels = self.data
+            # else:
+            channel = self.data[int(self.channelBox.currentText())]
 
-        if self.mode == "1D":
-            channel.plotAvsB(A, B, axis=None, states=states)
-        if self.mode == "2D":
-            Ahi = max(channel.getAttr(A, states))
-            Alo = min(channel.getAttr(A, states))
-            
-            Bhi = max(channel.getAttr(B, states))
-            Blo = min(channel.getAttr(B, states))
+            if self.mode == "1D":
+                channel.plotAvsB(A, B, axis=None, states=states)
+            if self.mode == "2D":
+                Ahi = max(channel.getAttr(A, states))
+                Alo = min(channel.getAttr(A, states))
+                
+                Bhi = max(channel.getAttr(B, states))
+                Blo = min(channel.getAttr(B, states))
 
-            num = int(self.binsBox.text())#500
+                num = int(self.binsBox.text())#500
 
-            bins = [np.linspace(Alo, Ahi, num=num), np.linspace(Blo,Bhi,num=num)]#self.binsBox.text()
-            channel.plotAvsB2d(A, B, binEdgesAB = bins, axis=None, states=states)
-            #plotAvsB2d(self, nameA, nameB, binEdgesAB, axis=None, states=None, cutRecipeName=None, norm=None)
-        # self.plotter.setParams(self, A, B, states, channels, self.data, self.mode)
-        # self.plotter.show()
+                bins = [np.linspace(Alo, Ahi, num=num), np.linspace(Blo,Bhi,num=num)]#self.binsBox.text()
+                channel.plotAvsB2d(A, B, binEdgesAB = bins, axis=None, states=states)
+                #plotAvsB2d(self, nameA, nameB, binEdgesAB, axis=None, states=None, cutRecipeName=None, norm=None)
+            # self.plotter.setParams(self, A, B, states, channels, self.data, self.mode)
+            # self.plotter.show()
+
+    def uncheckAll(self):
+        self.statesGrid.unfill_all()
+
+    def checkAll(self):
+        self.statesGrid.fill_all()
 
 class linefitSetup(QtWidgets.QDialog):
     def __init__(self, parent=None):
@@ -813,7 +833,7 @@ class linefitSetup(QtWidgets.QDialog):
 #         self.canvas.draw()
 
 
-class hdf5Opener(QtWidgets.QDialog):
+class hdf5Opener(QtWidgets.QDialog): #dialog with a combobox which lists all of the saved calibraitions.
     def __init__(self, parent=None):
         super(hdf5Opener, self).__init__(parent)
         QtWidgets.QDialog.__init__(self)
@@ -836,9 +856,8 @@ class hdf5Opener(QtWidgets.QDialog):
         calList = []
         with h5py.File('saves.h5', 'r') as file:
             runs = list(file.keys())
-            for run in runs:
+            for run in runs:    #individual calibrations are grouped by the run information, so we loop through the nested folders.
                 for cal in list(file[run].keys()):
                     calList.append(f'{run} {cal}')
-        print(calList)
         return calList
 

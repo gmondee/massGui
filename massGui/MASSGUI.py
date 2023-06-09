@@ -69,14 +69,18 @@ class MainWindow(QtWidgets.QWidget):
             maxChans = self.maxChansSpinBox.value()
         filenames = getOffFileListFromOneFile(filename, maxChans)
         self.filenames = filenames
+        self.filename=filename
         self.data = ChannelGroup(filenames, verbose=False)
         #self.label_loadedChans.setText("loaded {} chans".format(len(self.data)))
+        print("loaded {} chans".format(len(self.data)))
+
         self.fileTextBox.setText("Curret dataset: {}".format(self.data.shortName)) 
          
         self.channels = []
         for channum in self.data.keys():
             self.channels.append(channum)
             #self.refChannelBox.addItem("{}".format(channum))
+        
 
     def handle_choose_file(self):
         #options = QFileDialog.options(QFileDialog)
@@ -94,6 +98,7 @@ class MainWindow(QtWidgets.QWidget):
             #self.data_no_cal = self.data
         self.calibrationGroup.setEnabled(True) #file is loaded, user should now do the line identification.
         self.calButtonGroup.setEnabled(False) #don't let users run the calibration procedure yet. enabled in importTableRows()
+        self.loadCalButton.setEnabled(True) #once file is specified, a calibration can be loaded
 
     def set_std_dev_threshold(self):
         for ds in self.data.values():
@@ -109,8 +114,8 @@ class MainWindow(QtWidgets.QWidget):
         self.checkHCI()
         self.plotsGroup.setEnabled(False)
         self.fileSelectionGroup.setEnabled(False)
-        self.hc = HistCalibrator(self, data, channum, "filtValue", data[channum].stateLabels) 
-        self.hc.setParams(data, channum, "filtValue", data[channum].stateLabels)
+        self.hc = HistCalibrator(self) 
+        self.hc.setParams(data, channum, "filtValue", data[channum].stateLabels, binSize=50)
         #hc.setWindowModality(self, QtCore.Qt.ApplicationModal)
         self._selected_window = self.hc
         self.hc.exec()
@@ -156,6 +161,7 @@ class MainWindow(QtWidgets.QWidget):
     def resetCalibration(self):
         self.calButtonGroup.setEnabled(False)
         self.plotsGroup.setEnabled(False)
+        self.saveCalButton.setEnabled(False)
         self.clear_table()
 
     def get_line_names(self):
@@ -249,10 +255,12 @@ class MainWindow(QtWidgets.QWidget):
                 print(f'Calibrated channel {self.ds.channum}')
             except:
                 pass
-            self.ds.calibrateFollowingPlan(self.newestName, dlo=15,dhi=15, binsize=1) #add dlo, dhi, binsize options later
+            dlo_dhi = self.getDloDhi()
+            binsize=self.getBinsizeCal()
+            self.ds.calibrateFollowingPlan(self.newestName, dlo=dlo_dhi,dhi=dlo_dhi, binsize=binsize)
 
         self.plotter = HistPlotter(self) 
-        self.plotter.setParams(self.data, self.ds.channum, "energy", self.ds.stateLabels)
+        self.plotter.setParams(self.data, self.ds.channum, "energy", self.ds.stateLabels, binSize=binsize)
         self.plotter.channelBox.setEnabled(False)
         self.plotter.histChannelCheckbox.setEnabled(False)
         self.plotter.exec()
@@ -280,17 +288,27 @@ class MainWindow(QtWidgets.QWidget):
             print(f'Calibrated {len(self.data.values())} channels using reference channel {self.ds.channum}')
         except:
             pass
-        self.data.calibrateFollowingPlan(self.newestName, dlo=15,dhi=15, binsize=1, _rethrow=True) #add dlo, dhi, binsize options later
+        dlo_dhi = self.getDloDhi()
+        binsize=self.getBinsizeCal()
+        self.data.calibrateFollowingPlan(self.newestName, dlo=dlo_dhi,dhi=dlo_dhi, binsize=binsize, _rethrow=True)
+        self.saveCalButton.setEnabled(True)
+
         self.plotter = HistPlotter(self) 
         self._selected_window = self.plotter
-        self.plotter.setParams(self.data, self.ds.channum, "energy", self.ds.stateLabels)
+        self.plotter.setParams(self.data, self.ds.channum, "energy", self.ds.stateLabels, binSize=binsize)
         
         self.plotter.exec()
 
+    def getDloDhi(self):
+        return int(self.dlo_dhiBox.value())
+    
+    def getBinsizeCal(self):
+        return int(self.binSizeBox.value())
+    
     def viewEnergyPlot(self):
         plotter = HistPlotter(self)
         self._selected_window = plotter
-        plotter.setParams(self.data, self.ds.channum, "energy", self.ds.stateLabels)
+        plotter.setParams(self.data, self.ds.channum, "energy", self.ds.stateLabels, binSize=self.getBinsizeCal())
         plotter.exec()
 
     def diagnoseCalibration(self):
@@ -317,6 +335,7 @@ class MainWindow(QtWidgets.QWidget):
         keys = list(self.ds.recipes.craftedIngredients) + list(self.ds.recipes.baseIngredients)
         if type == "1D":
             self.AvsBsetup = AvsBSetup(self) 
+            #print(self.data.keys())
             self.AvsBsetup.setParams(self, keys, self.ds.stateLabels, self.data.keys(), self.data, mode = "1D")
             self.AvsBsetup.show()
         if type == "2D":
@@ -342,7 +361,7 @@ class MainWindow(QtWidgets.QWidget):
         with  h5py.File('saves.h5', 'a') as hf:
 
             str.split(self.ds.shortName)
-            run_filename = str.split(self.ds.shortName)[0] +" "+ str(self.ds.channum) +" "+ str(len(self.data.values()))
+            run_filename = str.split(self.ds.shortName)[0] +" "+ str(self.ds.channum) +" "+ str(len(self.data.values())) #filename is date_run + referenceChannel + numberOfChannels
             if run_filename in hf:
                 hdf5_group = hf[run_filename]
             else:
@@ -372,14 +391,14 @@ class MainWindow(QtWidgets.QWidget):
         self.hdf5Opener.setParams(self)
         self.hdf5Opener.exec()
         cal_name = str.split(self.hdf5Opener.fileBox.currentText(), " ")
-        group_name = f'{cal_name[0]} {cal_name[1]} {cal_name[2]}'
+        group_name = f'{cal_name[0]} {cal_name[1]} {cal_name[2]}' #filename is date_run + referenceChannel + numberOfChannels
         with h5py.File('saves.h5', 'r') as hf:
             group = hf[group_name]
-            self.load_from_hdf5(group, cal_name[3], int(cal_name[1]))
+            self.load_from_hdf5(group, name = cal_name[3], channum = int(cal_name[1]), maxChans = int(cal_name[2]))
         self.plotsGroup.setEnabled(True)
 
 
-    def load_from_hdf5(self, hdf5_group, name, channum):
+    def load_from_hdf5(self, hdf5_group, name, channum, maxChans):
         cal_group = hdf5_group[name]
         cal = mass.EnergyCalibration(cal_group.attrs['nonlinearity'],
                   cal_group.attrs['curvetype'],
@@ -396,12 +415,22 @@ class MainWindow(QtWidgets.QWidget):
 
         for thisname, ph, e, dph, de in zip(_names, _ph, _energies, _dph, _de):
             cal.add_cal_point(ph, e, thisname.decode(), dph, de)
+
+        #reload data with the correct number of channels used
+        self.load_file(filename=self.filename, maxChans=maxChans)
         self.ds = self.data[channum]
 
         self.ds.calibrationPlanInit("filtValue")
-        self.data.alignToReferenceChannel(referenceChannel=self.ds, binEdges=np.arange(0,35000,10), attr="filtValue", states=self.ds.stateLabels)
-        for channel in self.data.keys():
-            self.data[channel].recipes.add("energy", cal, ["filtValue"], overwrite=True)
+        
+        #missing something here? pass in _peakLocs to data.alignToReferenceChannel
+        #passed in _peakLocs, but now ds is the only remaining channel in self.data after alignment.
+        self.data.alignToReferenceChannel(referenceChannel=self.ds, binEdges=np.arange(0,35000,10), attr="filtValue", states=self.ds.stateLabels, _peakLocs=_ph)
+        # for channel in self.data.keys():
+        #     self.data[channel].recipes.add("energy", cal, ["filtValue"], overwrite=True)
+        self.ds.recipes.add("energy", cal, ["filtValue"], overwrite=True)
+        
+        print(self.ds.recipes.keys())
+
         
         # self.ds.recipes.add("energy", cal,
         #                  ["filtValue"], overwrite=True)

@@ -15,7 +15,14 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="MplCanvas" name="histCanvasWidget" native="true"/>
+    <widget class="MplCanvas" name="histCanvasWidget" native="true">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>500</height>
+      </size>
+     </property>
+    </widget>
    </item>
    <item>
     <widget class="QPushButton" name="histPlotButton">
