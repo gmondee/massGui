@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>515</width>
+    <width>703</width>
     <height>1000</height>
    </rect>
   </property>
@@ -238,7 +238,7 @@
           <widget class="QTableWidget" name="table">
            <property name="minimumSize">
             <size>
-             <width>0</width>
+             <width>200</width>
              <height>100</height>
             </size>
            </property>
@@ -265,7 +265,7 @@
            </column>
            <column>
             <property name="text">
-             <string>Energy</string>
+             <string>Energy (eV)</string>
             </property>
            </column>
           </widget>

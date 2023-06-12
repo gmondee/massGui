@@ -67,6 +67,16 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
         self.binSizeBox.textChanged.connect(self.updateChild)
 
         self.closeButton.clicked.connect(self.close)
+        #self.table.itemChanged.connect(self.updateTable)
+
+    def updateTable(self, line):
+        for r in range(self.table.rowCount()):
+            for c in range(self.table.columnCount()):
+                widget = self.table.cellWidget(r, c)
+                if isinstance(widget, QtWidgets.QComboBox):
+                    if widget.currentText() == line:
+                        self.table.setItem(r, c+1, QtWidgets.QTableWidgetItem(str(mass.spectra[line].nominal_peak_energy)))
+
 
     def clear_table(self):
         # for i in range(self.table.columnCount()):
@@ -80,6 +90,11 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
 
     def handle_markered(self, x, states):
         n = self.table.rowCount()
+        try: 
+            self.table.disconnect()
+        except:
+            pass
+
         self.table.setRowCount(n+1)
         # log.debug(f"handle_markered, x {x}, states {states}, n {n}")   
         self.table.setItem(n, 0, QtWidgets.QTableWidgetItem(",".join(states)))
@@ -90,6 +105,7 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
         cbox.addItems(self.lines) 
         self.table.setCellWidget(n, 2, cbox)
         self.table.resizeColumnsToContents()
+        cbox.currentTextChanged.connect(self.updateTable)
         # log.debug(f"{self.getTableRows()}")
 
     def getTableRows(self):

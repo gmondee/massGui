@@ -142,15 +142,15 @@ class MainWindow(QtWidgets.QWidget):
         for (states, fv, line, energy) in self.cal_info: 
             # # log.debug(f"states {states}, fv {fv}, line {line}, energy {energy}")
             #print(states.split(","))
-            if line and not energy:
+            if line in mass.spectra.keys() and not energy:
                 self.ds.calibrationPlanAddPoint(float(fv), line, states=states.split(","))
                 # try:
                 #     self.ds.calibrationPlanAddPoint(float(fv), line, states=states)
                 # finally:
                 #     self.ds.calibrationPlanAddPoint(float(fv),self.common_models[str(line)], states=states)
-            elif energy and not line:  
+            elif energy and not line in mass.spectra.keys():  
                 self.ds.calibrationPlanAddPoint(float(fv), energy, states=states.split(","), energy=float(energy))
-            elif line and energy:
+            elif line in mass.spectra.keys() and energy:
                 self.ds.calibrationPlanAddPoint(float(fv), line, states=states.split(","), energy=float(energy))
         self.data.referenceDs = self.ds
         # log.debug(f"{ds.calibrationPlan}")
@@ -194,20 +194,22 @@ class MainWindow(QtWidgets.QWidget):
         #self.lineFitComboBox.clear()
         for i in range(len(self.cal_info)):
             rowPosition = self.calTable.rowCount()
-            rowData = self.cal_info[i] #data like       [state, filtVal, name]
-                                #this table looks like  [name, filtVal, state]
+            rowData = self.cal_info[i] #data like       [state, filtVal, name, energy]
+                                #this table looks like  [name, filtVal, state, energy]
             #print(rowPosition, rowData)
             self.calTable.insertRow(rowPosition)
             
-            if rowData[2] != '':
+            if rowData[2] != '': #if there is a filtValue without a line name from mass.spectra
                 self.calTable.setItem(rowPosition, 0, QtWidgets.QTableWidgetItem(rowData[2]))   #name
                 #self.lineFitComboBox.addItem(rowData[2])
             else:
                 self.calTable.setItem(rowPosition, 0, QtWidgets.QTableWidgetItem('Name?'))
-                self.calTable.item(rowPosition, 0).setBackground(QtGui.QColor(255,10,10))  #name
-                allowCal = False
+                if rowData[3] == '': #if the energy isn't filled in either, prevent user from calibrating
+                    self.calTable.item(rowPosition, 0).setBackground(QtGui.QColor(255,10,10))  #name
+                    allowCal = False
             self.calTable.setItem(rowPosition, 1, QtWidgets.QTableWidgetItem(rowData[1]))   #filtVal    
             self.calTable.setItem(rowPosition, 2, QtWidgets.QTableWidgetItem(rowData[0]))   #state
+            self.calTable.setItem(rowPosition, 3, QtWidgets.QTableWidgetItem(rowData[3]))
         if rowPosition != None and allowCal == True: #if something is added to the calibration plan and each line has a name, let user calibrate. 
             self.calButtonGroup.setEnabled(True)
         else:   #if nothing is added OR if a line isn't identified, stop the user from calibrating.

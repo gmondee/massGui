@@ -193,6 +193,11 @@ p, li { white-space: pre-wrap; }
           <string>State</string>
          </property>
         </column>
+        <column>
+         <property name="text">
+          <string>Energy (eV)</string>
+         </property>
+        </column>
        </widget>
       </item>
       <item row="2" column="0">
