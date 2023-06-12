@@ -33,7 +33,7 @@ MPL_DEFAULT_COLORS = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728',
 
 DEFAULT_LINES = list(mass.spectra.keys())
 
-class HistCalibrator(QtWidgets.QDialog):
+class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable canvas for manual line ID
     def __init__(self, parent=None):
         super(HistCalibrator, self).__init__(parent)
         #self.setWindowModality(QtCore.Qt.ApplicationModal)
@@ -52,6 +52,9 @@ class HistCalibrator(QtWidgets.QDialog):
         self.channum = channum
         for channel in self.data.keys():
             self.channelBox.addItem("{}".format(channel))
+        self.eRangeLow.insert(str(0))
+        self.eRangeHi.insert(str(20000))
+        self.binSizeBox.insert(str(50))
         self.histHistViewer.setParams(self, data, channum, attr, state_labels, colors, self.binSize)
 
 
@@ -59,6 +62,10 @@ class HistCalibrator(QtWidgets.QDialog):
         self.histHistViewer.plotted.connect(self.handle_plotted)
         self.histHistViewer.markered.connect(self.handle_markered)
         self.channelBox.currentTextChanged.connect(self.updateChild)
+        self.eRangeLow.textChanged.connect(self.updateChild)
+        self.eRangeHi.textChanged.connect(self.updateChild)
+        self.binSizeBox.textChanged.connect(self.updateChild)
+
         self.closeButton.clicked.connect(self.close)
 
     def clear_table(self):
@@ -99,8 +106,28 @@ class HistCalibrator(QtWidgets.QDialog):
     def getChannum(self):
         self.channum = self.channelBox.currentText()
         return self.channum
+    
+    def getBins(self):
+        if self.eRangeLow.displayText() != '':
+            self.histHistViewer.binLo = float(self.eRangeLow.displayText())
+        else:
+            self.histHistViewer.binLo = 0
+
+        if self.eRangeHi.displayText() != '':
+            self.histHistViewer.binHi = float(self.eRangeHi.displayText())
+        else:
+            self.histHistViewer.binHi = 20000
+
+        if self.binSizeBox.displayText() != '':
+            self.histHistViewer.binSize = float(self.binSizeBox.displayText())
+        else:
+            self.histHistViewer.binSize = 50
+
     def updateChild(self):
         self.histHistViewer.channum = self.getChannum()
+        self.getBins()
+
+        
 
 
 
@@ -109,7 +136,7 @@ class HistCalibrator(QtWidgets.QDialog):
 
 
 
-class HistViewer(QtWidgets.QWidget): #widget. plots clickable hist.
+class HistViewer(QtWidgets.QWidget): #widget for hist calibrator and others. plots a clickable histogram.
     min_marker_ind_diff = 12
     plotted = QtCore.pyqtSignal()
     markered = QtCore.pyqtSignal(float, list)
@@ -120,14 +147,21 @@ class HistViewer(QtWidgets.QWidget): #widget. plots clickable hist.
  
         # PyQt6.uic.loadUi(os.path.join(os.path.dirname(__file__), "ui/channel.ui"), self) 
 
-    def setParams(self, parent, data, channum, attr, state_labels, colors, binSize, clickable=True):
+    def setParams(self, parent, data, channum, attr, state_labels, colors, binSize, clickable=True, binLo=None, binHi=None):
         # QtWidgets.QWidget.__init__(self, parent)#, s, attr, state_labels, colors)
         #super(HistViewer, self).__init__(parent)
         log.debug(f"set params for histviewer")
         self.parent = parent
         self.plotAllChans = False #used to switch between self.plot and self.plotAll
-        self.binLo = 0
-        self.binHi = 20000
+        if binLo==None:
+            self.binLo = 0
+        else:
+            self.binLo=binLo
+        if binHi==None:
+            self.binHi = 20000
+        else:
+            self.binHi=binHi
+
         self.binSize = binSize
         self.channum = channum
         self.lastUsedChannel = channum
@@ -157,7 +191,7 @@ class HistViewer(QtWidgets.QWidget): #widget. plots clickable hist.
     def handle_plot(self): #needs to use channel
         #self.channum = self.parent().getChannum()  #can't use parent properly b/c initialised with .ui file. Use an update signal instead.
         colors, states_list = self.statesGrid.get_colors_and_states_list() 
-        print(self.binSize)
+        #print(self.binSize)
         # log.debug(f"handle_plot: color: {colors}")
         # log.debug(f"handle_plot: states_list: {states_list}")
         if len(colors) == 0:
@@ -187,6 +221,7 @@ class HistViewer(QtWidgets.QWidget): #widget. plots clickable hist.
         self.canvas.legend([",".join(states) for states in states_list])
         self.canvas.set_xlabel(attr)
         self.canvas.set_ylabel("counts per bin")
+        self.canvas.set_title(self.data[int(self.channum)].shortName + ", states = {}".format(states_list))
         # plt.tight_layout()
         self.parent.photonCountBox.setText(str(self.photonCount))
         self.canvas.draw()
@@ -207,6 +242,7 @@ class HistViewer(QtWidgets.QWidget): #widget. plots clickable hist.
         self.canvas.legend([",".join(states) for states in states_list])
         self.canvas.set_xlabel(attr)
         self.canvas.set_ylabel("counts per bin")
+        self.canvas.set_title(self.data.shortName + ", states = {}".format(states_list))
         # plt.tight_layout()
         self.canvas.draw()
         self.canvas.mpl_connect('pick_event', self.mpl_click_event)
@@ -280,7 +316,7 @@ class HistViewer(QtWidgets.QWidget): #widget. plots clickable hist.
         return i
     
 
-class StatesGrid(QtWidgets.QWidget):
+class StatesGrid(QtWidgets.QWidget): #widget that makes a grid of checkboxes. allows user to select states and group them into colors
     def __init__(self, parent=None, state_labels=None, colors=None, one_state_per_line=True):
         QtWidgets.QWidget.__init__(self, parent)
         self.one_state_per_line = one_state_per_line
@@ -382,7 +418,7 @@ class StatesGrid(QtWidgets.QWidget):
 
 
 
-class HistPlotter(QtWidgets.QDialog):
+class HistPlotter(QtWidgets.QDialog):   #general-purpose histogram plotter. features a canvas, states grid, and energy range/# of counts information
     def __init__(self, parent=None, colors=MPL_DEFAULT_COLORS[:6]):
         super(HistPlotter, self).__init__(parent)
         #self.setWindowModality(QtCore.Qt.ApplicationModal)
@@ -398,6 +434,7 @@ class HistPlotter(QtWidgets.QDialog):
         #self.pHistViewer = HistViewer(self, s, attr, state_labels, colors) #pHistViewer is the name of the widget that plots.
         self.data = data
         self.channum = channum
+        self.channelBox.addItem("All")
         for channum in self.data.keys():
             self.channelBox.addItem("{}".format(channum))
         self.channelBox.setCurrentText(str(self.channum))
@@ -408,7 +445,6 @@ class HistPlotter(QtWidgets.QDialog):
 
     def connect(self):
         self.channelBox.currentTextChanged.connect(self.updateChild)
-        self.histChannelCheckbox.stateChanged.connect(self.updateChild)
         self.eRangeLow.textChanged.connect(self.updateChild)
         self.eRangeHi.textChanged.connect(self.updateChild)
 
@@ -416,27 +452,31 @@ class HistPlotter(QtWidgets.QDialog):
         self.channum = self.channelBox.currentText()
         return self.channum
     
-    def updateChild(self):
+    def updateChild(self): #send channum and bins to the pHistViewer
         # if arg == 'chan':
         #     self.pHistViewer.channum=self.getChannum()
         # if arg == 'checkbox':
         #     self.pHistViewer.plotAllChans = (not self.pHistViewer.plotAllChans)
         self.pHistViewer.channum=self.getChannum()
-        self.pHistViewer.plotAllChans = self.histChannelCheckbox.isChecked()
+        if self.channum == 'All':
+            self.pHistViewer.plotAllChans = True
+        else:
+            self.pHistViewer.plotAllChans = False
         #crashes if the range boxes are empty. Use default values instead to avoid crash.
         if self.eRangeLow.displayText() != '':
-            self.pHistViewer.binLo = int(self.eRangeLow.displayText())
+            self.pHistViewer.binLo = float(self.eRangeLow.displayText())
         else:
-            self.pHistViewer.binLo = 0
+            self.pHistViewer.binLo = 0.
 
         if self.eRangeHi.displayText() != '':
-            self.pHistViewer.binHi = int(self.eRangeHi.displayText())
+            self.pHistViewer.binHi = float(self.eRangeHi.displayText())
         else:
-            self.pHistViewer.binHi = 20000
+            self.pHistViewer.binHi = 20000.
         ##energy range updating
 
 
-class diagnoseViewer(QtWidgets.QDialog):
+
+class diagnoseViewer(QtWidgets.QDialog):    #displays the plots from the Mass diagnoseCalibration function
     def __init__(self, parent=None):
         super(diagnoseViewer, self).__init__(parent)
         QtWidgets.QDialog.__init__(self)
@@ -499,7 +539,7 @@ class diagnoseViewer(QtWidgets.QDialog):
 
 
 
-class rtpViewer(QtWidgets.QDialog):
+class rtpViewer(QtWidgets.QDialog): #window that hosts the real-time plotting routine.
     def __init__(self, parent=None):
         super(rtpViewer, self).__init__(parent)
         QtWidgets.QDialog.__init__(self)
@@ -519,6 +559,7 @@ class rtpViewer(QtWidgets.QDialog):
         self.RTPdelay = self.intervalBox.text() 
         self.statesGrid.setParams(state_labels=self.stateLabels, colors=MPL_DEFAULT_COLORS[:1], one_state_per_line=False)
         self.statesGrid.fill_simple()
+        self.channelBox.addItem("All")
         for channum in self.parent.data.keys():
             self.channelBox.addItem("{}".format(channum))
         self.channelBox.setCurrentIndex(0)
@@ -530,7 +571,6 @@ class rtpViewer(QtWidgets.QDialog):
     def updateButtonClicked(self):
         self.timer.stop()
         self.UpdatePlots()
-        #assert 1 == 0
 
     #####################################| Real-time plotting routine|#####################################
     def initRTP(self): #creates axes, clears variables, and starts real-time plotting routine
@@ -550,32 +590,30 @@ class rtpViewer(QtWidgets.QDialog):
         self.energyAxis.set_ylabel('Counts per'+str(self.parent.binSize)+'eV bin')
         self.energyAxis.autoscale(enable=True)
         self.rate = 0.1                     #how much to lower the transparency of lines each update
-        self.setAttribute(QtCore.Qt.WidgetAttribute.WA_DeleteOnClose)
-        self.timer = QTimer(self)    
+        self.setAttribute(QtCore.Qt.WidgetAttribute.WA_DeleteOnClose)   #kills the timer when the RTP window is closed
+        self.timer = QTimer(self)       #timer is used to loop the real-time plotting updates
         #self.timer.setSingleShot(True)    
         self.timer.timeout.connect(self.UpdatePlots)        
         #self.timer.start(self.updateFreq)
         self.UpdatePlots()
 
     def stopRTP(self):
-        try:
+        try:    #timer might not exist yet
             self.timer.stop()
         finally:
             pass
 
-    def getDataToPlot(self):
+    def getDataToPlot(self):    #determines the individual channel or channel group (data) to be plotted. restarts RTP if the selection changes.
         old = self.dataToPlot
-        if self.rtpChannelCheckbox.isChecked():
+        if self.channelBox.currentText() == 'All':
             new = self.parent.data
         else:
             new = self.parent.data[int(self.channelBox.currentText())]
         if old != new: #if channel is changed, or if user goes from all channels to one channel, we need to clear the plot.
-            print(new, old)
             print("Restarting RTP because channel selection has changed.")
             self.restartRTP()
-            return new
-        else:
-            return new
+        self.energyAxis.set_title(new.shortName)
+        return new
 
     def restartRTP(self):   #this function resets necessary parameters to start monitoring another data set
 
@@ -591,7 +629,7 @@ class rtpViewer(QtWidgets.QDialog):
         
         self.energyAxis.set_title('Real-time energy')
         self.energyAxis.set_xlabel('Energy (eV)')
-        self.energyAxis.set_ylabel('Counts per'+str(self.parent.binSize)+'eV bin')
+        self.energyAxis.set_ylabel('Counts per '+str(self.parent.getBinsizeCal())+'eV bin')
         self.rtpdata=[]                             #temporary storage of data points
         self.rtpline.append([])                     #stores every line that is plotted according to the updateIndex
 
@@ -618,8 +656,7 @@ class rtpViewer(QtWidgets.QDialog):
         self.rtpline.append([])                     #stores every line that is plotted according to the updateIndex
         self.dataToPlot = self.getDataToPlot()
         for s in range(len(States)):    #looping over each state passed in
-            #self.rtpdata.append(self.parent.data.hist(np.arange(0, 14000, float(self.parent.binSize)), "energy", states=States[s]))   #[x,y] points of current energy spectrum, one state at a time
-            self.rtpdata.append(self.dataToPlot.hist(np.arange(0, 14000, float(self.parent.binSize)), "energy", states=States[s]))
+            self.rtpdata.append(self.dataToPlot.hist(np.arange(0, 14000, float(self.parent.getBinsizeCal())), "energy", states=States[s]))
             self.energyAxis.plot(self.rtpdata[s][0],self.rtpdata[s][1],alpha=1, color=self.getColorfromState(States[s]))    #plots the [x,y] points and assigns color based on the state
             if States[s] not in self.plottedStates:     #new states are added to the legend; old ones are already there                      
                 self.plottedStates.append(States[s])
@@ -675,7 +712,7 @@ class rtpViewer(QtWidgets.QDialog):
 
     
 
-class AvsBSetup(QtWidgets.QDialog):
+class AvsBSetup(QtWidgets.QDialog): #for plotAvsB and plotAvsB2D functions. Allows user to select what A and B are.
     def __init__(self, parent=None):
         super(AvsBSetup, self).__init__(parent)
         QtWidgets.QDialog.__init__(self)
@@ -706,7 +743,11 @@ class AvsBSetup(QtWidgets.QDialog):
 
         for B in self.AvsBDict:
             self.Bbox.addItem("{}".format(B))
-        self.Bbox.setCurrentIndex(0)   
+        eIndx = self.Bbox.findText("energy")
+        if eIndx == -1:
+            self.Bbox.setCurrentIndex(1)
+        else:
+            self.Bbox.setCurrentIndex(eIndx)  
 
         if self.mode == "1D":
             self.binsFrame.hide()
@@ -753,7 +794,7 @@ class AvsBSetup(QtWidgets.QDialog):
     def checkAll(self):
         self.statesGrid.fill_all()
 
-class linefitSetup(QtWidgets.QDialog):
+class linefitSetup(QtWidgets.QDialog):  #handles linefit function call. lets user choose line, states, channel
     def __init__(self, parent=None):
         super(linefitSetup, self).__init__(parent)
         QtWidgets.QDialog.__init__(self)
@@ -773,6 +814,7 @@ class linefitSetup(QtWidgets.QDialog):
         PyQt6.uic.loadUi(os.path.join(os.path.dirname(__file__), "ui/linefitSetup.ui"), self) 
         self.statesGrid.setParams(state_labels=self.states_list, colors=MPL_DEFAULT_COLORS[:1], one_state_per_line=False)
         self.statesGrid.fill_simple()
+        self.channelBox.addItem("All")
         for channum in self.channels:
             self.channelBox.addItem("{}".format(channum))
         self.channelBox.setCurrentIndex(0)
@@ -783,54 +825,53 @@ class linefitSetup(QtWidgets.QDialog):
 
     def connect(self):
         self.plotButton.clicked.connect(self.handlePlot)
+        self.checkAllButton.clicked.connect(self.checkAll)
+        self.uncheckAllButton.clicked.connect(self.uncheckAll)
+
+    def uncheckAll(self):
+        self.statesGrid.unfill_all()
+
+    def checkAll(self):
+        self.statesGrid.fill_all()
 
     def handlePlot(self):
         _colors, states = self.statesGrid.get_colors_and_states_list()
-        states=states[0]
+        try: #if the user has all states unchecked during a refresh, use the last set of states.
+            states = states[0]
+            self.oldStates = states
+        except:
+            print("No states selected in Line Fit window.")
+            #states='A'
+            return 0
         line = self.lineBox.currentText()
         has_linear_background = self.lbCheckbox.isChecked()
         has_tails = self.tailCheckbox.isChecked()
 
         dlo = self.dlo.text()
         if dlo != '': #not empty
-            dlo = abs(int(self.dlo.text()))
+            dlo = abs(float(self.dlo.text()))
         else:
             dlo = 15
 
         dhi = self.dhi.text()
         if dhi != '': #not empty
-            dhi = abs(int(self.dhi.text()))
+            dhi = abs(float(self.dhi.text()))
         else:
             dhi = 15
 
-        channel = self.data[int(self.channelBox.currentText())]
-        channel.linefit(lineNameOrEnergy=line, attr="energy", states=states, has_linear_background=has_linear_background, has_tails=has_tails, dlo=dlo, dhi=dhi)
+        binsize = self.binSizeBox.text()
+        if binsize != '':
+            binsize = float(self.binSizeBox.text())
+        else:
+            binsize = 1.0
 
+        if self.channelBox.currentText() == 'All':
+            dataToPlot=self.data
+        else:
+            dataToPlot = self.data[int(self.channelBox.currentText())]
+        dataToPlot.linefit(lineNameOrEnergy=line, attr="energy", states=states, has_linear_background=has_linear_background, 
+                           has_tails=has_tails, dlo=dlo, dhi=dhi, binsize=binsize)
 
-# class AvsBViewer(QtWidgets.QDialog):      #not used. avsb is plotted in a popup plt window so you can have many at once.
-#     def __init__(self, parent=None):
-#         super(AvsBViewer, self).__init__(parent)
-#         QtWidgets.QDialog.__init__(self)
-#         plt.ion()
-#     def setParams(self, parent, A, B, States, channels, data, mode):
-#         self.parent = parent
-#         self.states = States
-#         self.A = A
-#         self.B = B
-#         self.channels = channels
-#         self.data = data
-#         self.build(mode)
-
-#     def build(self, mode):
-#         PyQt6.uic.loadUi(os.path.join(os.path.dirname(__file__), "ui/avsbViewer.ui"), self) 
-#         self.canvas.fig.clear()
-#         self.axis = self.canvas.fig.add_subplot(111)
-#         self.axis.grid()
-#         if mode == "1D":
-#             self.axis = self.channels.plotAvsB(self.A, self.B, axis=self.axis, states=self.states)
-#         if mode == "2D":
-#             pass
-#         self.canvas.draw()
 
 
 class hdf5Opener(QtWidgets.QDialog): #dialog with a combobox which lists all of the saved calibraitions.

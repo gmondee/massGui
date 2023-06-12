@@ -97,9 +97,26 @@
     <widget class="QWidget" name="widget" native="true">
      <layout class="QHBoxLayout" name="horizontalLayout_4">
       <item>
+       <widget class="QLabel" name="label_5">
+        <property name="text">
+         <string>Bin size (eV):</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="binSizeBox">
+        <property name="inputMethodHints">
+         <set>Qt::ImhDigitsOnly</set>
+        </property>
+        <property name="text">
+         <string>1</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QLabel" name="label_3">
         <property name="text">
-         <string>dlo</string>
+         <string>dlo (eV)</string>
         </property>
        </widget>
       </item>
@@ -116,7 +133,7 @@
       <item>
        <widget class="QLabel" name="label_4">
         <property name="text">
-         <string>dhi</string>
+         <string>dhi (eV)</string>
         </property>
        </widget>
       </item>
@@ -127,6 +144,32 @@
         </property>
         <property name="text">
          <string>15</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QFrame" name="frame_3">
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_5">
+      <item>
+       <widget class="QPushButton" name="checkAllButton">
+        <property name="text">
+         <string>Check All States</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="uncheckAllButton">
+        <property name="text">
+         <string>Uncheck All States</string>
         </property>
        </widget>
       </item>
