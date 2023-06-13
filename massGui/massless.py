@@ -69,8 +69,8 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
         self.closeButton.clicked.connect(self.close)
         #self.table.itemChanged.connect(self.updateTable)
 
-    def updateTable(self, line):
-        for r in range(self.table.rowCount()):
+    def updateTable(self, line): #bad way to do this, but it works. see deleteRow for a better way using slots.
+        for r in range(self.table.rowCount()):  #searches for comboboxes with the clicked line and updates the first one's energy. 
             for c in range(self.table.columnCount()):
                 widget = self.table.cellWidget(r, c)
                 if isinstance(widget, QtWidgets.QComboBox):
@@ -145,7 +145,7 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
                                 #this table looks like  [name, filtVal, state, energy]
             self.table.insertRow(n)
             #print(rowPosition, rowData)
-            self.table.setItem(n, 0, QtWidgets.QTableWidgetItem(",".join(rowData[2])))
+            self.table.setItem(n, 0, QtWidgets.QTableWidgetItem(rowData[2]))
             self.table.setItem(n, 1, QtWidgets.QTableWidgetItem("{}".format(rowData[1])))
             self.table.setItem(n, 3, QtWidgets.QTableWidgetItem("{}".format(rowData[3])))
             cbox = QtWidgets.QComboBox()
@@ -159,19 +159,7 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
             self.table.setCellWidget(n, 4, delButton)
             self.table.resizeColumnsToContents()
             cbox.currentTextChanged.connect(self.updateTable)
-            
-            
-            # if rowData[0] != 'Name?': #if there is a filtValue without a line name from mass.spectra
-            #     self.table.setItem(rowPosition, 2, QtWidgets.QTableWidgetItem(rowData[0]))   #name
-            #     #self.lineFitComboBox.addItem(rowData[2])
-            # else:
-            #     self.table.setItem(rowPosition, 0, QtWidgets.QTableWidgetItem('Name?'))
-            #     if rowData[3] == '': #if the energy isn't filled in either, prevent user from calibrating
-            #         self.table.item(rowPosition, 0).setBackground(QtGui.QColor(255,10,10))  #name
-            #         allowCal = False
-            # self.table.setItem(rowPosition, 1, QtWidgets.QTableWidgetItem(rowData[1]))   #filtVal    
-            # self.table.setItem(rowPosition, 2, QtWidgets.QTableWidgetItem(rowData[0]))   #state
-            # self.table.setItem(rowPosition, 3, QtWidgets.QTableWidgetItem(rowData[3]))
+
     
     def getChannum(self):
         self.channum = self.channelBox.currentText()

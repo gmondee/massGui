@@ -231,7 +231,7 @@ p, li { white-space: pre-wrap; }
             </size>
            </property>
            <property name="text">
-            <string>Calibrate reference channel and view plots</string>
+            <string>Calibrate reference channel</string>
            </property>
           </widget>
          </item>
