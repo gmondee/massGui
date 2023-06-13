@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>703</width>
+    <width>832</width>
     <height>1000</height>
    </rect>
   </property>
@@ -266,6 +266,11 @@
            <column>
             <property name="text">
              <string>Energy (eV)</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Delete</string>
             </property>
            </column>
           </widget>

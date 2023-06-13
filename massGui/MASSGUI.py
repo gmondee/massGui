@@ -117,6 +117,8 @@ class MainWindow(QtWidgets.QWidget):
         self.fileSelectionGroup.setEnabled(False)
         self.hc = HistCalibrator(self) 
         self.hc.setParams(data, channum, "filtValue", data[channum].stateLabels, binSize=50)
+        tableData = self.getcalTableRows()
+        self.hc.importTableRows(tableData)
         #hc.setWindowModality(self, QtCore.Qt.ApplicationModal)
         self._selected_window = self.hc
         self.hc.exec()
@@ -157,7 +159,16 @@ class MainWindow(QtWidgets.QWidget):
         self.plotsGroup.setEnabled(True) 
         #self.lineFitComboBox.setEnabled(True)
 
-  
+    def getcalTableRows(self):
+        rows = []
+        for i in range(self.calTable.rowCount()):
+            row = []
+            row.append(self.calTable.item(i, 0).text())
+            row.append(self.calTable.item(i, 1).text())
+            row.append(self.calTable.item(i, 2).text())
+            row.append(self.calTable.item(i, 3).text())
+            rows.append(row)
+        return rows
 
     def resetCalibration(self):
         self.calButtonGroup.setEnabled(False)

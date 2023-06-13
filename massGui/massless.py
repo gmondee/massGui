@@ -74,7 +74,7 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
             for c in range(self.table.columnCount()):
                 widget = self.table.cellWidget(r, c)
                 if isinstance(widget, QtWidgets.QComboBox):
-                    if widget.currentText() == line:
+                    if widget.currentText() == line and line in mass.spectra.keys():
                         self.table.setItem(r, c+1, QtWidgets.QTableWidgetItem(str(mass.spectra[line].nominal_peak_energy)))
 
 
@@ -103,10 +103,27 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
         cbox = QtWidgets.QComboBox()
         cbox.addItem("")
         cbox.addItems(self.lines) 
+        delButton = QtWidgets.QPushButton()
+        delButton.setText("Delete")
+        delButton.clicked.connect(self.deleteRow)
         self.table.setCellWidget(n, 2, cbox)
+        self.table.setCellWidget(n, 4, delButton)
         self.table.resizeColumnsToContents()
         cbox.currentTextChanged.connect(self.updateTable)
         # log.debug(f"{self.getTableRows()}")
+
+    def addDelButton(self, row, col):
+        delButton = QtWidgets.QPushButton()
+        delButton.setText("Delete")
+        delButton.clicked.connect(self.deleteRow)
+        self.table.setCellWidget(row, col, delButton)
+
+    @QtCore.pyqtSlot()
+    def deleteRow(self):
+        button=self.sender()
+        if button:
+            row = self.table.indexAt(button.pos()).row()
+            self.table.removeRow(row)
 
     def getTableRows(self):
         rows = []
@@ -118,6 +135,43 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
             row.append(self.table.item(i, 3).text())
             rows.append(row)
         return rows
+    
+    def importTableRows(self, cal_info):
+        n = None
+        self.cal_info = cal_info
+        for i in range(len(self.cal_info)):
+            n=self.table.rowCount()
+            rowData = self.cal_info[i] #data like       [state, filtVal, name, energy]
+                                #this table looks like  [name, filtVal, state, energy]
+            self.table.insertRow(n)
+            #print(rowPosition, rowData)
+            self.table.setItem(n, 0, QtWidgets.QTableWidgetItem(",".join(rowData[2])))
+            self.table.setItem(n, 1, QtWidgets.QTableWidgetItem("{}".format(rowData[1])))
+            self.table.setItem(n, 3, QtWidgets.QTableWidgetItem("{}".format(rowData[3])))
+            cbox = QtWidgets.QComboBox()
+            cbox.addItem("")
+            cbox.addItems(self.lines) 
+            cbox.setCurrentText("{}".format(rowData[0]))
+            delButton = QtWidgets.QPushButton()
+            delButton.setText("Delete")
+            delButton.clicked.connect(self.deleteRow)
+            self.table.setCellWidget(n, 2, cbox)
+            self.table.setCellWidget(n, 4, delButton)
+            self.table.resizeColumnsToContents()
+            cbox.currentTextChanged.connect(self.updateTable)
+            
+            
+            # if rowData[0] != 'Name?': #if there is a filtValue without a line name from mass.spectra
+            #     self.table.setItem(rowPosition, 2, QtWidgets.QTableWidgetItem(rowData[0]))   #name
+            #     #self.lineFitComboBox.addItem(rowData[2])
+            # else:
+            #     self.table.setItem(rowPosition, 0, QtWidgets.QTableWidgetItem('Name?'))
+            #     if rowData[3] == '': #if the energy isn't filled in either, prevent user from calibrating
+            #         self.table.item(rowPosition, 0).setBackground(QtGui.QColor(255,10,10))  #name
+            #         allowCal = False
+            # self.table.setItem(rowPosition, 1, QtWidgets.QTableWidgetItem(rowData[1]))   #filtVal    
+            # self.table.setItem(rowPosition, 2, QtWidgets.QTableWidgetItem(rowData[0]))   #state
+            # self.table.setItem(rowPosition, 3, QtWidgets.QTableWidgetItem(rowData[3]))
     
     def getChannum(self):
         self.channum = self.channelBox.currentText()
