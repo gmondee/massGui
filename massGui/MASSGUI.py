@@ -75,11 +75,13 @@ class MainWindow(QtWidgets.QWidget):
         print("loaded {} chans".format(len(self.data)))
 
         self.fileTextBox.setText("Curret dataset: {}".format(self.data.shortName)) 
-         
+        
         self.channels = []
         for channum in self.data.keys():
             self.channels.append(channum)
             #self.refChannelBox.addItem("{}".format(channum))
+        
+        self.launch_channel_colors, self.launch_channel_states = None, None
         
 
     def handle_choose_file(self):
@@ -96,7 +98,6 @@ class MainWindow(QtWidgets.QWidget):
             self.load_file(fileName) # sets self._choose_file_lastdir
             self.set_std_dev_threshold()
             #self.data_no_cal = self.data
-            self.plotMarkers, self.listMarkers = None, None
         
         self.calibrationGroup.setEnabled(True) #file is loaded, user should now do the line identification.
         self.calButtonGroup.setEnabled(False) #don't let users run the calibration procedure yet. enabled in importTableRows()
@@ -117,10 +118,10 @@ class MainWindow(QtWidgets.QWidget):
         self.plotsGroup.setEnabled(False)
         self.fileSelectionGroup.setEnabled(False)
         self.hc = HistCalibrator(self) 
-        self.hc.setParams(data, channum, "filtValue", data[channum].stateLabels, binSize=50)
+        self.hc.setParams(data, channum, "filtValue", data[channum].stateLabels, binSize=50, statesConfig=self.launch_channel_states)
         tableData = self.getcalTableRows()
         self.hc.importTableRows(tableData)
-        self.hc.importMarkers(self.plotMarkers, self.listMarkers)
+
         #hc.setWindowModality(self, QtCore.Qt.ApplicationModal)
         self._selected_window = self.hc
         self.hc.exec()
@@ -128,7 +129,7 @@ class MainWindow(QtWidgets.QWidget):
         self.setChannum()
         self.ds = data[self.channum]
         self.cal_info = self.hc.getTableRows()
-        self.plotMarkers, self.listMarkers = self.hc.getMarkers()
+        self.launch_channel_colors, self.launch_channel_states = self.hc.histHistViewer.statesGrid.get_colors_and_states_list()
         self.clear_table()
         self.importTableRows()
         #self.initCal()

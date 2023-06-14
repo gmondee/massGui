@@ -43,14 +43,14 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
         QtWidgets.QDialog.__init__(self)
         self.lines = list(mass.spectra.keys())
 
-    def setParams(self, data, channum, attr, state_labels, binSize, colors=MPL_DEFAULT_COLORS[:6], lines=DEFAULT_LINES):
+    def setParams(self, data, channum, attr, state_labels, binSize, colors=MPL_DEFAULT_COLORS[:6], lines=DEFAULT_LINES, statesConfig=None):
         self.binSize=binSize
         self.markersDict = {}
         self.artistMarkersDict = {}
-        self.build(data, channum, attr, state_labels, colors)
+        self.build(data, channum, attr, state_labels, colors, statesConfig)
         self.connect()
 
-    def build(self, data, channum, attr, state_labels, colors):
+    def build(self, data, channum, attr, state_labels, colors, statesConfig):
         PyQt6.uic.loadUi(os.path.join(os.path.dirname(__file__), "ui/ChannelBrowser.ui"), self) #,  s, attr, state_labels, colors)
         #self.histHistViewer = HistViewer(self, s, attr, state_labels, colors) #histHistViewer is the name of the widget that plots.
         self.data = data
@@ -60,7 +60,7 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
         self.eRangeLow.insert(str(0))
         self.eRangeHi.insert(str(20000))
         self.binSizeBox.insert(str(50))
-        self.histHistViewer.setParams(self, data, channum, attr, state_labels, colors, self.binSize)
+        self.histHistViewer.setParams(self, data, channum, attr, state_labels, colors, self.binSize, statesConfig=statesConfig)
 
 
     def connect(self):
@@ -156,15 +156,6 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
             row.append(self.table.item(i, 3).text())
             rows.append(row)
         return rows
-    
-    def getMarkers(self):
-        return self.markersDict, self.artistMarkersDict #plottable objects, list of markers for self.histHistPlotter.line2marker
-    
-    def importMarkers(self, markersDict, artistMarkersDict):
-        if markersDict != None:
-            print(markersDict, markersDict.values())
-            print(artistMarkersDict)
-            #self.histHistViewer.canvas.plot(markersDict.values())
 
     
     def importTableRows(self, cal_info):
@@ -253,7 +244,7 @@ class HistViewer(QtWidgets.QWidget): #widget for hist calibrator and others. plo
  
         # PyQt6.uic.loadUi(os.path.join(os.path.dirname(__file__), "ui/channel.ui"), self) 
 
-    def setParams(self, parent, data, channum, attr, state_labels, colors, binSize, clickable=True, binLo=None, binHi=None):
+    def setParams(self, parent, data, channum, attr, state_labels, colors, binSize, clickable=True, binLo=None, binHi=None, statesConfig=None):
         # QtWidgets.QWidget.__init__(self, parent)#, s, attr, state_labels, colors)
         #super(HistViewer, self).__init__(parent)
         log.debug(f"set params for histviewer")
@@ -267,20 +258,23 @@ class HistViewer(QtWidgets.QWidget): #widget for hist calibrator and others. plo
             self.binHi = 20000
         else:
             self.binHi=binHi
-        self.line2marker = {}
-        self.line2states = {}
-        self.addMarkerDict = {}
         self.binSize = binSize
         self.channum = channum
         self.lastUsedChannel = channum
         self.data=data
         self.s = data[channum]
         self.attr = attr
+        self.clickable = clickable
         self.build(state_labels, colors) 
         self.connect()
-        self.statesGrid.fill_simple()
+        if statesConfig==None:
+            print("none")
+            self.statesGrid.fill_simple()
+        else:
+            print("fill")
+            self.statesGrid.fill(statesConfig)
         self.handle_plot()
-        self.clickable = clickable
+        
         
     def build(self, state_labels, colors):
         layout = QtWidgets.QVBoxLayout()
@@ -317,16 +311,10 @@ class HistViewer(QtWidgets.QWidget): #widget for hist calibrator and others. plo
         #print(self.data[int(self.channum)].channum)
         self.lastUsedChannel = self.data[int(self.channum)].channum
         self.canvas.clear()
-        # self.line2marker = {}
+        self.line2marker = {}
         self.line2states = {}
         self.photonCount = 0
         
-        for [artist, i] in self.addMarkerDict.values():
-            print("artist",artist,"i", i)
-            #self.add_marker(artist, i)
-            c = plt.matplotlib.artist.getp(artist, "markerfacecolor")
-            xs, ys = artist.get_data()
-            marker = self.canvas.plot(xs[i], ys[i], "o", markersize=12, c=c)
         for states, color in zip(states_list, colors):
             x,y = self.data[int(self.channum)].hist(bin_edges, attr, states=states)
             self.photonCount+=sum(y)
@@ -370,7 +358,6 @@ class HistViewer(QtWidgets.QWidget): #widget for hist calibrator and others. plo
 
     
     def mpl_click_event(self, event):
-        print(event.artist)
         if self.clickable == True:
             x = event.mouseevent.xdata
             y = event.mouseevent.ydata
@@ -383,12 +370,11 @@ class HistViewer(QtWidgets.QWidget): #widget for hist calibrator and others. plo
                 i = self.local_max_ind(xs, ys, x, y) 
                 if ys[i] > y*0.8:
                     self.add_marker(artist, i)
-                    self.addMarkerDict[self.parent.table.rowCount()-1]=[artist, i]
                 else:
                     log.debug(f"marker not placed becausel local maximum {ys[i]}<=0.8*mouse_click_height {y}.\nclick closer to the peak")
                     pass
             else: 
-                #log.debug(f"arist not in line2marker.keys() {line2marker.keys()}")
+                log.debug(f"arist not in line2marker.keys() {self.line2marker.keys()}")
                 pass
         else:
             pass
@@ -401,11 +387,10 @@ class HistViewer(QtWidgets.QWidget): #widget for hist calibrator and others. plo
 
         for (i_, marker_) in artist_markers:
             if np.abs(i-i_) < self.min_marker_ind_diff:
-                # log.debug(f"not adding marker at {i}, x {xs[i]}, y {ys[i]}. too close to marker at {i_} for artist {artist} and color {c}")
+                log.debug(f"not adding marker at {i}, x {xs[i]}, y {ys[i]}. too close to marker at {i_} for artist {artist} and color {c}")
                 return
         marker = self.canvas.plot(xs[i], ys[i], "o", markersize=12, c=c) # cant be picked unless I pass picker?
         artist_markers.append((i, marker))
-        #self.markersList.append(marker)
         self.line2marker[artist] = artist_markers
         self.markered.emit(xs[i], self.line2states[artist], marker, i, self.line2marker[artist])
         self.canvas.draw() 
@@ -508,6 +493,14 @@ class StatesGrid(QtWidgets.QWidget): #widget that makes a grid of checkboxes. al
                 states_list.append(states)
         return colors, states_list
     
+    def fill(self, statesConfig): #statesConfig is "states" from get_colors_and_states_list
+        for i, states in enumerate(statesConfig):
+            #stateIndex=[]
+            for state in states:
+                #stateIndex[j] = self.state_labels.index(state)
+                stateIndex= self.state_labels.index(state)
+                self.boxes[stateIndex][i].setChecked(True)
+            
     def fill_all(self): #intended for cases where you only have one row of states. can be modified to fill one row of any states grid...
         for (j, color) in enumerate(self.colors):
             for (i, state) in enumerate(self.state_labels):
