@@ -159,7 +159,7 @@ p, li { white-space: pre-wrap; }
       <item row="0" column="0" colspan="2">
        <widget class="QPushButton" name="lineIDButton">
         <property name="text">
-         <string>Click to begin line identification</string>
+         <string>Click for reference channel calibration</string>
         </property>
        </widget>
       </item>
@@ -272,6 +272,9 @@ p, li { white-space: pre-wrap; }
       </item>
       <item row="0" column="3" rowspan="5">
        <widget class="QGroupBox" name="calibrationStepsBox">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
           <horstretch>0</horstretch>
@@ -313,7 +316,7 @@ p, li { white-space: pre-wrap; }
           </widget>
          </item>
          <item>
-          <widget class="QCheckBox" name="checkBox">
+          <widget class="QCheckBox" name="Acheckbox">
            <property name="text">
             <string>Approximate Calibration</string>
            </property>

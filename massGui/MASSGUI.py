@@ -45,6 +45,7 @@ class MainWindow(QtWidgets.QWidget):
 
     def build(self):
         PyQt6.uic.loadUi(os.path.join(os.path.dirname(__file__), "ui/massGuiW.ui"), self)
+        self.calibratedChannels = {}
         self.calibrationGroup.setEnabled(False)
 
     def connect(self):
@@ -118,7 +119,7 @@ class MainWindow(QtWidgets.QWidget):
         self.plotsGroup.setEnabled(False)
         self.fileSelectionGroup.setEnabled(False)
         self.hc = HistCalibrator(self) 
-        self.hc.setParams(data, channum, "filtValue", data[channum].stateLabels, binSize=50, statesConfig=self.launch_channel_states)
+        self.hc.setParams(self, data, channum, "filtValue", data[channum].stateLabels, binSize=50, statesConfig=self.launch_channel_states)
         tableData = self.getcalTableRows()
         self.hc.importTableRows(tableData)
 
@@ -133,6 +134,8 @@ class MainWindow(QtWidgets.QWidget):
         self.clear_table()
         self.importTableRows()
         #self.initCal()
+        if self.calibratedChannels == {self.ds.channum}:
+            self.plotsGroup.setEnabled(True)
         self._cal_stage = 0 #_cal_stage tracks the most recent calibration activity. 0=cal plan made; 1=single channel calibration done; 2=all channel calibration
                             #I use _cal_stage so I know when I need to reload the self.data object (to switch between single and all channel calibration)
         # log.debug(f"hc dict {cal_info}")
@@ -149,16 +152,12 @@ class MainWindow(QtWidgets.QWidget):
         for (states, fv, line, energy) in self.cal_info: 
             # # log.debug(f"states {states}, fv {fv}, line {line}, energy {energy}")
             #print(states.split(","))
-            if line in mass.spectra.keys() and not energy:
+            if line != 'Manual Energy': #in mass.spectra.keys() and not energy:
                 self.ds.calibrationPlanAddPoint(float(fv), line, states=states.split(","))
-                # try:
-                #     self.ds.calibrationPlanAddPoint(float(fv), line, states=states)
-                # finally:
-                #     self.ds.calibrationPlanAddPoint(float(fv),self.common_models[str(line)], states=states)
-            elif energy and not line in mass.spectra.keys():  
+            elif energy:# and not line in mass.spectra.keys():  
                 self.ds.calibrationPlanAddPoint(float(fv), energy, states=states.split(","), energy=float(energy))
-            elif line in mass.spectra.keys() and energy:
-                self.ds.calibrationPlanAddPoint(float(fv), line, states=states.split(","), energy=float(energy))
+            # elif line in mass.spectra.keys() and energy:
+            #     self.ds.calibrationPlanAddPoint(float(fv), line, states=states.split(","), energy=float(energy))
         self.data.referenceDs = self.ds
         # log.debug(f"{ds.calibrationPlan}")
         self.plotsGroup.setEnabled(True) 
@@ -261,18 +260,18 @@ class MainWindow(QtWidgets.QWidget):
                 if self.PCcheckbox.isChecked():
                     uncorr = self.newestName
                     self.newestName+="PC"
-                    self.ds.learnPhaseCorrection(indicatorName="filtPhase", uncorrectedName=uncorr, correctedName = self.newestName, states=self.ds.stateLabels)
+                    self.ds.learnPhaseCorrection(indicatorName="filtPhase", uncorrectedName=uncorr, correctedName = self.newestName, states=self.ds.stateLabels, overwriteRecipe=True)
         
                 if self.DCcheckbox.isChecked():
                     uncorr = self.newestName
                     self.newestName+="DC"
-                    self.ds.learnDriftCorrection(indicatorName="pretriggerMean", uncorrectedName=uncorr, correctedName = self.newestName, states=self.ds.stateLabels)#, cutRecipeName="cutForLearnDC")
+                    self.ds.learnDriftCorrection(indicatorName="pretriggerMean", uncorrectedName=uncorr, correctedName = self.newestName, states=self.ds.stateLabels, overwriteRecipe=True)#, cutRecipeName="cutForLearnDC")
 
                 if self.TDCcheckbox.isChecked():
                     uncorr = self.newestName
                     self.newestName+="TC"
-                    self.ds.learnTimeDriftCorrection(indicatorName="relTimeSec", uncorrectedName=uncorr, correctedName = self.newestName, states=self.ds.stateLabels)#,cutRecipeName="cutForLearnDC", _rethrow=True) 
-                self.ds.calibrateFollowingPlan(self.newestName, dlo=dlo_dhi,dhi=dlo_dhi, binsize=binsize, overwriteRecipe=True) 
+                    self.ds.learnTimeDriftCorrection(indicatorName="relTimeSec", uncorrectedName=uncorr, correctedName = self.newestName, states=self.ds.stateLabels, overwriteRecipe=True)#,cutRecipeName="cutForLearnDC", _rethrow=True) 
+                self.ds.calibrateFollowingPlan(self.newestName, dlo=dlo_dhi,dhi=dlo_dhi, binsize=binsize, overwriteRecipe=True, approximate=self.Acheckbox.isChecked())
                 print(f'Calibrated channel {self.ds.channum}')
             except:
                 print('exception in singleChannelCalibration')
@@ -295,23 +294,24 @@ class MainWindow(QtWidgets.QWidget):
             if self.PCcheckbox.isChecked():
                 uncorr = self.newestName
                 self.newestName+="PC"
-                self.data.learnPhaseCorrection(indicatorName="filtPhase", uncorrectedName=uncorr, correctedName = self.newestName, states=self.ds.stateLabels)
+                self.data.learnPhaseCorrection(indicatorName="filtPhase", uncorrectedName=uncorr, correctedName = self.newestName, states=self.ds.stateLabels, overwriteRecipe=True)
         
             if self.DCcheckbox.isChecked():
                 uncorr = self.newestName
                 self.newestName+="DC"
-                self.data.learnDriftCorrection(indicatorName="pretriggerMean", uncorrectedName=uncorr, correctedName = self.newestName, states=self.ds.stateLabels)#, cutRecipeName="cutForLearnDC")
+                self.data.learnDriftCorrection(indicatorName="pretriggerMean", uncorrectedName=uncorr, correctedName = self.newestName, states=self.ds.stateLabels, overwriteRecipe=True)#, cutRecipeName="cutForLearnDC")
 
             if self.TDCcheckbox.isChecked():
                 uncorr = self.newestName
                 self.newestName+="TC"
-                self.data.learnTimeDriftCorrection(indicatorName="relTimeSec", uncorrectedName=uncorr, correctedName = self.newestName, states=self.ds.stateLabels)#,cutRecipeName="cutForLearnDC", _rethrow=True) 
+                self.data.learnTimeDriftCorrection(indicatorName="relTimeSec", uncorrectedName=uncorr, correctedName = self.newestName, states=self.ds.stateLabels, overwriteRecipe=True)#,cutRecipeName="cutForLearnDC", _rethrow=True) 
             print(f'Calibrated {len(self.data.values())} channels using reference channel {self.ds.channum}')
         except:
             pass
 
-        self.data.calibrateFollowingPlan(self.newestName, dlo=dlo_dhi,dhi=dlo_dhi, binsize=binsize, _rethrow=True, overwriteRecipe=True)
+        self.data.calibrateFollowingPlan(self.newestName, dlo=dlo_dhi,dhi=dlo_dhi, binsize=binsize, _rethrow=True, overwriteRecipe=True, approximate=self.Acheckbox.isChecked())
         self.saveCalButton.setEnabled(True)
+        self.calibratedChannels.add(self.data.keys())
 
         # self.plotter = HistPlotter(self) 
         # self._selected_window = self.plotter
@@ -328,12 +328,12 @@ class MainWindow(QtWidgets.QWidget):
     def viewEnergyPlot(self):
         plotter = HistPlotter(self)
         self._selected_window = plotter
-        plotter.setParams(self.data, self.ds.channum, "energy", self.ds.stateLabels, binSize=self.getBinsizeCal())
+        plotter.setParams(self, self.data, self.ds.channum, "energy", self.ds.stateLabels, binSize=self.getBinsizeCal())
         plotter.exec()
 
     def diagnoseCalibration(self):
         self.plotter = diagnoseViewer(self)
-        self.plotter.setParams(self.data, self.ds.channum)
+        self.plotter.setParams(self, self.data, self.ds.channum)
         self.plotter.exec()
 
 

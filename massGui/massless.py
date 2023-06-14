@@ -43,7 +43,8 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
         QtWidgets.QDialog.__init__(self)
         self.lines = list(mass.spectra.keys())
 
-    def setParams(self, data, channum, attr, state_labels, binSize, colors=MPL_DEFAULT_COLORS[:6], lines=DEFAULT_LINES, statesConfig=None):
+    def setParams(self, parent, data, channum, attr, state_labels, binSize, colors=MPL_DEFAULT_COLORS[:6], lines=DEFAULT_LINES, statesConfig=None):
+        self.parent=parent
         self.binSize=binSize
         self.markersDict = {}
         self.artistMarkersDict = {}
@@ -208,28 +209,57 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
         self.getBins()
 
     def diagnoseCalibration(self):
-        ds = self.data[int(self.getChannum())]
-        ds.calibrationPlanInit("filtValue")
         lines = self.getTableRows()
+        if len(lines) == 0:
+            print("Add at least one line to calibrate")
+            return
+        self.ds = self.data[int(self.getChannum())]
+        self.ds.calibrationPlanInit("filtValue")
+        
         for (states, fv, line, energy) in lines: 
             # # log.debug(f"states {states}, fv {fv}, line {line}, energy {energy}")
             #print(states.split(","))
-            if line in mass.spectra.keys() and not energy:
-                ds.calibrationPlanAddPoint(float(fv), line, states=states.split(","))
+            if line != 'Manual Energy':#in mass.spectra.keys() and not energy:
+                self.ds.calibrationPlanAddPoint(float(fv), line, states=states.split(","))
                 # try:
                 #     self.ds.calibrationPlanAddPoint(float(fv), line, states=states)
                 # finally:
                 #     self.ds.calibrationPlanAddPoint(float(fv),self.common_models[str(line)], states=states)
-            elif energy and not line in mass.spectra.keys():  
-                ds.calibrationPlanAddPoint(float(fv), energy, states=states.split(","), energy=float(energy))
-            elif line in mass.spectra.keys() and energy:
-                ds.calibrationPlanAddPoint(float(fv), line, states=states.split(","), energy=float(energy))
+            elif energy:# and not line in mass.spectra.keys():  
+                self.ds.calibrationPlanAddPoint(float(fv), energy, states=states.split(","), energy=float(energy))
+            # elif line in mass.spectra.keys() and energy:
+            #     ds.calibrationPlanAddPoint(float(fv), line, states=states.split(","), energy=float(energy))
 
-        ds.calibrateFollowingPlan("filtValue", dlo=50,dhi=50, binsize=1, overwriteRecipe=True)
+        dlo_dhi = float(self.dlo_dhiBox.text())/2.
+        binsize=float(self.calBinBox.text())
+        
+        #self.data.cutAdd("cutForLearnDC", lambda energyRough: np.logical_and(energyRough > 0, energyRough < 10000), setDefault=False) #ideally, user can set the bounds
+        self.ds.alignToReferenceChannel(referenceChannel=self.ds, binEdges=np.arange(float(self.eRangeLow.text()),float(self.eRangeHi.text()),binsize), attr="filtValue", states=self.ds.stateLabels)
+        self.newestName = "filtValue"
+        if self.PCcheckbox.isChecked():
+            uncorr = self.newestName
+            self.newestName+="PC"
+            self.ds.learnPhaseCorrection(indicatorName="filtPhase", uncorrectedName=uncorr, correctedName = self.newestName, states=self.ds.stateLabels, overwriteRecipe=True)
+
+        if self.DCcheckbox.isChecked():
+            uncorr = self.newestName
+            self.newestName+="DC"
+            self.ds.learnDriftCorrection(indicatorName="pretriggerMean", uncorrectedName=uncorr, correctedName = self.newestName, states=self.ds.stateLabels, overwriteRecipe=True)#, cutRecipeName="cutForLearnDC")
+
+        if self.TDCcheckbox.isChecked():
+            uncorr = self.newestName
+            self.newestName+="TC"
+            self.ds.learnTimeDriftCorrection(indicatorName="relTimeSec", uncorrectedName=uncorr, correctedName = self.newestName, states=self.ds.stateLabels, overwriteRecipe=True)#,cutRecipeName="cutForLearnDC", _rethrow=True) 
+        self.ds.calibrateFollowingPlan(self.newestName, dlo=dlo_dhi,dhi=dlo_dhi, binsize=binsize, overwriteRecipe=True, approximate=self.Acheckbox.isChecked())
+        print(f'Calibrated channel {self.ds.channum}')
+        self.parent.calibratedChannels = {self.ds.channum}
+
+        #self.ds.calibrateFollowingPlan("filtValue", dlo=50,dhi=50, binsize=1, overwriteRecipe=True)
         self.plotter = diagnoseViewer(self)
-        self.plotter.setParams(self.data, ds.channum)
+        self.plotter.setParams(self.parent, self.data, self.ds.channum)
         self.plotter.frame.setEnabled(False)
         self.plotter.exec()
+
         
 
 
@@ -268,10 +298,8 @@ class HistViewer(QtWidgets.QWidget): #widget for hist calibrator and others. plo
         self.build(state_labels, colors) 
         self.connect()
         if statesConfig==None:
-            print("none")
             self.statesGrid.fill_simple()
         else:
-            print("fill")
             self.statesGrid.fill(statesConfig)
         self.handle_plot()
         
@@ -541,7 +569,8 @@ class HistPlotter(QtWidgets.QDialog):   #general-purpose histogram plotter. feat
         #self.setWindowModality(QtCore.Qt.ApplicationModal)
         QtWidgets.QDialog.__init__(self)
 
-    def setParams(self, data, channum, attr, state_labels, binSize, colors=MPL_DEFAULT_COLORS[:6], lines=DEFAULT_LINES):
+    def setParams(self, parent, data, channum, attr, state_labels, binSize, colors=MPL_DEFAULT_COLORS[:6], lines=DEFAULT_LINES):
+        self.parent=parent
         self.binsize=binSize
         self.build(data, channum, attr, state_labels, colors)
         self.connect()
@@ -551,8 +580,9 @@ class HistPlotter(QtWidgets.QDialog):   #general-purpose histogram plotter. feat
         #self.pHistViewer = HistViewer(self, s, attr, state_labels, colors) #pHistViewer is the name of the widget that plots.
         self.data = data
         self.channum = channum
-        self.channelBox.addItem("All")
-        for channum in self.data.keys():
+        if len(self.parent.calibratedChannels)==len(self.data.keys()):
+            self.channelBox.addItem("All")
+        for channum in self.parent.calibratedChannels:#.data.keys():
             self.channelBox.addItem("{}".format(channum))
         self.channelBox.setCurrentText(str(self.channum))
         self.eRangeLow.insert(str(0))
@@ -598,7 +628,8 @@ class diagnoseViewer(QtWidgets.QDialog):    #displays the plots from the Mass di
         super(diagnoseViewer, self).__init__(parent)
         QtWidgets.QDialog.__init__(self)
 
-    def setParams(self, data, channum, colors=MPL_DEFAULT_COLORS[:6], calibratedName=None):
+    def setParams(self, parent, data, channum, colors=MPL_DEFAULT_COLORS[:6], calibratedName=None):
+        self.parent=parent
         self.colors = colors
         if calibratedName==None:
             self.calibratedName = "energy"
@@ -612,7 +643,7 @@ class diagnoseViewer(QtWidgets.QDialog):    #displays the plots from the Mass di
         #self.pHistViewer = HistViewer(self, s, attr, state_labels, colors) #pHistViewer is the name of the widget that plots.
         self.data = data
         self.channum = channum
-        for channum in self.data.keys():
+        for channum in self.parent.calibratedChannels:
             self.channelBox.addItem("{}".format(channum))
         self.channelBox.setCurrentText(str(self.channum))
         self.plotDiagnosis()
@@ -680,8 +711,9 @@ class rtpViewer(QtWidgets.QDialog): #window that hosts the real-time plotting ro
         self.RTPdelay = self.intervalBox.text() 
         self.statesGrid.setParams(state_labels=self.stateLabels, colors=MPL_DEFAULT_COLORS[:1], one_state_per_line=False)
         self.statesGrid.fill_simple()
-        self.channelBox.addItem("All")
-        for channum in self.parent.data.keys():
+        if len(self.parent.calibratedChannels)==len(self.parent.data.keys()):
+            self.channelBox.addItem("All")
+        for channum in self.parent.calibratedChannels:#.data.keys():
             self.channelBox.addItem("{}".format(channum))
         self.channelBox.setCurrentIndex(0)
         self.initRTP()
@@ -891,23 +923,30 @@ class AvsBSetup(QtWidgets.QDialog): #for plotAvsB and plotAvsB2D functions. Allo
             #     channels = self.data
             # else:
             channel = self.data[int(self.channelBox.currentText())]
+            if (A in channel.recipes.baseIngredients) or (A in channel.recipes.craftedIngredients.keys()):
+                if (B in channel.recipes.baseIngredients) or ((B in channel.recipes.craftedIngredients.keys())):
 
-            if self.mode == "1D":
-                channel.plotAvsB(A, B, axis=None, states=states)
-            if self.mode == "2D":
-                Ahi = max(channel.getAttr(A, states))
-                Alo = min(channel.getAttr(A, states))
-                
-                Bhi = max(channel.getAttr(B, states))
-                Blo = min(channel.getAttr(B, states))
+                    if self.mode == "1D":
+                        channel.plotAvsB(A, B, axis=None, states=states)
+                    if self.mode == "2D":
+                        Ahi = max(channel.getAttr(A, states))
+                        Alo = min(channel.getAttr(A, states))
+                        
+                        Bhi = max(channel.getAttr(B, states))
+                        Blo = min(channel.getAttr(B, states))
 
-                num = int(self.binsBox.text())#500
+                        num = int(self.binsBox.text())#500
 
-                bins = [np.linspace(Alo, Ahi, num=num), np.linspace(Blo,Bhi,num=num)]#self.binsBox.text()
-                channel.plotAvsB2d(A, B, binEdgesAB = bins, axis=None, states=states)
-                #plotAvsB2d(self, nameA, nameB, binEdgesAB, axis=None, states=None, cutRecipeName=None, norm=None)
-            # self.plotter.setParams(self, A, B, states, channels, self.data, self.mode)
-            # self.plotter.show()
+                        bins = [np.linspace(Alo, Ahi, num=num), np.linspace(Blo,Bhi,num=num)]#self.binsBox.text()
+                        channel.plotAvsB2d(A, B, binEdgesAB = bins, axis=None, states=states)
+                        #plotAvsB2d(self, nameA, nameB, binEdgesAB, axis=None, states=None, cutRecipeName=None, norm=None)
+                    # self.plotter.setParams(self, A, B, states, channels, self.data, self.mode)
+                    # self.plotter.show()
+                    
+                else:
+                    print(f"attribute {B} doesn't exist for this channel")
+            else:
+                print(f"attribute {A} doesn't exist for this channel")
 
     def uncheckAll(self):
         self.statesGrid.unfill_all()
@@ -935,8 +974,9 @@ class linefitSetup(QtWidgets.QDialog):  #handles linefit function call. lets use
         PyQt6.uic.loadUi(os.path.join(os.path.dirname(__file__), "ui/linefitSetup.ui"), self) 
         self.statesGrid.setParams(state_labels=self.states_list, colors=MPL_DEFAULT_COLORS[:1], one_state_per_line=False)
         self.statesGrid.fill_simple()
-        self.channelBox.addItem("All")
-        for channum in self.channels:
+        if len(self.parent.calibratedChannels)==len(self.data.keys()):
+            self.channelBox.addItem("All")
+        for channum in self.parent.calibratedChannels:
             self.channelBox.addItem("{}".format(channum))
         self.channelBox.setCurrentIndex(0)
 

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>832</width>
+    <width>946</width>
     <height>1000</height>
    </rect>
   </property>
@@ -92,31 +92,21 @@
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_3">
             <item>
-             <widget class="QPushButton" name="diagCalButton">
-              <property name="text">
-               <string>Diagnose Calibration</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QGroupBox" name="csWindow">
-              <property name="minimumSize">
-               <size>
-                <width>0</width>
-                <height>0</height>
-               </size>
-              </property>
+             <widget class="QFrame" name="frame_2">
               <property name="maximumSize">
                <size>
                 <width>16777215</width>
-                <height>200</height>
+                <height>100</height>
                </size>
               </property>
-              <property name="title">
-               <string>Select Channel</string>
+              <property name="frameShape">
+               <enum>QFrame::StyledPanel</enum>
               </property>
-              <layout class="QVBoxLayout" name="verticalLayout_4">
-               <item>
+              <property name="frameShadow">
+               <enum>QFrame::Raised</enum>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_3">
+               <item row="0" column="0">
                 <widget class="QLabel" name="label">
                  <property name="minimumSize">
                   <size>
@@ -129,27 +119,21 @@
                  </property>
                 </widget>
                </item>
-               <item>
+               <item row="0" column="1">
                 <widget class="QComboBox" name="channelBox">
                  <property name="currentText">
                   <string/>
                  </property>
                 </widget>
                </item>
-              </layout>
-             </widget>
-            </item>
-            <item>
-             <widget class="QFrame" name="frame_5">
-              <property name="frameShape">
-               <enum>QFrame::StyledPanel</enum>
-              </property>
-              <property name="frameShadow">
-               <enum>QFrame::Raised</enum>
-              </property>
-              <layout class="QVBoxLayout" name="verticalLayout_5">
-               <item>
-                <widget class="QFrame" name="frame_2">
+               <item row="0" column="2">
+                <widget class="QFrame" name="frame_6">
+                 <property name="maximumSize">
+                  <size>
+                   <width>16777215</width>
+                   <height>50</height>
+                  </size>
+                 </property>
                  <property name="frameShape">
                   <enum>QFrame::StyledPanel</enum>
                  </property>
@@ -185,54 +169,170 @@
                     </property>
                    </widget>
                   </item>
-                  <item>
-                   <widget class="QLabel" name="label_5">
-                    <property name="text">
-                     <string/>
-                    </property>
-                   </widget>
-                  </item>
                  </layout>
                 </widget>
                </item>
-               <item>
-                <widget class="QFrame" name="frame_6">
-                 <property name="frameShape">
-                  <enum>QFrame::StyledPanel</enum>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QFrame" name="frame_5">
+              <property name="frameShape">
+               <enum>QFrame::StyledPanel</enum>
+              </property>
+              <property name="frameShadow">
+               <enum>QFrame::Raised</enum>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_2">
+               <item row="0" column="0">
+                <widget class="QLabel" name="label_6">
+                 <property name="text">
+                  <string>filtValue bin size (arbs):</string>
                  </property>
-                 <property name="frameShadow">
-                  <enum>QFrame::Raised</enum>
-                 </property>
-                 <layout class="QHBoxLayout" name="horizontalLayout_2">
-                  <item>
-                   <widget class="QLabel" name="label_6">
-                    <property name="text">
-                     <string>Bin size:</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QLineEdit" name="binSizeBox">
-                    <property name="inputMethodHints">
-                     <set>Qt::ImhDigitsOnly|Qt::ImhPreferNumbers</set>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
                 </widget>
                </item>
-               <item>
+               <item row="3" column="0">
                 <widget class="QLabel" name="label_2">
                  <property name="text">
                   <string>Counts in filtValue Range</string>
                  </property>
                 </widget>
                </item>
-               <item>
+               <item row="3" column="1">
                 <widget class="QLineEdit" name="photonCountBox">
                  <property name="enabled">
                   <bool>false</bool>
                  </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QLineEdit" name="binSizeBox">
+                 <property name="inputMethodHints">
+                  <set>Qt::ImhDigitsOnly|Qt::ImhPreferNumbers</set>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QGroupBox" name="groupBox_9">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="title">
+               <string>Calibration Steps</string>
+              </property>
+              <layout class="QHBoxLayout" name="horizontalLayout_5">
+               <item>
+                <widget class="QFrame" name="frame_8">
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>100</height>
+                  </size>
+                 </property>
+                 <property name="frameShape">
+                  <enum>QFrame::StyledPanel</enum>
+                 </property>
+                 <property name="frameShadow">
+                  <enum>QFrame::Raised</enum>
+                 </property>
+                 <layout class="QVBoxLayout" name="verticalLayout">
+                  <item>
+                   <widget class="QCheckBox" name="DCcheckbox">
+                    <property name="text">
+                     <string>Drift Correction</string>
+                    </property>
+                    <property name="checked">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QCheckBox" name="PCcheckbox">
+                    <property name="text">
+                     <string>Phase Correction</string>
+                    </property>
+                    <property name="checked">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QCheckBox" name="TDCcheckbox">
+                    <property name="text">
+                     <string>Time Drift Correction</string>
+                    </property>
+                    <property name="checked">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QCheckBox" name="Acheckbox">
+                    <property name="text">
+                     <string>Approximate Calibration</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+               <item>
+                <widget class="QFrame" name="frame_9">
+                 <property name="frameShape">
+                  <enum>QFrame::StyledPanel</enum>
+                 </property>
+                 <property name="frameShadow">
+                  <enum>QFrame::Raised</enum>
+                 </property>
+                 <layout class="QGridLayout" name="gridLayout">
+                  <item row="0" column="0">
+                   <widget class="QLabel" name="label_8">
+                    <property name="text">
+                     <string>Default Fit Range (eV)</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="0">
+                   <widget class="QLabel" name="label_9">
+                    <property name="text">
+                     <string>Bin Size (eV)</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="2">
+                   <widget class="QLineEdit" name="dlo_dhiBox">
+                    <property name="inputMethodHints">
+                     <set>Qt::ImhPreferNumbers</set>
+                    </property>
+                    <property name="text">
+                     <string>100</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="2">
+                   <widget class="QLineEdit" name="calBinBox">
+                    <property name="inputMethodHints">
+                     <set>Qt::ImhPreferNumbers</set>
+                    </property>
+                    <property name="text">
+                     <string>1</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="2" column="0" colspan="2">
+                   <widget class="QPushButton" name="diagCalButton">
+                    <property name="text">
+                     <string>Calibrate Channel and Diagnose Calibration</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
                 </widget>
                </item>
               </layout>
@@ -245,7 +345,7 @@
           <widget class="QTableWidget" name="table">
            <property name="minimumSize">
             <size>
-             <width>200</width>
+             <width>600</width>
              <height>100</height>
             </size>
            </property>
