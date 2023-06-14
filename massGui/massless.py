@@ -15,9 +15,12 @@ import numpy as np
 import pylab as plt
 from .canvas import MplCanvas
 import mass
+import matplotlib
 from matplotlib.lines import Line2D
 import massGui
 import h5py
+
+
 logging.basicConfig(filename='masslessLog.txt',
                     filemode='w',
                     format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
@@ -42,6 +45,8 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
 
     def setParams(self, data, channum, attr, state_labels, binSize, colors=MPL_DEFAULT_COLORS[:6], lines=DEFAULT_LINES):
         self.binSize=binSize
+        self.markersDict = {}
+        self.artistMarkersDict = {}
         self.build(data, channum, attr, state_labels, colors)
         self.connect()
 
@@ -66,7 +71,8 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
         self.eRangeHi.textChanged.connect(self.updateChild)
         self.binSizeBox.textChanged.connect(self.updateChild)
 
-        self.closeButton.clicked.connect(self.close)
+        self.diagCalButton.clicked.connect(self.diagnoseCalibration)
+        #self.closeButton.clicked.connect(self.close) #removed
         #self.table.itemChanged.connect(self.updateTable)
 
     def updateTable(self, line): #bad way to do this, but it works. see deleteRow for a better way using slots.
@@ -76,6 +82,11 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
                 if isinstance(widget, QtWidgets.QComboBox):
                     if widget.currentText() == line and line in mass.spectra.keys():
                         self.table.setItem(r, c+1, QtWidgets.QTableWidgetItem(str(mass.spectra[line].nominal_peak_energy)))
+                        self.table.item(r, c+1).setFlags(self.table.item(r, c+1).flags() & ~QtCore.Qt.ItemFlag.ItemIsEditable)
+                        #item.setEnabled(False)
+                    elif widget.currentText() == "Manual Energy":
+                        self.table.setItem(r, c+1, QtWidgets.QTableWidgetItem(""))
+                        self.table.item(r, c+1).setFlags(self.table.item(r, c+1).flags() | QtCore.Qt.ItemFlag.ItemIsEditable)
 
 
     def clear_table(self):
@@ -86,14 +97,17 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
 
     def handle_plotted(self):
         log.debug("handle_plotted")
-        self.clear_table()
+        #self.clear_table()
 
-    def handle_markered(self, x, states):
+    def handle_markered(self, x, states, marker, i, artist_markers):
         n = self.table.rowCount()
         try: 
             self.table.disconnect()
         except:
             pass
+        self.markersDict[str(n)]=marker[0]
+        self.artistMarkersDict[str(n)]=[artist_markers, i, marker]
+        #self.artist_markers.remove((i, marker))
 
         self.table.setRowCount(n+1)
         # log.debug(f"handle_markered, x {x}, states {states}, n {n}")   
@@ -101,7 +115,7 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
         self.table.setItem(n, 1, QtWidgets.QTableWidgetItem("{}".format(x)))
         self.table.setItem(n, 3, QtWidgets.QTableWidgetItem(""))
         cbox = QtWidgets.QComboBox()
-        cbox.addItem("")
+        cbox.addItem("Manual Energy")
         cbox.addItems(self.lines) 
         delButton = QtWidgets.QPushButton()
         delButton.setText("Delete")
@@ -109,6 +123,7 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
         self.table.setCellWidget(n, 2, cbox)
         self.table.setCellWidget(n, 4, delButton)
         self.table.resizeColumnsToContents()
+
         cbox.currentTextChanged.connect(self.updateTable)
         # log.debug(f"{self.getTableRows()}")
 
@@ -124,6 +139,12 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
         if button:
             row = self.table.indexAt(button.pos()).row()
             self.table.removeRow(row)
+            #remove markers from the plot. There must be a cleaner way to do this but it works.
+            self.markersDict[str(row)].remove() #removes the plotted marker
+            am = self.artistMarkersDict[str(row)] 
+            am[0].remove((am[1], am[2]))    #removes the marker from the internal list of markers
+
+            self.histHistViewer.canvas.draw()   #update plot so the marker goes away
 
     def getTableRows(self):
         rows = []
@@ -135,6 +156,16 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
             row.append(self.table.item(i, 3).text())
             rows.append(row)
         return rows
+    
+    def getMarkers(self):
+        return self.markersDict, self.artistMarkersDict #plottable objects, list of markers for self.histHistPlotter.line2marker
+    
+    def importMarkers(self, markersDict, artistMarkersDict):
+        if markersDict != None:
+            print(markersDict, markersDict.values())
+            print(artistMarkersDict)
+            #self.histHistViewer.canvas.plot(markersDict.values())
+
     
     def importTableRows(self, cal_info):
         n = None
@@ -149,7 +180,7 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
             self.table.setItem(n, 1, QtWidgets.QTableWidgetItem("{}".format(rowData[1])))
             self.table.setItem(n, 3, QtWidgets.QTableWidgetItem("{}".format(rowData[3])))
             cbox = QtWidgets.QComboBox()
-            cbox.addItem("")
+            cbox.addItem("Manual Energy")
             cbox.addItems(self.lines) 
             cbox.setCurrentText("{}".format(rowData[0]))
             delButton = QtWidgets.QPushButton()
@@ -185,19 +216,36 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
         self.histHistViewer.channum = self.getChannum()
         self.getBins()
 
+    def diagnoseCalibration(self):
+        ds = self.data[int(self.getChannum())]
+        ds.calibrationPlanInit("filtValue")
+        lines = self.getTableRows()
+        for (states, fv, line, energy) in lines: 
+            # # log.debug(f"states {states}, fv {fv}, line {line}, energy {energy}")
+            #print(states.split(","))
+            if line in mass.spectra.keys() and not energy:
+                ds.calibrationPlanAddPoint(float(fv), line, states=states.split(","))
+                # try:
+                #     self.ds.calibrationPlanAddPoint(float(fv), line, states=states)
+                # finally:
+                #     self.ds.calibrationPlanAddPoint(float(fv),self.common_models[str(line)], states=states)
+            elif energy and not line in mass.spectra.keys():  
+                ds.calibrationPlanAddPoint(float(fv), energy, states=states.split(","), energy=float(energy))
+            elif line in mass.spectra.keys() and energy:
+                ds.calibrationPlanAddPoint(float(fv), line, states=states.split(","), energy=float(energy))
+
+        ds.calibrateFollowingPlan("filtValue", dlo=50,dhi=50, binsize=1, overwriteRecipe=True)
+        self.plotter = diagnoseViewer(self)
+        self.plotter.setParams(self.data, ds.channum)
+        self.plotter.frame.setEnabled(False)
+        self.plotter.exec()
         
-
-
-
-
-
-
 
 
 class HistViewer(QtWidgets.QWidget): #widget for hist calibrator and others. plots a clickable histogram.
     min_marker_ind_diff = 12
     plotted = QtCore.pyqtSignal()
-    markered = QtCore.pyqtSignal(float, list)
+    markered = QtCore.pyqtSignal(float, list, object, object, object)
     def __init__(self, parent, s=None, attr=None, state_labels=None, colors=None):
         QtWidgets.QWidget.__init__(self, parent)#, s, attr, state_labels, colors)
         #super(HistViewer, self).__init__(parent)
@@ -219,7 +267,9 @@ class HistViewer(QtWidgets.QWidget): #widget for hist calibrator and others. plo
             self.binHi = 20000
         else:
             self.binHi=binHi
-
+        self.line2marker = {}
+        self.line2states = {}
+        self.addMarkerDict = {}
         self.binSize = binSize
         self.channum = channum
         self.lastUsedChannel = channum
@@ -242,6 +292,7 @@ class HistViewer(QtWidgets.QWidget): #widget for hist calibrator and others. plo
         layout.addWidget(self.plotButton)
         layout.addWidget(self.statesGrid)
         self.setLayout(layout)
+        
 
     def connect(self):
         self.plotButton.clicked.connect(self.handle_plot)
@@ -266,23 +317,34 @@ class HistViewer(QtWidgets.QWidget): #widget for hist calibrator and others. plo
         #print(self.data[int(self.channum)].channum)
         self.lastUsedChannel = self.data[int(self.channum)].channum
         self.canvas.clear()
-        self.line2marker = {}
+        # self.line2marker = {}
         self.line2states = {}
         self.photonCount = 0
+        
+        for [artist, i] in self.addMarkerDict.values():
+            print("artist",artist,"i", i)
+            #self.add_marker(artist, i)
+            c = plt.matplotlib.artist.getp(artist, "markerfacecolor")
+            xs, ys = artist.get_data()
+            marker = self.canvas.plot(xs[i], ys[i], "o", markersize=12, c=c)
         for states, color in zip(states_list, colors):
             x,y = self.data[int(self.channum)].hist(bin_edges, attr, states=states)
             self.photonCount+=sum(y)
             [line2d] = self.canvas.plot(x,y, c=color, ds='steps-mid', lw=2, picker=4) 
+            #self.canvas.axes = self.data[int(self.channum)].plotHist(bin_edges, attr, states=states, axis=self.canvas.axes)
             # # log.debug(f"plot: loop: states={states} color={color}")
             self.line2marker[line2d] = []
             self.line2states[line2d] = states
         self.canvas.legend([",".join(states) for states in states_list])
-        self.canvas.set_xlabel(attr)
-        self.canvas.set_ylabel("counts per bin")
+        # self.canvas.set_xlabel(attr)
+        self.canvas.set_ylabel("counts per %0.1f unit bin" %(self.binSize))
+
+        #axis.set_ylabel("counts per %0.1f unit bin" % (binEdges[1]-binEdges[0]))
         self.canvas.set_title(self.data[int(self.channum)].shortName + ", states = {}".format(states_list))
         # plt.tight_layout()
         self.parent.photonCountBox.setText(str(self.photonCount))
         self.canvas.draw()
+        #plt.connect('button_press_event', self.mpl_click_event)
         self.canvas.mpl_connect('pick_event', self.mpl_click_event)
         self.plotted.emit()
 
@@ -306,8 +368,9 @@ class HistViewer(QtWidgets.QWidget): #widget for hist calibrator and others. plo
         self.canvas.mpl_connect('pick_event', self.mpl_click_event)
         self.plotted.emit()
 
-
+    
     def mpl_click_event(self, event):
+        print(event.artist)
         if self.clickable == True:
             x = event.mouseevent.xdata
             y = event.mouseevent.ydata
@@ -320,6 +383,7 @@ class HistViewer(QtWidgets.QWidget): #widget for hist calibrator and others. plo
                 i = self.local_max_ind(xs, ys, x, y) 
                 if ys[i] > y*0.8:
                     self.add_marker(artist, i)
+                    self.addMarkerDict[self.parent.table.rowCount()-1]=[artist, i]
                 else:
                     log.debug(f"marker not placed becausel local maximum {ys[i]}<=0.8*mouse_click_height {y}.\nclick closer to the peak")
                     pass
@@ -341,9 +405,11 @@ class HistViewer(QtWidgets.QWidget): #widget for hist calibrator and others. plo
                 return
         marker = self.canvas.plot(xs[i], ys[i], "o", markersize=12, c=c) # cant be picked unless I pass picker?
         artist_markers.append((i, marker))
+        #self.markersList.append(marker)
         self.line2marker[artist] = artist_markers
-        self.markered.emit(xs[i], self.line2states[artist])
+        self.markered.emit(xs[i], self.line2states[artist], marker, i, self.line2marker[artist])
         self.canvas.draw() 
+        
         # log.debug(f"add marker at {i}, x {xs[i]}, y {ys[i]}")
         # # log.debug(f"self.line2marker {self.line2marker}")
 
@@ -539,8 +605,12 @@ class diagnoseViewer(QtWidgets.QDialog):    #displays the plots from the Mass di
         super(diagnoseViewer, self).__init__(parent)
         QtWidgets.QDialog.__init__(self)
 
-    def setParams(self, data, channum, colors=MPL_DEFAULT_COLORS[:6]):
+    def setParams(self, data, channum, colors=MPL_DEFAULT_COLORS[:6], calibratedName=None):
         self.colors = colors
+        if calibratedName==None:
+            self.calibratedName = "energy"
+        else:
+            self.calibratedName = calibratedName
         self.build(data, channum)
         self.connect()
 
@@ -571,15 +641,15 @@ class diagnoseViewer(QtWidgets.QDialog):    #displays the plots from the Mass di
         self.channum = int(self.channelBox.currentText())
         return self.channum
 
-    def diagnoseCalibration(self, calibratedName="energy"):
+    def diagnoseCalibration(self):
         ds = self.data[self.getChannum()]
-        calibration = ds.recipes[calibratedName].f
+        calibration = ds.recipes[self.calibratedName].f
         uncalibratedName = calibration.uncalibratedName
         results = calibration.results
         n_intermediate = len(calibration.intermediate_calibrations)
         self.canvas.fig.clear()
         self.canvas.fig.suptitle(
-            ds.shortName+", cal diagnose for '{}'\n with {} intermediate calibrations".format(calibratedName, n_intermediate))
+            ds.shortName+", cal diagnose for '{}'\n with {} intermediate calibrations".format(self.calibratedName, n_intermediate))
         n = int(np.ceil(np.sqrt(len(results)+2)))
         for i, result in enumerate(results):
             ax = self.canvas.fig.add_subplot(n, n, i+1)
@@ -590,7 +660,7 @@ class diagnoseViewer(QtWidgets.QDialog):    #displays the plots from the Mass di
         calibration.plot(axis=ax)
         ax = self.canvas.fig.add_subplot(n, n, i+3)
         ds.plotHist(np.arange(0, 16000, 4), uncalibratedName,
-                      axis=ax, coAddStates=False)
+                      axis=ax, coAddStates=False) #todo: get better ranges using max of energy value
         #ax.vlines(ds.calibrationPlan.uncalibratedVals, 0, self.canvas.fig.ylim()[1])
         #plt.tight_layout()
 

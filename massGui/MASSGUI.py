@@ -96,6 +96,7 @@ class MainWindow(QtWidgets.QWidget):
             self.load_file(fileName) # sets self._choose_file_lastdir
             self.set_std_dev_threshold()
             #self.data_no_cal = self.data
+            self.plotMarkers, self.listMarkers = None, None
         
         self.calibrationGroup.setEnabled(True) #file is loaded, user should now do the line identification.
         self.calButtonGroup.setEnabled(False) #don't let users run the calibration procedure yet. enabled in importTableRows()
@@ -119,12 +120,15 @@ class MainWindow(QtWidgets.QWidget):
         self.hc.setParams(data, channum, "filtValue", data[channum].stateLabels, binSize=50)
         tableData = self.getcalTableRows()
         self.hc.importTableRows(tableData)
+        self.hc.importMarkers(self.plotMarkers, self.listMarkers)
         #hc.setWindowModality(self, QtCore.Qt.ApplicationModal)
         self._selected_window = self.hc
         self.hc.exec()
+
         self.setChannum()
         self.ds = data[self.channum]
         self.cal_info = self.hc.getTableRows()
+        self.plotMarkers, self.listMarkers = self.hc.getMarkers()
         self.clear_table()
         self.importTableRows()
         #self.initCal()
@@ -210,11 +214,11 @@ class MainWindow(QtWidgets.QWidget):
             #print(rowPosition, rowData)
             self.calTable.insertRow(rowPosition)
             
-            if rowData[2] != '': #if there is a filtValue without a line name from mass.spectra
+            if rowData[2] != 'Manual Energy': #if there is a filtValue without a line name from mass.spectra
                 self.calTable.setItem(rowPosition, 0, QtWidgets.QTableWidgetItem(rowData[2]))   #name
                 #self.lineFitComboBox.addItem(rowData[2])
             else:
-                self.calTable.setItem(rowPosition, 0, QtWidgets.QTableWidgetItem('Name?'))
+                self.calTable.setItem(rowPosition, 0, QtWidgets.QTableWidgetItem('Manual Energy'))
                 if rowData[3] == '': #if the energy isn't filled in either, prevent user from calibrating
                     self.calTable.item(rowPosition, 0).setBackground(QtGui.QColor(255,10,10))  #name
                     allowCal = False
@@ -267,7 +271,7 @@ class MainWindow(QtWidgets.QWidget):
                     uncorr = self.newestName
                     self.newestName+="TC"
                     self.ds.learnTimeDriftCorrection(indicatorName="relTimeSec", uncorrectedName=uncorr, correctedName = self.newestName, states=self.ds.stateLabels)#,cutRecipeName="cutForLearnDC", _rethrow=True) 
-                self.ds.calibrateFollowingPlan(self.newestName, dlo=dlo_dhi,dhi=dlo_dhi, binsize=binsize) #add dlo, dhi, binsize options later
+                self.ds.calibrateFollowingPlan(self.newestName, dlo=dlo_dhi,dhi=dlo_dhi, binsize=binsize, overwriteRecipe=True) 
                 print(f'Calibrated channel {self.ds.channum}')
             except:
                 print('exception in singleChannelCalibration')
@@ -305,7 +309,7 @@ class MainWindow(QtWidgets.QWidget):
         except:
             pass
 
-        self.data.calibrateFollowingPlan(self.newestName, dlo=dlo_dhi,dhi=dlo_dhi, binsize=binsize, _rethrow=True)
+        self.data.calibrateFollowingPlan(self.newestName, dlo=dlo_dhi,dhi=dlo_dhi, binsize=binsize, _rethrow=True, overwriteRecipe=True)
         self.saveCalButton.setEnabled(True)
 
         # self.plotter = HistPlotter(self) 

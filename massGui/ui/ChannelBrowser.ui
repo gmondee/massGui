@@ -92,6 +92,13 @@
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_3">
             <item>
+             <widget class="QPushButton" name="diagCalButton">
+              <property name="text">
+               <string>Diagnose Calibration</string>
+              </property>
+             </widget>
+            </item>
+            <item>
              <widget class="QGroupBox" name="csWindow">
               <property name="minimumSize">
                <size>
@@ -279,15 +286,17 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="closeButton">
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>30</height>
-         </size>
+       <widget class="QLabel" name="label_7">
+        <property name="font">
+         <font>
+          <italic>true</italic>
+         </font>
         </property>
         <property name="text">
-         <string>Click here or close this window to save the calibration plan</string>
+         <string>Close this window to save calibration plan</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
         </property>
        </widget>
       </item>
