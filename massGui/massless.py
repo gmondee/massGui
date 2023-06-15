@@ -140,9 +140,17 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
         if button:
             row = self.table.indexAt(button.pos()).row()
             self.table.removeRow(row)
-            #remove markers from the plot. There must be a cleaner way to do this but it works.
-            self.markersDict[str(row)].remove() #removes the plotted marker
-            am = self.artistMarkersDict[str(row)] 
+            #remove markers from the plot. incorrectly identifies the dict key if deleted out of order.
+            #get the keys and sort from low to high. Then, find the row, n. Finally, pick the n'th key and delete that one.
+            keyslist = []
+            for key in self.markersDict:
+                keyslist.append(str(key))
+            # print("list: ",keyslist, "key: ",keyslist[row])
+            # print("dict: ",self.markersDict)
+            # print("removed: ", self.markersDict[str(keyslist[row])])
+            self.markersDict[str(keyslist[row])].remove() #removes the plotted marker
+            self.markersDict.pop(str(keyslist[row]))
+            am = self.artistMarkersDict[str(keyslist[row])] 
             am[0].remove((am[1], am[2]))    #removes the marker from the internal list of markers
 
             self.histHistViewer.canvas.draw()   #update plot so the marker goes away
