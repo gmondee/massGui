@@ -12,14 +12,14 @@ from PyQt6.QtWidgets import QFileDialog
 QtGui.QCursor
 # other imports
 import numpy as np
-import pylab as plt
+import matplotlib.pyplot as plt
 from .canvas import MplCanvas
 import mass
 import matplotlib
 from matplotlib.lines import Line2D
 import massGui
 import h5py
-
+from copy import copy
 
 logging.basicConfig(filename='masslessLog.txt',
                     filemode='w',
@@ -43,11 +43,21 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
         QtWidgets.QDialog.__init__(self)
         self.lines = list(mass.spectra.keys())
 
-    def setParams(self, parent, data, channum, attr, state_labels, binSize, colors=MPL_DEFAULT_COLORS[:6], lines=DEFAULT_LINES, statesConfig=None):
+    def setParams(self, parent, data, channum, attr, state_labels, binSize, colors=MPL_DEFAULT_COLORS[:6], lines=DEFAULT_LINES, statesConfig=None, markers=None, artistMarkers=None,markersIndex=None):
         self.parent=parent
         self.binSize=binSize
-        self.markersDict = {}
-        self.artistMarkersDict = {}
+        if markers==None:
+            self.markersDict = {}
+        else:
+            self.markersDict = markers
+        if artistMarkers==None:
+            self.artistMarkersDict = {}
+        else:
+            self.artistMarkersDict = artistMarkers
+        if markersIndex==None:
+            self.markerIndex = 0
+        else:
+            self.markerIndex = markersIndex
         self.build(data, channum, attr, state_labels, colors, statesConfig)
         self.connect()
 
@@ -58,10 +68,12 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
         self.channum = channum
         for channel in self.data.keys():
             self.channelBox.addItem("{}".format(channel))
+        self.channelBox.setCurrentText(str(channum))
         self.eRangeLow.insert(str(0))
         self.eRangeHi.insert(str(20000))
         self.binSizeBox.insert(str(50))
         self.histHistViewer.setParams(self, data, channum, attr, state_labels, colors, self.binSize, statesConfig=statesConfig)
+        self.importMarkers()
 
 
     def connect(self):
@@ -75,6 +87,22 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
         self.diagCalButton.clicked.connect(self.diagnoseCalibration)
         #self.closeButton.clicked.connect(self.close) #removed
         #self.table.itemChanged.connect(self.updateTable)
+
+    def importMarkers(self):
+        for marker in self.markersDict:
+            artist = self.markersDict[marker]
+            new_ax = self.histHistViewer.canvas.axes
+            #self.markersDict[marker].plot()
+            artist.remove()
+            artist.axes = new_ax
+            artist.set_transform(new_ax.transData)  # <-- I added this line
+            #new_ax.add_line(artist)
+            new_ax.add_artist(artist)
+
+            
+            # am = self.artistMarkersDict[i] 
+            # #self.markersDict[str(i)]=am[2]
+            # self.histHistViewer.add_marker(am[3], am[1], emit=False) 
 
     def updateTable(self, line): #bad way to do this, but it works. see deleteRow for a better way using slots.
         for r in range(self.table.rowCount()):  #searches for comboboxes with the clicked line and updates the first one's energy. 
@@ -95,10 +123,13 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
         #     for j in range(self.table.rowCount()):
         #         self.table.setHorizontalHeaderItem(j, QtWidgets.QTableWidgetItem())
         self.table.setRowCount(0)
+        self.markerIndex = 0
+        self.markersDict = {}
+        self.artistMarkersDict = {}
 
     def handle_plotted(self):
         log.debug("handle_plotted")
-        #self.clear_table()
+        self.clear_table()
 
     def handle_markered(self, x, states, marker, i, artist_markers):
         n = self.table.rowCount()
@@ -106,8 +137,10 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
             self.table.disconnect()
         except:
             pass
-        self.markersDict[str(n)]=marker[0]
-        self.artistMarkersDict[str(n)]=[artist_markers, i, marker]
+        #self.markersDict[str(n)]=marker[0]
+        self.markersDict[self.markerIndex] = marker[0]
+        self.artistMarkersDict[self.markerIndex]=[artist_markers, i, marker]
+        self.markerIndex+=1 
         #self.artist_markers.remove((i, marker))
 
         self.table.setRowCount(n+1)
@@ -144,13 +177,14 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
             #get the keys and sort from low to high. Then, find the row, n. Finally, pick the n'th key and delete that one.
             keyslist = []
             for key in self.markersDict:
-                keyslist.append(str(key))
-            # print("list: ",keyslist, "key: ",keyslist[row])
-            # print("dict: ",self.markersDict)
-            # print("removed: ", self.markersDict[str(keyslist[row])])
-            self.markersDict[str(keyslist[row])].remove() #removes the plotted marker from the plot
-            self.markersDict.pop(str(keyslist[row]))    #removes the (reference to the) plotted marker from the dictionary
-            am = self.artistMarkersDict[str(keyslist[row])] 
+                keyslist.append(key)
+            print("list: ",keyslist, "key: ",row)
+            print("dict: ",self.markersDict)
+            print("removed: ", self.markersDict[keyslist[row]])
+            self.markersDict[keyslist[row]].remove() #removes the plotted marker from the plot
+            self.markersDict.pop(keyslist[row])    #removes the (reference to the) plotted marker from the dictionary
+
+            am = self.artistMarkersDict[keyslist[row]] 
             am[0].remove((am[1], am[2]))    #removes the marker from the internal list of markers
 
             self.histHistViewer.canvas.draw()   #update plot so the marker goes away
@@ -247,7 +281,7 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
         if self.PCcheckbox.isChecked():
             uncorr = self.newestName
             self.newestName+="PC"
-            self.ds.learnPhaseCorrection(indicatorName="filtPhase", uncorrectedName=uncorr, correctedName = self.newestName, states=self.ds.stateLabels, overwriteRecipe=True)
+            self.ds.learnPhaseCorrection(indicatorName="filtPhase", uncorrectedName=uncorr, correctedName = self.newestName, states=self.ds.stateLabels)
 
         if self.DCcheckbox.isChecked():
             uncorr = self.newestName
@@ -257,7 +291,7 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
         if self.TDCcheckbox.isChecked():
             uncorr = self.newestName
             self.newestName+="TC"
-            self.ds.learnTimeDriftCorrection(indicatorName="relTimeSec", uncorrectedName=uncorr, correctedName = self.newestName, states=self.ds.stateLabels, overwriteRecipe=True)#,cutRecipeName="cutForLearnDC", _rethrow=True) 
+            self.ds.learnTimeDriftCorrection(indicatorName="relTimeSec", uncorrectedName=uncorr, correctedName = self.newestName, states=self.ds.stateLabels)#,cutRecipeName="cutForLearnDC", _rethrow=True) 
         self.ds.calibrateFollowingPlan(self.newestName, dlo=dlo_dhi,dhi=dlo_dhi, binsize=binsize, overwriteRecipe=True, approximate=self.Acheckbox.isChecked())
         print(f'Calibrated channel {self.ds.channum}')
         self.parent.calibratedChannels = {self.ds.channum}
@@ -311,6 +345,15 @@ class HistViewer(QtWidgets.QWidget): #widget for hist calibrator and others. plo
             self.statesGrid.fill(statesConfig)
         self.handle_plot()
         
+    # def importMarkers(self, artistmarkers):
+    #     self.artistMarkersDict = artistmarkers    #self.artistMarkersDict[str(n)]=[artist_markers, i, marker, artist]
+    #     self.markersDict = self.parent.markersDict
+    #     for i in self.artistMarkersDict:
+            
+    #         am = self.artistMarkersDict[str(i)] 
+    #         self.markersDict[str(i)]=am[2]
+    #         print("323",self.markersDict)
+    #         self.add_marker(am[3], am[1], emit=False) 
         
     def build(self, state_labels, colors):
         layout = QtWidgets.QVBoxLayout()
@@ -416,7 +459,7 @@ class HistViewer(QtWidgets.QWidget): #widget for hist calibrator and others. plo
             pass
 
 
-    def add_marker(self, artist, i):
+    def add_marker(self, artist, i, emit=True):
         artist_markers = self.line2marker[artist]
         c = plt.matplotlib.artist.getp(artist, "markerfacecolor")
         xs, ys = artist.get_data()
@@ -428,7 +471,8 @@ class HistViewer(QtWidgets.QWidget): #widget for hist calibrator and others. plo
         marker = self.canvas.plot(xs[i], ys[i], "o", markersize=12, c=c) # cant be picked unless I pass picker?
         artist_markers.append((i, marker))
         self.line2marker[artist] = artist_markers
-        self.markered.emit(xs[i], self.line2states[artist], marker, i, self.line2marker[artist])
+        if emit==True:
+            self.markered.emit(xs[i], self.line2states[artist], marker, i, self.line2marker[artist])
         self.canvas.draw() 
         
         # log.debug(f"add marker at {i}, x {xs[i]}, y {ys[i]}")

@@ -81,7 +81,10 @@ class MainWindow(QtWidgets.QWidget):
         for channum in self.data.keys():
             self.channels.append(channum)
             #self.refChannelBox.addItem("{}".format(channum))
-        
+        self.markersDict = None
+        self.markerIndex = None
+        self.artistMarkersDict = None
+        self.channum = self.channels[0]
         self.launch_channel_colors, self.launch_channel_states = None, None
         
 
@@ -110,16 +113,16 @@ class MainWindow(QtWidgets.QWidget):
 
     def handle_manual_cal(self):
         # log.debug("handle_manual_cal")
-        channum = self.channels[0]#int(self.refChannelBox.currentText())
+        
         #self.launch_channel(self.data[channum])
-        self.launch_channel(self.data, channum)
+        self.launch_channel(self.data, self.channum)
 
     def launch_channel(self, data, channum):
         self.checkHCI()
         self.plotsGroup.setEnabled(False)
         self.fileSelectionGroup.setEnabled(False)
         self.hc = HistCalibrator(self) 
-        self.hc.setParams(self, data, channum, "filtValue", data[channum].stateLabels, binSize=50, statesConfig=self.launch_channel_states)
+        self.hc.setParams(self, data, channum, "filtValue", data[channum].stateLabels, binSize=50, statesConfig=self.launch_channel_states, markers=self.markersDict, artistMarkers=self.artistMarkersDict,markersIndex=self.markerIndex)
         tableData = self.getcalTableRows()
         self.hc.importTableRows(tableData)
 
@@ -131,6 +134,9 @@ class MainWindow(QtWidgets.QWidget):
         self.ds = data[self.channum]
         self.cal_info = self.hc.getTableRows()
         self.launch_channel_colors, self.launch_channel_states = self.hc.histHistViewer.statesGrid.get_colors_and_states_list()
+        self.markersDict = self.hc.markersDict
+        self.artistMarkersDict = self.hc.artistMarkersDict
+        self.markerIndex = self.hc.markerIndex
         self.clear_table()
         self.importTableRows()
         #self.initCal()
