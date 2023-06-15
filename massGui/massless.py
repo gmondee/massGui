@@ -148,8 +148,8 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
             # print("list: ",keyslist, "key: ",keyslist[row])
             # print("dict: ",self.markersDict)
             # print("removed: ", self.markersDict[str(keyslist[row])])
-            self.markersDict[str(keyslist[row])].remove() #removes the plotted marker
-            self.markersDict.pop(str(keyslist[row]))
+            self.markersDict[str(keyslist[row])].remove() #removes the plotted marker from the plot
+            self.markersDict.pop(str(keyslist[row]))    #removes the (reference to the) plotted marker from the dictionary
             am = self.artistMarkersDict[str(keyslist[row])] 
             am[0].remove((am[1], am[2]))    #removes the marker from the internal list of markers
 
