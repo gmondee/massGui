@@ -263,9 +263,12 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
             #print(states.split(","))
             if line != 'Manual Energy':#in mass.spectra.keys() and not energy:
                 self.ds.calibrationPlanAddPoint(float(fv), line, states=states.split(","))
+                #get a set of states used by a line?
+
+
                 # try:
                 #     self.ds.calibrationPlanAddPoint(float(fv), line, states=states)
-                # finally:
+                # except:
                 #     self.ds.calibrationPlanAddPoint(float(fv),self.common_models[str(line)], states=states)
             elif energy:# and not line in mass.spectra.keys():  
                 self.ds.calibrationPlanAddPoint(float(fv), energy, states=states.split(","), energy=float(energy))
@@ -276,12 +279,12 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
         binsize=float(self.calBinBox.text())
         
         #self.data.cutAdd("cutForLearnDC", lambda energyRough: np.logical_and(energyRough > 0, energyRough < 10000), setDefault=False) #ideally, user can set the bounds
-        self.ds.alignToReferenceChannel(referenceChannel=self.ds, binEdges=np.arange(float(self.eRangeLow.text()),float(self.eRangeHi.text()),binsize), attr="filtValue", states=self.ds.stateLabels)
+        #self.ds.alignToReferenceChannel(referenceChannel=self.ds, binEdges=np.arange(float(self.eRangeLow.text()),float(self.eRangeHi.text()),binsize), attr="filtValue", states=self.ds.stateLabels)
         self.newestName = "filtValue"
         if self.PCcheckbox.isChecked():
             uncorr = self.newestName
             self.newestName+="PC"
-            self.ds.learnPhaseCorrection(indicatorName="filtPhase", uncorrectedName=uncorr, correctedName = self.newestName, states=self.ds.stateLabels)
+            self.ds.learnPhaseCorrection(indicatorName="filtPhase", uncorrectedName=uncorr, correctedName = self.newestName, states=self.ds.stateLabels, overwriteRecipe=True)
 
         if self.DCcheckbox.isChecked():
             uncorr = self.newestName
@@ -291,7 +294,7 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
         if self.TDCcheckbox.isChecked():
             uncorr = self.newestName
             self.newestName+="TC"
-            self.ds.learnTimeDriftCorrection(indicatorName="relTimeSec", uncorrectedName=uncorr, correctedName = self.newestName, states=self.ds.stateLabels)#,cutRecipeName="cutForLearnDC", _rethrow=True) 
+            self.ds.learnTimeDriftCorrection(indicatorName="relTimeSec", uncorrectedName=uncorr, correctedName = self.newestName, states=self.ds.stateLabels, overwriteRecipe=True)#,cutRecipeName="cutForLearnDC", _rethrow=True) 
         self.ds.calibrateFollowingPlan(self.newestName, dlo=dlo_dhi,dhi=dlo_dhi, binsize=binsize, overwriteRecipe=True, approximate=self.Acheckbox.isChecked())
         print(f'Calibrated channel {self.ds.channum}')
         self.parent.calibratedChannels = {self.ds.channum}

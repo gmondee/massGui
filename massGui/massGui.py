@@ -125,11 +125,20 @@ class MainWindow(QtWidgets.QWidget):
         self.hc.setParams(self, data, channum, "filtValue", data[channum].stateLabels, binSize=50, statesConfig=self.launch_channel_states, markers=self.markersDict, artistMarkers=self.artistMarkersDict,markersIndex=self.markerIndex)
         tableData = self.getcalTableRows()
         self.hc.importTableRows(tableData)
+        self.hc.PCcheckbox.setChecked(self.PCcheckbox.isChecked())
+        self.hc.DCcheckbox.setChecked(self.DCcheckbox.isChecked())
+        self.hc.TDCcheckbox.setChecked(self.TDCcheckbox.isChecked())
+        self.hc.Acheckbox.setChecked(self.Acheckbox.isChecked())
+        self.hc.dlo_dhiBox.setText(self.dlo_dhiBox.text())
+        self.hc.calBinBox.setText(self.binSizeBox.text())
 
         #hc.setWindowModality(self, QtCore.Qt.ApplicationModal)
         self._selected_window = self.hc
         self.hc.exec()
 
+        self.get_data_from_channel(data)
+
+    def get_data_from_channel(self, data): #grabs calibration info from the single channel cal window
         self.setChannum()
         self.ds = data[self.channum]
         self.cal_info = self.hc.getTableRows()
@@ -137,15 +146,18 @@ class MainWindow(QtWidgets.QWidget):
         self.markersDict = self.hc.markersDict
         self.artistMarkersDict = self.hc.artistMarkersDict
         self.markerIndex = self.hc.markerIndex
+        self.PCcheckbox.setChecked(self.hc.PCcheckbox.isChecked())
+        self.DCcheckbox.setChecked(self.hc.DCcheckbox.isChecked())
+        self.TDCcheckbox.setChecked(self.hc.TDCcheckbox.isChecked())
+        self.Acheckbox.setChecked(self.hc.Acheckbox.isChecked())
+        self.dlo_dhiBox.setText(self.hc.dlo_dhiBox.text())
+        self.binSizeBox.setText(self.hc.calBinBox.text())
         self.clear_table()
         self.importTableRows()
-        #self.initCal()
         if self.calibratedChannels == {self.ds.channum}:
             self.plotsGroup.setEnabled(True)
         self._cal_stage = 0 #_cal_stage tracks the most recent calibration activity. 0=cal plan made; 1=single channel calibration done; 2=all channel calibration
                             #I use _cal_stage so I know when I need to reload the self.data object (to switch between single and all channel calibration)
-        # log.debug(f"hc dict {cal_info}")
-        #self.label_calStatus.setText("{}".format(self.cal_info))
 
     def initCal(self):
         #self.data = self.data_no_cal
