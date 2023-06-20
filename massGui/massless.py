@@ -255,6 +255,10 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
         if len(lines) == 0:
             print("Add at least one line to calibrate")
             return
+        for line in lines:
+            if (line[2] == 'Manual Energy') and (line[3] == ''): #if a line is clicked but no energy is assigned
+                print("Assign energies to all lines and try again")
+                return
         self.ds = self.data[int(self.getChannum())]
         self.ds.calibrationPlanInit("filtValue")
         
@@ -297,7 +301,7 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
             self.ds.learnTimeDriftCorrection(indicatorName="relTimeSec", uncorrectedName=uncorr, correctedName = self.newestName, states=self.ds.stateLabels, overwriteRecipe=True)#,cutRecipeName="cutForLearnDC", _rethrow=True) 
         self.ds.calibrateFollowingPlan(self.newestName, dlo=dlo_dhi,dhi=dlo_dhi, binsize=binsize, overwriteRecipe=True, approximate=self.Acheckbox.isChecked())
         print(f'Calibrated channel {self.ds.channum}')
-        self.parent.calibratedChannels = {self.ds.channum}
+        self.parent.calibratedChannels = set([self.ds.channum])
 
         #self.ds.calibrateFollowingPlan("filtValue", dlo=50,dhi=50, binsize=1, overwriteRecipe=True)
         self.plotter = diagnoseViewer(self)
@@ -775,10 +779,19 @@ class rtpViewer(QtWidgets.QDialog): #window that hosts the real-time plotting ro
 
     def connect(self):
         self.updateButton.clicked.connect(self.updateButtonClicked)
+        self.checkAllButton.clicked.connect(self.checkAll)
+        self.uncheckAllButton.clicked.connect(self.uncheckAll)
 
     def updateButtonClicked(self):
         self.timer.stop()
         self.UpdatePlots()
+
+    def uncheckAll(self):
+        self.statesGrid.unfill_all()
+
+    def checkAll(self):
+        self.statesGrid.fill_all()
+
 
     #####################################| Real-time plotting routine|#####################################
     def initRTP(self): #creates axes, clears variables, and starts real-time plotting routine
@@ -1117,4 +1130,98 @@ class hdf5Opener(QtWidgets.QDialog): #dialog with a combobox which lists all of 
                 for cal in list(file[run].keys()):
                     calList.append(f'{run} {cal}')
         return calList
+
+
+
+class qualityCheckLinefitSetup(QtWidgets.QDialog):  #handles linefit function call. lets user choose line, states, channel
+    def __init__(self, parent=None):
+        super(qualityCheckLinefitSetup, self).__init__(parent)
+        QtWidgets.QDialog.__init__(self)
+        plt.ion()
+    def setParams(self, parent, lines, states_list, data):
+        self.colors = MPL_DEFAULT_COLORS[0]
+        self.parent = parent
+        self.states_list = states_list
+        self.lines = lines
+        self.data = data
+        self.build()
+        self.connect()
+
+
+    def build(self):
+        PyQt6.uic.loadUi(os.path.join(os.path.dirname(__file__), "ui/QualityCheckLinefit.ui"), self) 
+        self.statesGrid.setParams(state_labels=self.states_list, colors=MPL_DEFAULT_COLORS[:1], one_state_per_line=False)
+        self.statesGrid.fill_simple()
+
+        for line in self.lines:
+            self.lineBox.addItem("{}".format(line))
+        self.lineBox.setCurrentIndex(0)     
+
+    def connect(self):
+        self.plotButton.clicked.connect(self.handlePlot)
+        self.checkAllButton.clicked.connect(self.checkAll)
+        self.uncheckAllButton.clicked.connect(self.uncheckAll)
+
+    def uncheckAll(self):
+        self.statesGrid.unfill_all()
+
+    def checkAll(self):
+        self.statesGrid.fill_all()
+
+    def handlePlot(self):
+        _colors, states = self.statesGrid.get_colors_and_states_list()
+        try: #if the user has all states unchecked during a refresh, use the last set of states.
+            states = states[0]
+            self.oldStates = states
+        except:
+            print("No states selected in Quality Check Line Fit window.")
+            #states='A'
+            return 0
+        line = self.lineBox.currentText()
+
+        dlo = self.dlo.text()
+        dhi = self.dhi.text()
+        binsize = self.binSizeBox.text()
+        fwhm = self.fwhmBox.text()
+
+        paramsList = [dlo, dhi, binsize, fwhm]
+        for i, param in enumerate(paramsList):
+            if param != '': #if param has been filled
+                paramsList[i] = abs(float(param))
+            else:
+                paramsList[i] = None
+        dlo, dhi, binsize, fwhm = paramsList      
+
+        if self.radioSigma.isChecked():
+            if self.sigmaBox.text() != '':
+                sigma = abs(float(self.sigmaBox.text()))
+            else:
+                sigma = None
+        else:
+            sigma = None
+        
+        if self.radioAbsolute.isChecked():
+            if self.absoluteBox.text() != '':
+                absolute = abs(float(self.absoluteBox.text()))
+            else:
+                absolute = None
+        else:
+            absolute = None
+
+        print("paramslist ",paramsList, sigma, absolute) 
+
+        if dlo == None:
+            dlo = 50
+        if dhi == None:
+            dhi = 50
+
+        self.data.qualityCheckLinefit(line, sigma, fwhm, absolute, 'energy', states, dlo, dhi, binsize, binEdges=None,
+                            guessParams=None, cutRecipeName=None, holdvals=None, resolutionPlot=True, hdf5Group=None,
+                            _rethrow=False)
+        for channel in self.parent.goodChannels:
+            self.data[channel].markGood()
+        
+    def closeEvent(self, event):
+        for channel in self.parent.goodChannels:
+            self.parent.data[channel].markGood()   
 

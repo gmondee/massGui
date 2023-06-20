@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>946</width>
+    <width>1010</width>
     <height>1000</height>
    </rect>
   </property>
@@ -150,6 +150,9 @@
                   </item>
                   <item>
                    <widget class="QLineEdit" name="eRangeLow">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
                     <property name="inputMethodHints">
                      <set>Qt::ImhDigitsOnly</set>
                     </property>

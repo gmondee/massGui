@@ -10,8 +10,9 @@ import os
 #import pytest
 #import pytestqt
 from matplotlib.lines import Line2D
-from .massless import HistCalibrator, HistPlotter, diagnoseViewer, rtpViewer, AvsBSetup, linefitSetup, hdf5Opener
+from .massless import HistCalibrator, HistPlotter, diagnoseViewer, rtpViewer, AvsBSetup, linefitSetup, hdf5Opener, qualityCheckLinefitSetup
 from .canvas import MplCanvas
+import progress
 
 
 import mass
@@ -45,8 +46,9 @@ class MainWindow(QtWidgets.QWidget):
 
     def build(self):
         PyQt6.uic.loadUi(os.path.join(os.path.dirname(__file__), "ui/massGuiW.ui"), self)
-        self.calibratedChannels = {}
+        self.calibratedChannels = set()
         self.calibrationGroup.setEnabled(False)
+        progress.Infinite.file = sys.stderr 
 
     def connect(self):
         self.selectFileButton.clicked.connect(self.handle_choose_file)
@@ -63,6 +65,7 @@ class MainWindow(QtWidgets.QWidget):
         self.energyHistButton.clicked.connect(self.viewEnergyPlot)
         self.saveCalButton.clicked.connect(self.save_to_hdf5)
         self.loadCalButton.clicked.connect(self.handle_load_from_hdf5)
+        self.qualityButton.clicked.connect(self.startQualityCheck)
 
     def load_file(self, filename, maxChans = None):
         self._choose_file_lastdir = os.path.dirname(filename)
@@ -71,7 +74,7 @@ class MainWindow(QtWidgets.QWidget):
         filenames = getOffFileListFromOneFile(filename, maxChans)
         self.filenames = filenames
         self.filename=filename
-        self.data = ChannelGroup(filenames, verbose=False)
+        self.data = ChannelGroup(filenames, verbose=True)
         #self.label_loadedChans.setText("loaded {} chans".format(len(self.data)))
         print("loaded {} chans".format(len(self.data)))
 
@@ -156,13 +159,14 @@ class MainWindow(QtWidgets.QWidget):
         self.importTableRows()
         if self.calibratedChannels == {self.ds.channum}:
             self.plotsGroup.setEnabled(True)
-        self._cal_stage = 0 #_cal_stage tracks the most recent calibration activity. 0=cal plan made; 1=single channel calibration done; 2=all channel calibration
+            self.qualityButton.setEnabled(False)
+        self._cal_stage = 0 #Deprecated: _cal_stage tracks the most recent calibration activity. 0=cal plan made; 1=single channel calibration done; 2=all channel calibration
                             #I use _cal_stage so I know when I need to reload the self.data object (to switch between single and all channel calibration)
 
     def initCal(self):
         #self.data = self.data_no_cal
 
-        self.data = ChannelGroup(self.filenames, verbose=False)
+        self.data = ChannelGroup(self.filenames, verbose=True)
         self.set_std_dev_threshold()
         self.data.learnResidualStdDevCut()
         self.ds = self.data[self.channum]
@@ -196,6 +200,9 @@ class MainWindow(QtWidgets.QWidget):
         self.calButtonGroup.setEnabled(False)
         self.plotsGroup.setEnabled(False)
         self.saveCalButton.setEnabled(False)
+        self.markersDict = None
+        self.artistMarkersDict = None
+        self.markerIndex = 0
         self.clear_table()
 
     def get_line_names(self):
@@ -325,11 +332,13 @@ class MainWindow(QtWidgets.QWidget):
                 self.data.learnTimeDriftCorrection(indicatorName="relTimeSec", uncorrectedName=uncorr, correctedName = self.newestName, states=self.ds.stateLabels, overwriteRecipe=True)#,cutRecipeName="cutForLearnDC", _rethrow=True) 
             print(f'Calibrated {len(self.data.values())} channels using reference channel {self.ds.channum}')
         except:
+            print("exception in all channel calibration")
             pass
 
         self.data.calibrateFollowingPlan(self.newestName, dlo=dlo_dhi,dhi=dlo_dhi, binsize=binsize, _rethrow=True, overwriteRecipe=True, approximate=self.Acheckbox.isChecked())
         self.saveCalButton.setEnabled(True)
-        self.calibratedChannels.add(self.data.keys())
+        self.qualityButton.setEnabled(True)
+        self.calibratedChannels.update(self.data.keys())
 
         # self.plotter = HistPlotter(self) 
         # self._selected_window = self.plotter
@@ -397,6 +406,14 @@ class MainWindow(QtWidgets.QWidget):
         self.lfsetup.dhi.setText(str(self.getDloDhi()))
         self.lfsetup.binSizeBox.setText(str(self.getBinsizeCal()))
         self.lfsetup.show()
+
+    def startQualityCheck(self):
+        self.goodChannels = self.data.keys()
+        self.qcsetup = qualityCheckLinefitSetup(self) 
+        lines = list(mass.spectra.keys())
+        self.qcsetup.setParams(self, lines, states_list=self.ds.stateLabels, data=self.data)
+        self.qcsetup.show()  
+          
 
     def save_to_hdf5(self, name=None):
         with  h5py.File('saves.h5', 'a') as hf:
