@@ -20,6 +20,7 @@ from matplotlib.lines import Line2D
 import massGui
 import h5py
 from copy import copy
+import traceback
 
 logging.basicConfig(filename='masslessLog.txt',
                     filemode='w',
@@ -43,9 +44,12 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
         QtWidgets.QDialog.__init__(self)
         self.lines = list(mass.spectra.keys())
 
-    def setParams(self, parent, data, channum, attr, state_labels, binSize, colors=MPL_DEFAULT_COLORS[:6], lines=DEFAULT_LINES, statesConfig=None, markers=None, artistMarkers=None,markersIndex=None):
+    def setParams(self, parent, data, channum, attr, state_labels, binSize, colors=MPL_DEFAULT_COLORS[:6], 
+                  lines=DEFAULT_LINES, statesConfig=None, markers=None, artistMarkers=None,markersIndex=None, linesNames=None, 
+                  autoFWHM=None, maxacc=None):
         self.parent=parent
         self.binSize=binSize
+        self.linesNames = linesNames
         if markers==None:
             self.markersDict = {}
         else:
@@ -58,10 +62,11 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
             self.markerIndex = 0
         else:
             self.markerIndex = markersIndex
-        self.build(data, channum, attr, state_labels, colors, statesConfig)
+
+        self.build(data, channum, attr, state_labels, colors, statesConfig, self.linesNames, autoFWHM, maxacc)
         self.connect()
 
-    def build(self, data, channum, attr, state_labels, colors, statesConfig):
+    def build(self, data, channum, attr, state_labels, colors, statesConfig, linesNames, autoFWHM, maxacc):
         PyQt6.uic.loadUi(os.path.join(os.path.dirname(__file__), "ui/ChannelBrowser.ui"), self) #,  s, attr, state_labels, colors)
         #self.histHistViewer = HistViewer(self, s, attr, state_labels, colors) #histHistViewer is the name of the widget that plots.
         self.data = data
@@ -73,7 +78,16 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
         self.eRangeHi.insert(str(20000))
         self.binSizeBox.insert(str(50))
         self.histHistViewer.setParams(self, data, channum, attr, state_labels, colors, self.binSize, statesConfig=statesConfig)
+        if autoFWHM == None:
+            self.autoFWHMBox.setText('25')
+        else:
+            self.autoFWHMBox.setText(str(autoFWHM))
+        if maxacc == None:
+            self.autoMaxAccBox.setText('0.015')
+        else:
+            self.autoMaxAccBox.setText(str(maxacc))
         self.importMarkers()
+        self.importList()
 
 
     def connect(self):
@@ -85,6 +99,10 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
         self.binSizeBox.textChanged.connect(self.updateChild)
 
         self.diagCalButton.clicked.connect(self.diagnoseCalibration)
+        self.autocalButton.clicked.connect(self.autoCalibration)
+        self.linesList.itemSelectionChanged.connect(self.listChanged)
+        self.listSearchBox.textChanged.connect(self.searchItem)
+
         #self.closeButton.clicked.connect(self.close) #removed
         #self.table.itemChanged.connect(self.updateTable)
 
@@ -95,14 +113,31 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
             #self.markersDict[marker].plot()
             artist.remove()
             artist.axes = new_ax
-            artist.set_transform(new_ax.transData)  # <-- I added this line
-            #new_ax.add_line(artist)
+            artist.set_transform(new_ax.transData)
             new_ax.add_artist(artist)
 
-            
-            # am = self.artistMarkersDict[i] 
-            # #self.markersDict[str(i)]=am[2]
-            # self.histHistViewer.add_marker(am[3], am[1], emit=False) 
+    def importList(self):
+        self.linesList.addItems(self.lines)
+        print("aaa")
+        if self.linesNames != None:
+            print("not none 111")
+            for line in self.linesNames:
+                item = self.linesList.findItems(line, QtCore.Qt.MatchFlag.MatchExactly)
+                item[0].setSelected(True)
+                self.linesList.setCurrentItem(item[0])
+
+
+    def listChanged(self):
+        self.autoListOfLines.clear()
+        self.autoListOfLines.setText(str([item.text() for item in self.linesList.selectedItems()]))
+        self.linesNames = [item.text() for item in self.linesList.selectedItems()]
+
+    def searchItem(self):
+        search_string = self.listSearchBox.text()
+        match_items = self.linesList.findItems(search_string, QtCore.Qt.MatchFlag.MatchContains)
+        for i in range(self.linesList.count()):
+            it = self.linesList.item(i)
+            it.setHidden(it not in match_items)
 
     def updateTable(self, line): #bad way to do this, but it works. see deleteRow for a better way using slots.
         for r in range(self.table.rowCount()):  #searches for comboboxes with the clicked line and updates the first one's energy. 
@@ -250,34 +285,61 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
         self.histHistViewer.channum = self.getChannum()
         self.getBins()
 
-    def diagnoseCalibration(self):
-        lines = self.getTableRows()
-        if len(lines) == 0:
-            print("Add at least one line to calibrate")
+    def autoCalibration(self):
+        self.linesNames = [item.text() for item in self.linesList.selectedItems()]
+        colors, states_list = self.histHistViewer.statesGrid.get_colors_and_states_list()
+        states_list = states_list[0] 
+        try:
+            autoFWHM = float(self.autoFWHMBox.text())
+        except:
+            print("failed to get autoFWHM")
             return
-        for line in lines:
-            if (line[2] == 'Manual Energy') and (line[3] == ''): #if a line is clicked but no energy is assigned
-                print("Assign energies to all lines and try again")
+
+        try:
+            maxacc = float(self.autoMaxAccBox.text())
+        except:
+            print("failed to get Max Acc")  
+            return 
+
+        try:
+            self.ds = self.data[int(self.getChannum())]
+            #print(self.linesNames)
+            self.ds.learnCalibrationPlanFromEnergiesAndPeaks('filtValue', states=states_list, ph_fwhm=autoFWHM, line_names=self.linesNames, maxacc=maxacc)
+            self.diagnoseCalibration(auto=True)
+        except Exception as exc:
+            print("Failed to autocalibrate!")
+            print(traceback.format_exc())
+
+
+    def diagnoseCalibration(self, auto=False):
+        if auto == False:
+            lines = self.getTableRows()
+            if len(lines) == 0:
+                print("Add at least one line to calibrate")
                 return
-        self.ds = self.data[int(self.getChannum())]
-        self.ds.calibrationPlanInit("filtValue")
-        
-        for (states, fv, line, energy) in lines: 
-            # # log.debug(f"states {states}, fv {fv}, line {line}, energy {energy}")
-            #print(states.split(","))
-            if line != 'Manual Energy':#in mass.spectra.keys() and not energy:
-                self.ds.calibrationPlanAddPoint(float(fv), line, states=states.split(","))
-                #get a set of states used by a line?
+            for line in lines:
+                if (line[2] == 'Manual Energy') and (line[3] == ''): #if a line is clicked but no energy is assigned
+                    print("Assign energies to all lines and try again")
+                    return
+            self.ds = self.data[int(self.getChannum())]
+            self.ds.calibrationPlanInit("filtValue")
+            
+            for (states, fv, line, energy) in lines: 
+                # # log.debug(f"states {states}, fv {fv}, line {line}, energy {energy}")
+                #print(states.split(","))
+                if line != 'Manual Energy':#in mass.spectra.keys() and not energy:
+                    self.ds.calibrationPlanAddPoint(float(fv), line, states=states.split(","))
+                    #get a set of states used by a line?
 
 
-                # try:
-                #     self.ds.calibrationPlanAddPoint(float(fv), line, states=states)
-                # except:
-                #     self.ds.calibrationPlanAddPoint(float(fv),self.common_models[str(line)], states=states)
-            elif energy:# and not line in mass.spectra.keys():  
-                self.ds.calibrationPlanAddPoint(float(fv), energy, states=states.split(","), energy=float(energy))
-            # elif line in mass.spectra.keys() and energy:
-            #     ds.calibrationPlanAddPoint(float(fv), line, states=states.split(","), energy=float(energy))
+                    # try:
+                    #     self.ds.calibrationPlanAddPoint(float(fv), line, states=states)
+                    # except:
+                    #     self.ds.calibrationPlanAddPoint(float(fv),self.common_models[str(line)], states=states)
+                elif energy:# and not line in mass.spectra.keys():  
+                    self.ds.calibrationPlanAddPoint(float(fv), energy, states=states.split(","), energy=float(energy))
+                # elif line in mass.spectra.keys() and energy:
+                #     ds.calibrationPlanAddPoint(float(fv), line, states=states.split(","), energy=float(energy))
 
         dlo_dhi = float(self.dlo_dhiBox.text())/2.
         binsize=float(self.calBinBox.text())
@@ -1208,7 +1270,7 @@ class qualityCheckLinefitSetup(QtWidgets.QDialog):  #handles linefit function ca
         else:
             absolute = None
 
-        print("paramslist ",paramsList, sigma, absolute) 
+        #print("paramslist ",paramsList, sigma, absolute) 
 
         if dlo == None:
             dlo = 50

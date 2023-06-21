@@ -13,6 +13,7 @@ from matplotlib.lines import Line2D
 from .massless import HistCalibrator, HistPlotter, diagnoseViewer, rtpViewer, AvsBSetup, linefitSetup, hdf5Opener, qualityCheckLinefitSetup
 from .canvas import MplCanvas
 import progress
+from mass.calibration import algorithms
 
 
 import mass
@@ -20,6 +21,16 @@ from mass.off import ChannelGroup, Channel, getOffFileListFromOneFile
 
 import numpy as np
 import h5py
+
+
+def ds_learnCalibrationPlanFromEnergiesAndPeaks(self, attr, states, ph_fwhm, line_names, maxacc):
+    peak_ph_vals, _peak_heights = algorithms.find_local_maxima(self.getAttr(attr, indsOrStates=states), ph_fwhm)
+    _name_e, energies_out, opt_assignments = algorithms.find_opt_assignment(peak_ph_vals, line_names, maxacc=maxacc)
+
+    self.calibrationPlanInit(attr)
+    for ph, name in zip(opt_assignments, _name_e):
+        self.calibrationPlanAddPoint(ph, name, states=states)
+mass.off.Channel.learnCalibrationPlanFromEnergiesAndPeaks = ds_learnCalibrationPlanFromEnergiesAndPeaks
 
 # def main():
 #     app = qt.QApplication([])
@@ -66,6 +77,7 @@ class MainWindow(QtWidgets.QWidget):
         self.saveCalButton.clicked.connect(self.save_to_hdf5)
         self.loadCalButton.clicked.connect(self.handle_load_from_hdf5)
         self.qualityButton.clicked.connect(self.startQualityCheck)
+        self.allChanAutoCalButton.clicked.connect(self.allChannelAutoCalibration)
 
     def load_file(self, filename, maxChans = None):
         self._choose_file_lastdir = os.path.dirname(filename)
@@ -84,11 +96,17 @@ class MainWindow(QtWidgets.QWidget):
         for channum in self.data.keys():
             self.channels.append(channum)
             #self.refChannelBox.addItem("{}".format(channum))
-        self.markersDict = None
-        self.markerIndex = None
-        self.artistMarkersDict = None
-        self.channum = self.channels[0]
-        self.launch_channel_colors, self.launch_channel_states = None, None
+
+        ### Setting parameters for the single-channel calibration as None.
+        ### These will be sent back and forth between main window and the 1-channel cal window (or accessed directly) as needed.
+        self.markersDict = None #dictionary of the plottable markers
+        self.markerIndex = None #running total number of markers (including deleted ones)
+        self.linesNames = None #list of autocal lines
+        self.artistMarkersDict = None #basically the same as markersDict but in a different format
+        self.autoFWHM = None
+        self.maxacc = None
+        self.channum = self.channels[0] #reference channel
+        self.launch_channel_colors, self.launch_channel_states = None, None #info for the states grid
         
 
     def handle_choose_file(self):
@@ -125,7 +143,9 @@ class MainWindow(QtWidgets.QWidget):
         self.plotsGroup.setEnabled(False)
         self.fileSelectionGroup.setEnabled(False)
         self.hc = HistCalibrator(self) 
-        self.hc.setParams(self, data, channum, "filtValue", data[channum].stateLabels, binSize=50, statesConfig=self.launch_channel_states, markers=self.markersDict, artistMarkers=self.artistMarkersDict,markersIndex=self.markerIndex)
+        self.hc.setParams(self, data, channum, "filtValue", data[channum].stateLabels, binSize=50, 
+                          statesConfig=self.launch_channel_states, markers=self.markersDict, artistMarkers=self.artistMarkersDict, 
+                          markersIndex=self.markerIndex, linesNames=self.linesNames, autoFWHM=self.autoFWHM, maxacc=self.maxacc)
         tableData = self.getcalTableRows()
         self.hc.importTableRows(tableData)
         self.hc.PCcheckbox.setChecked(self.PCcheckbox.isChecked())
@@ -134,11 +154,12 @@ class MainWindow(QtWidgets.QWidget):
         self.hc.Acheckbox.setChecked(self.Acheckbox.isChecked())
         self.hc.dlo_dhiBox.setText(self.dlo_dhiBox.text())
         self.hc.calBinBox.setText(self.binSizeBox.text())
+        self.hc.autoListOfLines.setText(self.autoListOfLines.toPlainText())
 
         #hc.setWindowModality(self, QtCore.Qt.ApplicationModal)
         self._selected_window = self.hc
         self.hc.exec()
-
+        self.calibrationGroup.setEnabled(True)
         self.get_data_from_channel(data)
 
     def get_data_from_channel(self, data): #grabs calibration info from the single channel cal window
@@ -146,22 +167,37 @@ class MainWindow(QtWidgets.QWidget):
         self.ds = data[self.channum]
         self.cal_info = self.hc.getTableRows()
         self.launch_channel_colors, self.launch_channel_states = self.hc.histHistViewer.statesGrid.get_colors_and_states_list()
+        
         self.markersDict = self.hc.markersDict
         self.artistMarkersDict = self.hc.artistMarkersDict
         self.markerIndex = self.hc.markerIndex
+        self.linesNames = self.hc.linesNames
+        self.autoFWHM = float(self.hc.autoFWHMBox.text())
+        self.maxacc = float(self.hc.autoMaxAccBox.text())
         self.PCcheckbox.setChecked(self.hc.PCcheckbox.isChecked())
         self.DCcheckbox.setChecked(self.hc.DCcheckbox.isChecked())
         self.TDCcheckbox.setChecked(self.hc.TDCcheckbox.isChecked())
         self.Acheckbox.setChecked(self.hc.Acheckbox.isChecked())
         self.dlo_dhiBox.setText(self.hc.dlo_dhiBox.text())
         self.binSizeBox.setText(self.hc.calBinBox.text())
+        self.autoFWHMBox.setText(self.hc.autoFWHMBox.text())
+        self.autoMaxAccBox.setText(self.hc.autoMaxAccBox.text())
         self.clear_table()
         self.importTableRows()
+        self.importAutoList()
         if self.calibratedChannels == {self.ds.channum}:
             self.plotsGroup.setEnabled(True)
             self.qualityButton.setEnabled(False)
         self._cal_stage = 0 #Deprecated: _cal_stage tracks the most recent calibration activity. 0=cal plan made; 1=single channel calibration done; 2=all channel calibration
                             #I use _cal_stage so I know when I need to reload the self.data object (to switch between single and all channel calibration)
+
+
+    def importAutoList(self):
+        self.autoListOfLines.clear()
+        self.autoListOfLines.setText(self.hc.autoListOfLines.toPlainText())
+        if self.linesNames != None:
+            if len(self.linesNames) >= 1:
+                self.allChanAutoCalButton.setEnabled(True)
 
     def initCal(self):
         #self.data = self.data_no_cal
@@ -198,11 +234,14 @@ class MainWindow(QtWidgets.QWidget):
 
     def resetCalibration(self):
         self.calButtonGroup.setEnabled(False)
+        self.allChanCalButton.setEnabled(False)
+        self.allChanAutoCalButton.setEnabled(False)
         self.plotsGroup.setEnabled(False)
         self.saveCalButton.setEnabled(False)
         self.markersDict = None
         self.artistMarkersDict = None
         self.markerIndex = 0
+        self.linesNames = None
         self.clear_table()
 
     def get_line_names(self):
@@ -250,10 +289,11 @@ class MainWindow(QtWidgets.QWidget):
             self.calTable.setItem(rowPosition, 1, QtWidgets.QTableWidgetItem(rowData[1]))   #filtVal    
             self.calTable.setItem(rowPosition, 2, QtWidgets.QTableWidgetItem(rowData[0]))   #state
             self.calTable.setItem(rowPosition, 3, QtWidgets.QTableWidgetItem(rowData[3]))
+        self.calButtonGroup.setEnabled(True)
         if rowPosition != None and allowCal == True: #if something is added to the calibration plan and each line has a name, let user calibrate. 
-            self.calButtonGroup.setEnabled(True)
+            self.allChanCalButton.setEnabled(True)
         else:   #if nothing is added OR if a line isn't identified, stop the user from calibrating.
-            self.calButtonGroup.setEnabled(False)
+            self.allChanCalButton.setEnabled(False)
 
 
     def getChannum(self):
@@ -340,11 +380,63 @@ class MainWindow(QtWidgets.QWidget):
         self.qualityButton.setEnabled(True)
         self.calibratedChannels.update(self.data.keys())
 
-        # self.plotter = HistPlotter(self) 
-        # self._selected_window = self.plotter
-        # self.plotter.setParams(self.data, self.ds.channum, "energy", self.ds.stateLabels, binSize=binsize)
+    def allChannelAutoCalibration(self):
+        dlo_dhi = self.getDloDhi()
+        binsize=self.getBinsizeCal()
+        states = self.launch_channel_states[0]
+        linesNames = self.linesNames # self.autoListOfLines.toPlainText()
+        try:
+            autoFWHM = float(self.autoFWHMBox.text())
+        except:
+            print("failed to get autoFWHM")
+            return
+
+        try:
+            maxacc = float(self.autoMaxAccBox.text())
+        except:
+            print("failed to get Max Acc")  
+            return 
+        self.data = ChannelGroup(self.filenames, verbose=True)
+        self.set_std_dev_threshold()
+        self.data.learnResidualStdDevCut()
+        self.ds = self.data[self.channum]
+        self.data.referenceDs = self.ds
+        # log.debug(f"{ds.calibrationPlan}")
+        self.plotsGroup.setEnabled(True) 
+        # print(states, autoFWHM, linesNames, maxacc)
+        # print(type(linesNames))
+        try:
+            self.ds.learnCalibrationPlanFromEnergiesAndPeaks('filtValue', states=states, ph_fwhm=autoFWHM, line_names=linesNames, maxacc=maxacc)
+            self.data.alignToReferenceChannel(referenceChannel=self.ds, binEdges=np.arange(0,35000,10), attr="filtValue", states=self.ds.stateLabels)
+            self.newestName = "filtValue"
+        except:
+            print("failed to learn autocal")
+            return
+        try:
+            if self.PCcheckbox.isChecked():
+                uncorr = self.newestName
+                self.newestName+="PC"
+                self.data.learnPhaseCorrection(indicatorName="filtPhase", uncorrectedName=uncorr, correctedName = self.newestName, states=self.ds.stateLabels, overwriteRecipe=True)
         
-        # self.plotter.exec()
+            if self.DCcheckbox.isChecked():
+                uncorr = self.newestName
+                self.newestName+="DC"
+                self.data.learnDriftCorrection(indicatorName="pretriggerMean", uncorrectedName=uncorr, correctedName = self.newestName, states=self.ds.stateLabels, overwriteRecipe=True)#, cutRecipeName="cutForLearnDC")
+
+            if self.TDCcheckbox.isChecked():
+                uncorr = self.newestName
+                self.newestName+="TC"
+                self.data.learnTimeDriftCorrection(indicatorName="relTimeSec", uncorrectedName=uncorr, correctedName = self.newestName, states=self.ds.stateLabels, overwriteRecipe=True)#,cutRecipeName="cutForLearnDC", _rethrow=True) 
+            print(f'Calibrated {len(self.data.values())} channels using reference channel {self.ds.channum}')
+        except:
+            print("exception in all channel calibration")
+            pass
+
+        self.data.calibrateFollowingPlan(self.newestName, dlo=dlo_dhi,dhi=dlo_dhi, binsize=binsize, _rethrow=True, overwriteRecipe=True, approximate=self.Acheckbox.isChecked())
+        self.saveCalButton.setEnabled(True)
+        self.qualityButton.setEnabled(True)
+        self.calibratedChannels.update(self.data.keys())
+
 
     def getDloDhi(self):
         return float(self.dlo_dhiBox.text())/2.0 #whole energy range is dlo+dhi, so divide by 2 to get them individually
@@ -507,7 +599,10 @@ def main(test=False):
     #     mw.load_file("/Users/oneilg/mass/src/mass/off/data_for_test/20181205_BCDEFGHI/20181205_BCDEFGHI_chan1.off")
     #     mw.set_std_dev_threshold()
     #     mw.launch_channel(mw.data.firstGoodChannel())
-    retval = app.exec() 
+    try:
+        retval = app.exec() 
+    except Exception:
+        import pdb; pdb.post_mortem()
 
 # #https://www.youtube.com/watch?v=WjctCBjHvmA
 # http://adambemski.pythonanywhere.com/testing-qt-application-python-and-pytest
