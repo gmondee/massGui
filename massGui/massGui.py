@@ -13,6 +13,7 @@ from matplotlib.lines import Line2D
 from .massless import HistCalibrator, HistPlotter, diagnoseViewer, rtpViewer, AvsBSetup, linefitSetup, hdf5Opener, qualityCheckLinefitSetup
 from .canvas import MplCanvas
 import progress
+import traceback
 from mass.calibration import algorithms
 
 
@@ -353,7 +354,12 @@ class MainWindow(QtWidgets.QWidget):
         dlo_dhi = self.getDloDhi()
         binsize=self.getBinsizeCal()
         self.initCal()
-        self.data.alignToReferenceChannel(referenceChannel=self.ds, binEdges=np.arange(0,35000,10), attr="filtValue", states=self.ds.stateLabels)
+        try:
+            self.data.alignToReferenceChannel(referenceChannel=self.ds, binEdges=np.arange(0,35000,10), attr="filtValue", states=self.ds.stateLabels)
+        except Exception as exc:
+            print("Failed to align to reference channel!")
+            print(traceback.format_exc())
+            return
         self.newestName = "filtValue"
         try:
             if self.PCcheckbox.isChecked():
@@ -371,11 +377,18 @@ class MainWindow(QtWidgets.QWidget):
                 self.newestName+="TC"
                 self.data.learnTimeDriftCorrection(indicatorName="relTimeSec", uncorrectedName=uncorr, correctedName = self.newestName, states=self.ds.stateLabels, overwriteRecipe=True)#,cutRecipeName="cutForLearnDC", _rethrow=True) 
             print(f'Calibrated {len(self.data.values())} channels using reference channel {self.ds.channum}')
-        except:
+        except Exception as exc:
             print("exception in all channel calibration")
+            print(traceback.format_exc())
             pass
+        
+        try:
+            self.data.calibrateFollowingPlan(self.newestName, dlo=dlo_dhi,dhi=dlo_dhi, binsize=binsize, _rethrow=True, overwriteRecipe=True, approximate=self.Acheckbox.isChecked())
+        except Exception as exc:
+            print("Failed to calibrate following plan!")
+            print(traceback.format_exc())
+            return
 
-        self.data.calibrateFollowingPlan(self.newestName, dlo=dlo_dhi,dhi=dlo_dhi, binsize=binsize, _rethrow=True, overwriteRecipe=True, approximate=self.Acheckbox.isChecked())
         self.saveCalButton.setEnabled(True)
         self.qualityButton.setEnabled(True)
         self.calibratedChannels.update(self.data.keys())
@@ -428,11 +441,17 @@ class MainWindow(QtWidgets.QWidget):
                 self.newestName+="TC"
                 self.data.learnTimeDriftCorrection(indicatorName="relTimeSec", uncorrectedName=uncorr, correctedName = self.newestName, states=self.ds.stateLabels, overwriteRecipe=True)#,cutRecipeName="cutForLearnDC", _rethrow=True) 
             print(f'Calibrated {len(self.data.values())} channels using reference channel {self.ds.channum}')
-        except:
+        except Exception as exc:
             print("exception in all channel calibration")
+            print(traceback.format_exc())
             pass
 
-        self.data.calibrateFollowingPlan(self.newestName, dlo=dlo_dhi,dhi=dlo_dhi, binsize=binsize, _rethrow=True, overwriteRecipe=True, approximate=self.Acheckbox.isChecked())
+        try:
+            self.data.calibrateFollowingPlan(self.newestName, dlo=dlo_dhi,dhi=dlo_dhi, binsize=binsize, _rethrow=True, overwriteRecipe=True, approximate=self.Acheckbox.isChecked())
+        except Exception as exc:
+            print("Failed to calibrate following plan!")
+            print(traceback.format_exc())
+            return
         self.saveCalButton.setEnabled(True)
         self.qualityButton.setEnabled(True)
         self.calibratedChannels.update(self.data.keys())
