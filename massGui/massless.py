@@ -118,9 +118,7 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
 
     def importList(self):
         self.linesList.addItems(self.lines)
-        print("aaa")
         if self.linesNames != None:
-            print("not none 111")
             for line in self.linesNames:
                 item = self.linesList.findItems(line, QtCore.Qt.MatchFlag.MatchExactly)
                 item[0].setSelected(True)
@@ -609,6 +607,16 @@ class StatesGrid(QtWidgets.QWidget): #widget that makes a grid of checkboxes. al
         #self.setSizePolicy(QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Fixed,QtWidgets.QSizePolicy.Policy.Fixed))
         self.numberOfStates = i+1
     
+    def clearLayout(self, layout):
+        if layout is not None:
+            while layout.count():
+                item = layout.takeAt(0)
+                widget = item.widget()
+                if widget is not None:
+                    widget.deleteLater()
+                else:
+                    self.clearLayout(item.layout())
+
     def connect(self):
         for (j, color) in enumerate(self.colors):
             for (i, state) in enumerate(self.state_labels):
@@ -642,7 +650,7 @@ class StatesGrid(QtWidgets.QWidget): #widget that makes a grid of checkboxes. al
                 states_list.append(states)
         return colors, states_list
     
-    def fill(self, statesConfig): #statesConfig is "states" from get_colors_and_states_list
+    def fill(self, statesConfig): #reloads your last selection. statesConfig is "states" from get_colors_and_states_list
         for i, states in enumerate(statesConfig):
             #stateIndex=[]
             for state in states:
@@ -662,7 +670,7 @@ class StatesGrid(QtWidgets.QWidget): #widget that makes a grid of checkboxes. al
                 box = self.boxes[i][j] 
                 box.setChecked(False) 
 
-    def appendStates(self, newStates): #for real-time plotting: add more state boxes as more states are added during an experiment.
+    def appendStates(self, newStates, state_labels): #for real-time plotting: add more state boxes as more states are added during an experiment.
         for (i, state) in enumerate(newStates, self.numberOfStates): #start on i = numberOfStates so we don't override the existing boxes.
             boxes = []
             for (j, color) in enumerate(self.colors):
@@ -680,6 +688,9 @@ class StatesGrid(QtWidgets.QWidget): #widget that makes a grid of checkboxes. al
                 self.grid.addWidget(box, j+1, i+1)
                 boxes.append(box)
             self.boxes.append(boxes)
+        self.numberOfStates+= len(newStates)
+        self.state_labels = state_labels
+        self.connect()
     
 
 
@@ -830,7 +841,7 @@ class rtpViewer(QtWidgets.QDialog): #window that hosts the real-time plotting ro
     def build(self):
         PyQt6.uic.loadUi(os.path.join(os.path.dirname(__file__), "ui/realtimeviewer.ui"), self)
         self.RTPdelay = self.intervalBox.text() 
-        self.statesGrid.setParams(state_labels=self.stateLabels, colors=MPL_DEFAULT_COLORS[:1], one_state_per_line=False)
+        self.statesGrid.setParams(state_labels=self.parent.ds.stateLabels, colors=MPL_DEFAULT_COLORS[:1], one_state_per_line=False)
         self.statesGrid.fill_simple()
         if len(self.parent.calibratedChannels)==len(self.parent.data.keys()):
             self.channelBox.addItem("All")
@@ -929,17 +940,27 @@ class rtpViewer(QtWidgets.QDialog): #window that hosts the real-time plotting ro
         
         _colors, States = self.statesGrid.get_colors_and_states_list()
         try: #if the user has all states unchecked during a refresh, use the last set of states.
+            print("try1", States)
             States = States[0]
             self.oldStates = States
+            print("try2", States)
         except:
             States = self.oldStates
+            print("except", States)
 
         
         self.rtpdata=[]                             #temporary storage of data points
         self.rtpline.append([])                     #stores every line that is plotted according to the updateIndex
         self.dataToPlot = self.getDataToPlot()
+
+        ####testing
+        # x,y = self.dataToPlot.hist(np.arange(0, 14000, float(self.parent.getBinsizeCal())), "energy", states='X')
+        # print("dataToPlot sum y is ",sum(y))
+        # x,y = self.parent.data[1].hist(np.arange(0, 14000, float(self.parent.getBinsizeCal())), "energy", states='X')
+        # print("Data sum y is ",sum(y))
+        ####
         for s in range(len(States)):    #looping over each state passed in
-            self.rtpdata.append(self.dataToPlot.hist(np.arange(0, 14000, float(self.parent.getBinsizeCal())), "energy", states=States[s]))
+            self.rtpdata.append(self.dataToPlot.hist(np.arange(0, 14000, float(self.parent.getBinsizeCal())), "energy", states=States[s])) #todo: change bounds away from 0-14000
             self.energyAxis.plot(self.rtpdata[s][0],self.rtpdata[s][1],alpha=1, color=self.getColorfromState(States[s]))    #plots the [x,y] points and assigns color based on the state
             if States[s] not in self.plottedStates:     #new states are added to the legend; old ones are already there                      
                 self.plottedStates.append(States[s])
@@ -988,10 +1009,11 @@ class rtpViewer(QtWidgets.QDialog): #window that hosts the real-time plotting ro
     def updateFilesAndStates(self):
         oldStates = self.parent.ds.stateLabels
         self.parent.data.refreshFromFiles()                #Mass function to refresh .off files as they are updated
-        newStates = list(set(oldStates).symmetric_difference(set(self.parent.ds.stateLabels)))
+        diff = set(self.parent.ds.stateLabels) - set(oldStates) #list(set(oldStates).symmetric_difference(set(self.parent.ds.stateLabels)))
+        newStates = [s for s in self.parent.ds.stateLabels if s in diff]
         if len(newStates)>0:
             print("New states found: ",newStates)
-            self.statesGrid.appendStates(newStates)
+            self.statesGrid.appendStates(newStates, self.parent.ds.stateLabels)
 
     
 

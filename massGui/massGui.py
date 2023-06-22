@@ -244,6 +244,7 @@ class MainWindow(QtWidgets.QWidget):
         self.markerIndex = 0
         self.linesNames = None
         self.clear_table()
+        self.data = ChannelGroup(self.filenames, verbose=True)
 
     def get_line_names(self):
         if self.self.HCIonCheckbox.isChecked()==True:       #optional import of highly charged ions to the dropdown. Does not work now.
@@ -252,9 +253,6 @@ class MainWindow(QtWidgets.QWidget):
         self.LinesDict=list(mass.spectra.keys()) 
 
     def clear_table(self):
-        # for i in range(self.table.columnCount()):
-        #     for j in range(self.table.rowCount()):
-        #         self.table.setHorizontalHeaderItem(j, QtWidgets.QTableWidgetItem())
         self.calTable.setRowCount(0)
 
     def getTableRows(self):
