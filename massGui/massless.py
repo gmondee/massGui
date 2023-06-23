@@ -938,12 +938,11 @@ class rtpViewer(QtWidgets.QDialog): #window that hosts the real-time plotting ro
 
         self.updateFilesAndStates()
         
+        
         _colors, States = self.statesGrid.get_colors_and_states_list()
         try: #if the user has all states unchecked during a refresh, use the last set of states.
-            print("try1", States)
             States = States[0]
             self.oldStates = States
-            print("try2", States)
         except:
             States = self.oldStates
             print("except", States)
@@ -952,12 +951,13 @@ class rtpViewer(QtWidgets.QDialog): #window that hosts the real-time plotting ro
         self.rtpdata=[]                             #temporary storage of data points
         self.rtpline.append([])                     #stores every line that is plotted according to the updateIndex
         self.dataToPlot = self.getDataToPlot()
+        print(f"Length of channel 1: {len(self.parent.data[1].offFile._mmap)}")
 
         ####testing
-        # x,y = self.dataToPlot.hist(np.arange(0, 14000, float(self.parent.getBinsizeCal())), "energy", states='X')
-        # print("dataToPlot sum y is ",sum(y))
-        # x,y = self.parent.data[1].hist(np.arange(0, 14000, float(self.parent.getBinsizeCal())), "energy", states='X')
-        # print("Data sum y is ",sum(y))
+        x,y = self.dataToPlot.hist(np.arange(0, 14000, float(self.parent.getBinsizeCal())), "energy", states='D')
+        print("dataToPlot sum y is ",sum(y))
+        x,y = self.parent.data[1].hist(np.arange(0, 14000, float(self.parent.getBinsizeCal())), "energy", states='D')
+        print("Channel 1 sum y is ",sum(y))
         ####
         for s in range(len(States)):    #looping over each state passed in
             self.rtpdata.append(self.dataToPlot.hist(np.arange(0, 14000, float(self.parent.getBinsizeCal())), "energy", states=States[s])) #todo: change bounds away from 0-14000
@@ -983,18 +983,6 @@ class rtpViewer(QtWidgets.QDialog): #window that hosts the real-time plotting ro
 
 
     def getColorfromState(self, s): #pass in a state label string like 'A' or 'AC' (for states past Z) and get a color index using plt.colormaps() 
-        # c = plt.cm.get_cmap('gist_rainbow')     #can be other colormaps, rainbow is most distinct
-        # maxColors=8                             #how many unique colors there are. lower values make it easier to distinguish between neighboring states.
-        # cinter=np.linspace(0,1,maxColors)       #colormaps use values between 0 and 1. this interpolation lets us assign integers to colors easily.
-        # cIndex=0
-        # cIndex=cIndex+ord(s[-1])-ord('A')       #uses unicode values of state labels (e.g. 'A') to get an integer 
-        # if len(s)!=1:   #for states like AA, AB, etc., 27 is added to the value of the ones place
-        #     cIndex=cIndex+26+ord(s[0])-ord('A')+1 #26 + value of first letter (making A=1 so AA != Z)
-
-        # while cIndex >= maxColors:       #colors repeat after maxColors states. loops until there is a valid interpolated index from cinter
-        #     cIndex=cIndex-maxColors
-        # #print(c(cinter[cIndex]))
-        # return c(cinter[cIndex])        #returns values that can be assigned as a plt color, looks like (X,Y,Z,...) or something similar    
         c=['#d8434e', '#f67a49', '#fdbf6f', '#feeda1', '#f1f9a9', '#bfe5a0', '#74c7a5', '#378ebb'] #8 colors from seaborn's Spectral_r colormap
         maxColors = len(c)
 
@@ -1008,7 +996,8 @@ class rtpViewer(QtWidgets.QDialog): #window that hosts the real-time plotting ro
     
     def updateFilesAndStates(self):
         oldStates = self.parent.ds.stateLabels
-        self.parent.data.refreshFromFiles()                #Mass function to refresh .off files as they are updated
+        new_labels, new_pulses_dict = self.parent.data.refreshFromFiles()                #Mass function to refresh .off files as they are updated
+        print(new_labels, new_pulses_dict)
         diff = set(self.parent.ds.stateLabels) - set(oldStates) #list(set(oldStates).symmetric_difference(set(self.parent.ds.stateLabels)))
         newStates = [s for s in self.parent.ds.stateLabels if s in diff]
         if len(newStates)>0:
@@ -1087,11 +1076,22 @@ class AvsBSetup(QtWidgets.QDialog): #for plotAvsB and plotAvsB2D functions. Allo
                         Bhi = max(channel.getAttr(B, states))
                         Blo = min(channel.getAttr(B, states))
 
+                        res = int(self.binsBox.text())#500
+                        self.zoomPlot = ZoomPlot(channel, states, A, B, mins = [Alo, Blo], maxes=[Ahi, Bhi], resolution = res)
+                    if self.mode == "3D": #2D, renamed for now
+                        Ahi = max(channel.getAttr(A, states))
+                        Alo = min(channel.getAttr(A, states))
+                        
+                        Bhi = max(channel.getAttr(B, states))
+                        Blo = min(channel.getAttr(B, states))
+
                         num = int(self.binsBox.text())#500
 
                         bins = [np.linspace(Alo, Ahi, num=num), np.linspace(Blo,Bhi,num=num)]#self.binsBox.text()
                         channel.plotAvsB2d(A, B, binEdgesAB = bins, axis=None, states=states)
                         #plotAvsB2d(self, nameA, nameB, binEdgesAB, axis=None, states=None, cutRecipeName=None, norm=None)
+
+                        #plotAvsB2d(self, nameA, nameB, binEdgesAB, axis=None, states=None)
                     # self.plotter.setParams(self, A, B, states, channels, self.data, self.mode)
                     # self.plotter.show()
                     
@@ -1105,6 +1105,70 @@ class AvsBSetup(QtWidgets.QDialog): #for plotAvsB and plotAvsB2D functions. Allo
 
     def checkAll(self):
         self.statesGrid.fill_all()
+
+class ZoomPlot():
+
+    def __init__(self, channel, states, A, B, mins, maxes, resolution):
+        matplotlib.use("QtAgg")
+        self.mins = mins
+        self.maxes = maxes
+
+        self.fig = plt.figure()
+        self.ax = self.fig.add_subplot(111)
+        fm = plt.get_current_fig_manager() #figure manager, for the toolbar
+        fm.toolbar.actions()[0].triggered.connect(self.home_callback)
+        self.xmin = mins[0]; self.xmax = maxes[0]
+        self.ymin = mins[1]; self.ymax = maxes[1]
+        self.xpress = self.xmin
+        self.xrelease = self.xmax
+        self.ypress = self.ymin
+        self.yrelease = self.ymax
+        self.resolution = resolution
+        #self.maxiters = 30
+        self.channel = channel
+        self.states = states
+        self.A = A
+        self.B = B
+
+        self.fig.canvas.mpl_connect('button_press_event', self.onpress)
+        self.fig.canvas.mpl_connect('button_release_event', self.onrelease)
+        self.plot_fixed_resolution(self.xmin, self.xmax,
+                                   self.ymin, self.ymax)
+
+    def home_callback(self):
+        self.plot_fixed_resolution(self.mins[0], self.maxes[0],
+                                   self.mins[1], self.maxes[1])
+
+    def plotAvsB2D(self, x, y):
+        bins = [x,y]
+        self.channel.plotAvsB2d(self.A, self.B, binEdgesAB = bins, axis=self.ax, states=self.states)
+
+    def plot_fixed_resolution(self, x1, x2, y1, y2):
+        x = np.linspace(x1, x2, self.resolution)
+        y = np.linspace(y1, y2, self.resolution)
+        bins = [x,y]
+        self.ax.clear()
+        self.ax.set_xlim(x1, x2)
+        self.ax.set_ylim(y1, y2)
+        self.plotAvsB2D(x, y)
+        self.fig.canvas.draw()
+
+    def onpress(self, event):
+        if event.button != 1: return
+        self.xpress = event.xdata
+        self.ypress = event.ydata
+
+    def onrelease(self, event):
+        if event.button != 1: return
+        self.xrelease = event.xdata
+        self.yrelease = event.ydata
+        self.xmin = min(self.xpress, self.xrelease)
+        self.xmax = max(self.xpress, self.xrelease)
+        self.ymin = min(self.ypress, self.yrelease)
+        self.ymax = max(self.ypress, self.yrelease)
+        self.plot_fixed_resolution(self.xmin, self.xmax,
+                                   self.ymin, self.ymax)
+
 
 class linefitSetup(QtWidgets.QDialog):  #handles linefit function call. lets user choose line, states, channel
     def __init__(self, parent=None):
