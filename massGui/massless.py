@@ -1106,7 +1106,7 @@ class AvsBSetup(QtWidgets.QDialog): #for plotAvsB and plotAvsB2D functions. Allo
     def checkAll(self):
         self.statesGrid.fill_all()
 
-class ZoomPlot():
+class ZoomPlot(): #only works for 2D plots.
 
     def __init__(self, channel, states, A, B, mins, maxes, resolution):
         matplotlib.use("QtAgg")
@@ -1116,7 +1116,7 @@ class ZoomPlot():
         self.fig = plt.figure()
         self.ax = self.fig.add_subplot(111)
         fm = plt.get_current_fig_manager() #figure manager, for the toolbar
-        fm.toolbar.actions()[0].triggered.connect(self.home_callback)
+        fm.toolbar.actions()[0].triggered.connect(self.home_callback)   #when "home" is pressed on the toolbar, do self.home_callback()
         self.xmin = mins[0]; self.xmax = maxes[0]
         self.ymin = mins[1]; self.ymax = maxes[1]
         self.xpress = self.xmin
@@ -1135,7 +1135,7 @@ class ZoomPlot():
         self.plot_fixed_resolution(self.xmin, self.xmax,
                                    self.ymin, self.ymax)
 
-    def home_callback(self):
+    def home_callback(self):    #plot the original bounds
         self.plot_fixed_resolution(self.mins[0], self.maxes[0],
                                    self.mins[1], self.maxes[1])
 

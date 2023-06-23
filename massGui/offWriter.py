@@ -14,6 +14,3 @@ with open(r'C:\Users\Grant Mondeel\Box\my EUV\tes\realtime\realtime\Data\FakeDat
                 f2.flush()
                 os.fsync(f2.fileno())
                 time.sleep(3)
-                
-
-'''Copies the contents of the off file over time, but can't be opened by Mass while this is happening.'''
