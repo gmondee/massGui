@@ -932,9 +932,9 @@ class rtpViewer(QtWidgets.QDialog): #window that hosts the real-time plotting ro
     def UpdatePlots(self):  #real-time plotting routine. refreshes data, adjust alphas, and replots graphs
         print(f"iteration {self.updateIndex}")
         
-        self.RTPdelay = self.intervalBox.text() 
-        self.updateFreq = int(self.RTPdelay)*1000             #in ms after the multiplication
-        self.timer.start(self.updateFreq)
+         
+        self.updateFreq_ms = int(self.intervalBox.text())*1000             #in ms after the multiplication
+        self.timer.start(self.updateFreq_ms)
 
         self.updateFilesAndStates()
         
@@ -947,21 +947,21 @@ class rtpViewer(QtWidgets.QDialog): #window that hosts the real-time plotting ro
             States = self.oldStates
             print("except", States)
 
-        
-        self.rtpdata=[]                             #temporary storage of data points
+                                  #temporary storage of data points
         self.rtpline.append([])                     #stores every line that is plotted according to the updateIndex
         self.dataToPlot = self.getDataToPlot()
-        print(f"Length of channel 1: {len(self.parent.data[1].offFile._mmap)}")
+        #print(f"Length of channel 1: {len(self.parent.data[1].offFile._mmap)}")
 
         ####testing
-        x,y = self.dataToPlot.hist(np.arange(0, 14000, float(self.parent.getBinsizeCal())), "energy", states='D')
-        print("dataToPlot sum y is ",sum(y))
-        x,y = self.parent.data[1].hist(np.arange(0, 14000, float(self.parent.getBinsizeCal())), "energy", states='D')
-        print("Channel 1 sum y is ",sum(y))
+        # x,y = self.dataToPlot.hist(np.arange(0, 14000, float(self.parent.getBinsizeCal())), "energy", states='D')
+        # print("dataToPlot sum y is ",sum(y))
+        # x,y = self.parent.data[1].hist(np.arange(0, 14000, float(self.parent.getBinsizeCal())), "energy", states='D')
+        # print("Channel 1 sum y is ",sum(y))
         ####
         for s in range(len(States)):    #looping over each state passed in
-            self.rtpdata.append(self.dataToPlot.hist(np.arange(0, 14000, float(self.parent.getBinsizeCal())), "energy", states=States[s])) #todo: change bounds away from 0-14000
-            self.energyAxis.plot(self.rtpdata[s][0],self.rtpdata[s][1],alpha=1, color=self.getColorfromState(States[s]))    #plots the [x,y] points and assigns color based on the state
+            x,y = self.dataToPlot.hist(np.arange(0, 14000, float(self.parent.getBinsizeCal())), "energy", states=States[s]) #todo: change bounds away from 0-14000
+            self.energyAxis.plot(x, y ,alpha=1, color=self.getColorfromState(States[s]))    #plots the [x,y] points and assigns color based on the state
+            #print(f'{s=},{np.sum(y)=}')
             if States[s] not in self.plottedStates:     #new states are added to the legend; old ones are already there                      
                 self.plottedStates.append(States[s])
             self.rtpline[self.updateIndex].append(self.energyAxis.lines[-1])    #stores most recent line
@@ -997,12 +997,13 @@ class rtpViewer(QtWidgets.QDialog): #window that hosts the real-time plotting ro
     def updateFilesAndStates(self):
         oldStates = self.parent.ds.stateLabels
         new_labels, new_pulses_dict = self.parent.data.refreshFromFiles()                #Mass function to refresh .off files as they are updated
-        print(new_labels, new_pulses_dict)
+        #print(f'{new_labels=} {new_pulses_dict=}')
         diff = set(self.parent.ds.stateLabels) - set(oldStates) #list(set(oldStates).symmetric_difference(set(self.parent.ds.stateLabels)))
         newStates = [s for s in self.parent.ds.stateLabels if s in diff]
         if len(newStates)>0:
             print("New states found: ",newStates)
             self.statesGrid.appendStates(newStates, self.parent.ds.stateLabels)
+        #print(self.parent.ds.statesDict)
 
     
 
