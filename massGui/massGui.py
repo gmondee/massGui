@@ -10,7 +10,7 @@ import os
 #import pytest
 #import pytestqt
 from matplotlib.lines import Line2D
-from .massless import HistCalibrator, HistPlotter, diagnoseViewer, rtpViewer, AvsBSetup, linefitSetup, hdf5Opener, qualityCheckLinefitSetup
+from .massless import HistCalibrator, HistPlotter, diagnoseViewer, rtpViewer, AvsBSetup, linefitSetup, hdf5Opener, qualityCheckLinefitSetup, ExternalTriggerSetup
 from .canvas import MplCanvas
 import progress
 import traceback
@@ -31,6 +31,7 @@ def ds_learnCalibrationPlanFromEnergiesAndPeaks(self, attr, states, ph_fwhm, lin
     self.calibrationPlanInit(attr)
     for ph, name in zip(opt_assignments, _name_e):
         self.calibrationPlanAddPoint(ph, name, states=states)
+    return _name_e, opt_assignments
 mass.off.Channel.learnCalibrationPlanFromEnergiesAndPeaks = ds_learnCalibrationPlanFromEnergiesAndPeaks
 
 # def main():
@@ -79,12 +80,14 @@ class MainWindow(QtWidgets.QWidget):
         self.loadCalButton.clicked.connect(self.handle_load_from_hdf5)
         self.qualityButton.clicked.connect(self.startQualityCheck)
         self.allChanAutoCalButton.clicked.connect(self.allChannelAutoCalibration)
+        self.extTrigButton.clicked.connect(self.handleExternalTrigger)
 
     def load_file(self, filename, maxChans = None):
         self._choose_file_lastdir = os.path.dirname(filename)
         if maxChans is None:
             maxChans = self.maxChansSpinBox.value()
         filenames = getOffFileListFromOneFile(filename, maxChans)
+        self.basename, _ = mass.ljh_util.ljh_basename_channum(filename) #basename used later for experiment state file
         self.filenames = filenames
         self.filename=filename
         self.data = ChannelGroup(filenames, verbose=True)
@@ -498,6 +501,12 @@ class MainWindow(QtWidgets.QWidget):
             self.AvsBsetup = AvsBSetup(self) 
             self.AvsBsetup.setParams(self, keys, self.ds.stateLabels, self.data.keys(), self.data, mode = "2D")
             self.AvsBsetup.show()
+
+    def handleExternalTrigger(self):
+        self.ETsetup = ExternalTriggerSetup(self) 
+        self.ETsetup.setParams(self, self.data.stateLabels, self.data.keys(), self.data, self.basename)
+        self.ETsetup.show()
+
 
     def plotPTM(self):
         keys = list(self.ds.recipes.craftedIngredients) + list(self.ds.recipes.baseIngredients)

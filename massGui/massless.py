@@ -302,7 +302,8 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
         try:
             self.ds = self.data[int(self.getChannum())]
             #print(self.linesNames)
-            self.ds.learnCalibrationPlanFromEnergiesAndPeaks('filtValue', states=states_list, ph_fwhm=autoFWHM, line_names=self.linesNames, maxacc=maxacc)
+            names, filtValues = self.ds.learnCalibrationPlanFromEnergiesAndPeaks('filtValue', states=states_list, ph_fwhm=autoFWHM, line_names=self.linesNames, maxacc=maxacc)
+            #todo: import the cal stuff into the table.
             self.diagnoseCalibration(auto=True)
         except Exception as exc:
             print("Failed to autocalibrate!")
@@ -815,6 +816,7 @@ class diagnoseViewer(QtWidgets.QDialog):    #displays the plots from the Mass di
         ax = self.canvas.fig.add_subplot(n, n, i+2)
         calibration.plot(axis=ax)
         ax = self.canvas.fig.add_subplot(n, n, i+3)
+        
         ds.plotHist(np.arange(0, 16000, 4), uncalibratedName,
                       axis=ax, coAddStates=False) #todo: get better ranges using max of energy value
         #ax.vlines(ds.calibrationPlan.uncalibratedVals, 0, self.canvas.fig.ylim()[1])
@@ -848,6 +850,8 @@ class rtpViewer(QtWidgets.QDialog): #window that hosts the real-time plotting ro
         for channum in self.parent.calibratedChannels:#.data.keys():
             self.channelBox.addItem("{}".format(channum))
         self.channelBox.setCurrentIndex(0)
+        self.eRangeLow.insert(str(0))
+        self.eRangeHi.insert(str(20000))
         self.initRTP()
 
     def connect(self):
@@ -927,7 +931,17 @@ class rtpViewer(QtWidgets.QDialog): #window that hosts the real-time plotting ro
         self.rtpdata=[]                             #temporary storage of data points
         self.rtpline.append([])                     #stores every line that is plotted according to the updateIndex
 
+    def getEnergyBounds(self):
+        if self.eRangeLow.displayText() != '':
+            binLo = float(self.eRangeLow.displayText())
+        else:
+            binLo = 0.
 
+        if self.eRangeHi.displayText() != '':
+            binHi = float(self.eRangeHi.displayText())
+        else:
+            binHi = 20000.
+        return binLo, binHi
 
     def UpdatePlots(self):  #real-time plotting routine. refreshes data, adjust alphas, and replots graphs
         print(f"iteration {self.updateIndex}")
@@ -937,6 +951,7 @@ class rtpViewer(QtWidgets.QDialog): #window that hosts the real-time plotting ro
         self.timer.start(self.updateFreq_ms)
 
         self.updateFilesAndStates()
+        eLow, eHi = self.getEnergyBounds()
         
         
         _colors, States = self.statesGrid.get_colors_and_states_list()
@@ -952,15 +967,10 @@ class rtpViewer(QtWidgets.QDialog): #window that hosts the real-time plotting ro
         self.dataToPlot = self.getDataToPlot()
         #print(f"Length of channel 1: {len(self.parent.data[1].offFile._mmap)}")
 
-        ####testing
-        # x,y = self.dataToPlot.hist(np.arange(0, 14000, float(self.parent.getBinsizeCal())), "energy", states='D')
-        # print("dataToPlot sum y is ",sum(y))
-        # x,y = self.parent.data[1].hist(np.arange(0, 14000, float(self.parent.getBinsizeCal())), "energy", states='D')
-        # print("Channel 1 sum y is ",sum(y))
-        ####
         for s in range(len(States)):    #looping over each state passed in
-            x,y = self.dataToPlot.hist(np.arange(0, 14000, float(self.parent.getBinsizeCal())), "energy", states=States[s]) #todo: change bounds away from 0-14000
+            x,y = self.dataToPlot.hist(np.arange(eLow, eHi, float(self.parent.getBinsizeCal())), "energy", states=States[s])
             self.energyAxis.plot(x, y ,alpha=1, color=self.getColorfromState(States[s]))    #plots the [x,y] points and assigns color based on the state
+            self.energyAxis.set_xlim([eLow, eHi])
             #print(f'{s=},{np.sum(y)=}')
             if States[s] not in self.plottedStates:     #new states are added to the legend; old ones are already there                      
                 self.plottedStates.append(States[s])
@@ -1078,7 +1088,7 @@ class AvsBSetup(QtWidgets.QDialog): #for plotAvsB and plotAvsB2D functions. Allo
                         Blo = min(channel.getAttr(B, states))
 
                         res = int(self.binsBox.text())#500
-                        self.zoomPlot = ZoomPlot(channel, states, A, B, mins = [Alo, Blo], maxes=[Ahi, Bhi], resolution = res)
+                        self.zoomPlot = ZoomPlotAvsB(channel, states, A, B, mins = [Alo, Blo], maxes=[Ahi, Bhi], resolution = res)
                     if self.mode == "3D": #2D, renamed for now
                         Ahi = max(channel.getAttr(A, states))
                         Alo = min(channel.getAttr(A, states))
@@ -1107,7 +1117,7 @@ class AvsBSetup(QtWidgets.QDialog): #for plotAvsB and plotAvsB2D functions. Allo
     def checkAll(self):
         self.statesGrid.fill_all()
 
-class ZoomPlot(): #only works for 2D plots.
+class ZoomPlotAvsB(): #only works for 2D plots.
 
     def __init__(self, channel, states, A, B, mins, maxes, resolution):
         matplotlib.use("QtAgg")
@@ -1357,8 +1367,6 @@ class qualityCheckLinefitSetup(QtWidgets.QDialog):  #handles linefit function ca
         else:
             absolute = None
 
-        #print("paramslist ",paramsList, sigma, absolute) 
-
         if dlo == None:
             dlo = 50
         if dhi == None:
@@ -1374,3 +1382,196 @@ class qualityCheckLinefitSetup(QtWidgets.QDialog):  #handles linefit function ca
         for channel in self.parent.goodChannels:
             self.parent.data[channel].markGood()   
 
+
+class ExternalTriggerSetup(QtWidgets.QDialog):
+    def __init__(self, parent=None):
+        super(ExternalTriggerSetup, self).__init__(parent)
+        QtWidgets.QDialog.__init__(self)
+        plt.ion()
+    def setParams(self, parent, states_list, channels, data, basename):
+        self.colors = MPL_DEFAULT_COLORS[0]
+        self.parent = parent
+        self.states_list = states_list
+        self.channels = channels
+        self.data = data
+        self.basename = basename
+        self.build()
+        self.connect()
+
+
+    def build(self):
+        PyQt6.uic.loadUi(os.path.join(os.path.dirname(__file__), "ui/externalTriggerSetup.ui"), self) 
+        self.statesGrid.setParams(state_labels=self.states_list, colors=MPL_DEFAULT_COLORS[:1], one_state_per_line=False)
+        self.statesGrid.fill_all()
+        if len(self.parent.calibratedChannels)==len(self.data.keys()):
+            self.channelBox.addItem("All")
+        for channum in self.parent.calibratedChannels:
+            self.channelBox.addItem("{}".format(channum))
+
+
+    def connect(self):
+        self.plotButton.clicked.connect(self.handlePlot)
+        self.uncheckAllButton.clicked.connect(self.uncheckAll)
+        self.checkAllButton.clicked.connect(self.checkAll)
+
+    def handlePlot(self):
+        #self.plotter = AvsBViewer(self)
+        _colors, states = self.statesGrid.get_colors_and_states_list()
+        if len(states) == 0: #if no states are checked, don't try to plot 
+            print("Error: Select one or more states to plot.")
+        else:
+            states=states[0]
+            channelBox = self.channelBox.currentText()
+            if channelBox == 'All':
+                channels = self.parent.data.values()
+            else:
+                channels = [self.parent.data[int(channelBox)]]
+
+            mins, maxes, binSizes = self.getBins()
+
+            self.zoomPlot = ZoomPlotExternalTrigger(channels=channels, states=states, mins=mins, maxes=maxes, binSizes=binSizes, basename=self.basename)
+        
+    def getBins(self):
+        if self.eRangeLo.displayText() != '':
+            elo = float(self.eRangeLo.displayText())
+        else:
+            elo = 0.0
+        if self.eRangeHi.displayText() != '':
+            ehi = float(self.eRangeHi.displayText())
+        else:
+            ehi = 10000.0
+
+        if self.eBinBox.displayText() != '':
+            ebinSize = float(self.eBinBox.displayText())
+        else:
+            ebinSize = 3.0
+
+        if self.tRangeLo.displayText() != '':
+            tlo = float(self.tRangeLo.displayText())
+        else:
+            tlo = 0.0
+
+        if self.tRangeHi.displayText() != '':
+            thi = float(self.tRangeHi.displayText())
+        else:
+            thi = 3.0
+
+        if self.tBinBox.displayText() != '':
+            tbinSize = float(self.tBinBox.displayText())
+        else:
+            tbinSize = 0.01
+        
+        return [tlo, elo], [thi, ehi], [tbinSize,ebinSize]
+
+    def uncheckAll(self):
+        self.statesGrid.unfill_all()
+
+    def checkAll(self):
+        self.statesGrid.fill_all()
+
+class ZoomPlotExternalTrigger(): #only works for external trigger plots.
+
+    def __init__(self, states, basename, mins, maxes, binSizes, channels):
+        matplotlib.use("QtAgg")
+        self.mins = mins
+        self.maxes = maxes
+
+        self.fig = plt.figure()
+
+        plt.xlabel("time since external trigger (s)")
+        plt.ylabel("energy(eV)")
+        #plt.title(f"{data.shortName}, states={states}")
+        #plt.colorbar()
+        self.ax = self.fig.add_subplot(111)
+        fm = plt.get_current_fig_manager() #figure manager, for the toolbar
+        fm.toolbar.actions()[0].triggered.connect(self.home_callback)   #when "home" is pressed on the toolbar, do self.home_callback()
+        self.tmin = mins[0]; self.tmax = maxes[0] #time min and max
+        self.emin = mins[1]; self.emax = maxes[1] #energy min and max
+        self.tbinSize = binSizes[0]
+        self.ebinSize = binSizes[1]
+        self.xpress = self.tmin
+        self.xrelease = self.tmax
+        self.ypress = self.emin
+        self.yrelease = self.emax
+        self.channels = channels #either data[channum] or all of data
+        self.states = states
+
+        self.external_trigger_filename =  os.path.join(f"{basename}_external_trigger.bin")
+        self.external_trigger_rowcount = self.get_external_triggers(self.external_trigger_filename, good_only=True)
+        for ds in channels:
+            self.calc_external_trigger_timing(ds, self.external_trigger_rowcount)
+
+        self.fig.canvas.mpl_connect('button_press_event', self.onpress)
+        self.fig.canvas.mpl_connect('button_release_event', self.onrelease)
+        self.plot_fixed_resolution(self.tmin, self.tmax,
+                                   self.emin, self.emax)
+
+    def home_callback(self):    #plot the original bounds
+        self.plot_fixed_resolution(self.mins[0], self.maxes[0],
+                                   self.mins[1], self.maxes[1])
+
+    def plotExtTrigger(self, ts, es): #plots the external trigger plot
+        energies = np.hstack([ds.getAttr("energy", self.states) for ds in self.channels])
+        print(f'{[ds.getStatesIndicies(states=self.states) for ds in self.channels]}')
+        seconds_after_external_triggers = np.hstack([ds.seconds_after_external_trigger[ds.getStatesIndicies(states=self.states)] for ds in self.channels])
+
+        plt.figure(self.fig)
+        plt.hist2d(seconds_after_external_triggers, 
+            energies, 
+            bins=(ts, es))
+
+    def plot_fixed_resolution(self, x1, x2, y1, y2):
+        x = np.arange(x1, x2, self.tbinSize) #todo: can't use arange because lengths aren't the same
+        y = np.arange(y1, y2, self.ebinSize)
+        self.ax.clear()
+        self.ax.set_xlim(x1, x2)
+        self.ax.set_ylim(y1, y2)
+        self.plotExtTrigger(x, y)
+        self.fig.canvas.draw()
+
+    def onpress(self, event):
+        if event.button != 1: return
+        self.xpress = event.xdata
+        self.ypress = event.ydata
+
+    def onrelease(self, event):
+        if event.button != 1: return
+        self.xrelease = event.xdata
+        self.yrelease = event.ydata
+        self.tmin = min(self.xpress, self.xrelease)
+        self.tmax = max(self.xpress, self.xrelease)
+        self.emin = min(self.ypress, self.yrelease)
+        self.emax = max(self.ypress, self.yrelease)
+        self.plot_fixed_resolution(self.tmin, self.tmax,
+                                self.emin, self.emax)
+        
+    def get_external_triggers(self, filename, good_only):
+        f = open(filename,"rb")
+        f.readline() # discard comment line
+        external_trigger_rowcount = np.fromfile(f,"int64")
+        if good_only:
+            external_trigger_rowcount = external_trigger_rowcount[self.get_good_trig_inds(external_trigger_rowcount)]
+        return external_trigger_rowcount
+
+    def get_good_trig_inds(self, external_trigger_rowcount, plot=False):
+        d = np.diff(external_trigger_rowcount)
+        median_diff = np.median(np.diff(external_trigger_rowcount))
+        good_inds = np.where(d > median_diff/2)[0]
+        if plot:
+            plt.figure()
+            plt.plot(d,".",label="all")
+            plt.plot(good_inds, d[good_inds],".",label="good")
+            plt.legend()
+        return good_inds
+
+    def calc_external_trigger_timing(self, ds, external_trigger_rowcount):
+        nRows = ds.offFile.header["ReadoutInfo"]["NumberOfRows"]
+        rowcount = ds.offFile["framecount"] * nRows
+        rows_after_last_external_trigger, rows_until_next_external_trigger = \
+            mass.core.analysis_algorithms.nearest_arrivals(rowcount, external_trigger_rowcount)
+        ds.rowPeriodSeconds = ds.offFile.framePeriodSeconds/float(nRows)
+        ds.rows_after_last_external_trigger = rows_after_last_external_trigger
+        ds.rows_until_next_external_trigger = rows_until_next_external_trigger
+        ds.seconds_after_external_trigger = rows_after_last_external_trigger*ds.rowPeriodSeconds
+        ds.seconds_until_next_external_trigger = rows_until_next_external_trigger*ds.rowPeriodSeconds
+    
