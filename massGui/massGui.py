@@ -272,10 +272,11 @@ class MainWindow(QtWidgets.QWidget):
     def importTableRows(self):
         rowPosition = None
         allowCal = True
+        self.highestFV = 0.
         #self.lineFitComboBox.clear()
         for i in range(len(self.cal_info)):
             rowPosition = self.calTable.rowCount()
-            rowData = self.cal_info[i] #data like       [state, filtVal, name, energy]
+            rowData = self.cal_info[i] #data looks like [state, filtVal, name, energy]
                                 #this table looks like  [name, filtVal, state, energy]
             #print(rowPosition, rowData)
             self.calTable.insertRow(rowPosition)
@@ -291,6 +292,8 @@ class MainWindow(QtWidgets.QWidget):
             self.calTable.setItem(rowPosition, 1, QtWidgets.QTableWidgetItem(rowData[1]))   #filtVal    
             self.calTable.setItem(rowPosition, 2, QtWidgets.QTableWidgetItem(rowData[0]))   #state
             self.calTable.setItem(rowPosition, 3, QtWidgets.QTableWidgetItem(rowData[3]))
+            self.highestFV = max(self.highestFV, float(rowData[1]))
+
         self.calButtonGroup.setEnabled(True)
         if rowPosition != None and allowCal == True: #if something is added to the calibration plan and each line has a name, let user calibrate. 
             self.allChanCalButton.setEnabled(True)
@@ -472,7 +475,7 @@ class MainWindow(QtWidgets.QWidget):
 
     def diagnoseCalibration(self):
         self.plotter = diagnoseViewer(self)
-        self.plotter.setParams(self, self.data, self.ds.channum)
+        self.plotter.setParams(self, self.data, self.ds.channum, highestFV = self.highestFV)
         self.plotter.exec()
 
 

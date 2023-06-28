@@ -324,22 +324,17 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
             self.ds = self.data[int(self.getChannum())]
             self.ds.calibrationPlanInit("filtValue")
             
+            self.highestFV = 0. #used to set better bounds in the diagnose plot
             for (states, fv, line, energy) in lines: 
                 # # log.debug(f"states {states}, fv {fv}, line {line}, energy {energy}")
-                #print(states.split(","))
+                self.highestFV = max(self.highestFV, float(fv))
                 if line != 'Manual Energy':#in mass.spectra.keys() and not energy:
                     self.ds.calibrationPlanAddPoint(float(fv), line, states=states.split(","))
-                    #get a set of states used by a line?
-
-
-                    # try:
-                    #     self.ds.calibrationPlanAddPoint(float(fv), line, states=states)
-                    # except:
-                    #     self.ds.calibrationPlanAddPoint(float(fv),self.common_models[str(line)], states=states)
                 elif energy:# and not line in mass.spectra.keys():  
                     self.ds.calibrationPlanAddPoint(float(fv), energy, states=states.split(","), energy=float(energy))
                 # elif line in mass.spectra.keys() and energy:
                 #     ds.calibrationPlanAddPoint(float(fv), line, states=states.split(","), energy=float(energy))
+
 
         dlo_dhi = float(self.dlo_dhiBox.text())/2.
         binsize=float(self.calBinBox.text())
@@ -367,7 +362,7 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
 
         #self.ds.calibrateFollowingPlan("filtValue", dlo=50,dhi=50, binsize=1, overwriteRecipe=True)
         self.plotter = diagnoseViewer(self)
-        self.plotter.setParams(self.parent, self.data, self.ds.channum)
+        self.plotter.setParams(self.parent, self.data, self.ds.channum, highestFV = self.highestFV)
         self.plotter.frame.setEnabled(False)
         self.plotter.exec()
 
@@ -762,9 +757,10 @@ class diagnoseViewer(QtWidgets.QDialog):    #displays the plots from the Mass di
         super(diagnoseViewer, self).__init__(parent)
         QtWidgets.QDialog.__init__(self)
 
-    def setParams(self, parent, data, channum, colors=MPL_DEFAULT_COLORS[:6], calibratedName=None):
+    def setParams(self, parent, data, channum, colors=MPL_DEFAULT_COLORS[:6], calibratedName=None, highestFV=16000):
         self.parent=parent
         self.colors = colors
+        self.highestFV = highestFV #highest filtValue used during calibration to determine what range of filtValues to plot
         if calibratedName==None:
             self.calibratedName = "energy"
         else:
@@ -818,7 +814,7 @@ class diagnoseViewer(QtWidgets.QDialog):    #displays the plots from the Mass di
         calibration.plot(axis=ax)
         ax = self.canvas.fig.add_subplot(n, n, i+3)
         
-        ds.plotHist(np.arange(0, 16000, 4), uncalibratedName,
+        ds.plotHist(np.arange(0, self.highestFV*1.5, 4), uncalibratedName,
                       axis=ax, coAddStates=False) #todo: get better ranges using max of energy value
         #ax.vlines(ds.calibrationPlan.uncalibratedVals, 0, self.canvas.fig.ylim()[1])
         #plt.tight_layout()
