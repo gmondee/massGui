@@ -503,6 +503,10 @@ class MainWindow(QtWidgets.QWidget):
             self.AvsBsetup.show()
 
     def handleExternalTrigger(self):
+        if not os.path.isfile(os.path.join(f"{self.basename}_external_trigger.bin")):
+            print("Error: No external trigger file found in ",self.basename)
+            return
+
         self.ETsetup = ExternalTriggerSetup(self) 
         self.ETsetup.setParams(self, self.data.stateLabels, self.data.keys(), self.data, self.basename)
         self.ETsetup.show()
@@ -628,7 +632,7 @@ def main(test=False):
     try:
         retval = app.exec() 
     except Exception:
-        import pdb; pdb.post_mortem()
+        import pdb; pdb.post_mortem() #doesn't work
 
 # #https://www.youtube.com/watch?v=WjctCBjHvmA
 # http://adambemski.pythonanywhere.com/testing-qt-application-python-and-pytest

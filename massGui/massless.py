@@ -21,6 +21,7 @@ import massGui
 import h5py
 from copy import copy
 import traceback
+import warnings 
 
 logging.basicConfig(filename='masslessLog.txt',
                     filemode='w',
@@ -1508,20 +1509,22 @@ class ZoomPlotExternalTrigger(): #only works for external trigger plots.
                                    self.mins[1], self.maxes[1])
 
     def plotExtTrigger(self, ts, es): #plots the external trigger plot
-        seconds_after_external_triggers = []
-        energies = []
-        for ds in self.channels:
-            sec = []
-            energy = []
-            for s in self.states:
-                sec = np.concatenate([sec,ds.seconds_after_external_trigger[ds.getStatesIndicies(states=[s])][ds.getAttr("cutNone", [s], "cutNone")]]) #change the cut by swapping out the first "cutNone" with another cut.
-                energy = np.concatenate([energy, ds.getAttr("energy", s, "cutNone")])
-            seconds_after_external_triggers = np.concatenate([seconds_after_external_triggers, sec])
-            energies = np.concatenate([energies, energy])
+        with warnings.catch_warnings():
+            warnings.simplefilter(action='ignore', category=FutureWarning) #ignore the FutureWarning when using the cuts array in sec = np.concatenate([sec, [array][cuts array]])
+            seconds_after_external_triggers = []
+            energies = []
+            for ds in self.channels:
+                sec = []
+                energy = []
+                for s in self.states:
+                    sec = np.concatenate([sec,ds.seconds_after_external_trigger[ds.getStatesIndicies(states=[s])][ds.getAttr("cutNone", [s], "cutNone")]]) #change the cut by swapping out the first "cutNone" with another cut.
+                    energy = np.concatenate([energy, ds.getAttr("energy", s, "cutNone")])
+                seconds_after_external_triggers = np.concatenate([seconds_after_external_triggers, sec])
+                energies = np.concatenate([energies, energy])
 
-        plt.figure(self.fig)
-        #print(f'{seconds_after_external_triggers.shape=}, {energies.shape=}')
-        plt.hist2d(seconds_after_external_triggers, energies, bins=(ts, es))
+            plt.figure(self.fig)
+            #print(f'{seconds_after_external_triggers.shape=}, {energies.shape=}')
+            plt.hist2d(seconds_after_external_triggers, energies, bins=(ts, es))
 
     def plot_fixed_resolution(self, x1, x2, y1, y2):
         x = np.linspace(x1, x2, num=self.resolution) #todo: can't use arange because lengths aren't the same
