@@ -1427,9 +1427,9 @@ class ExternalTriggerSetup(QtWidgets.QDialog):
             else:
                 channels = [self.parent.data[int(channelBox)]]
 
-            mins, maxes, binSizes = self.getBins()
+            mins, maxes, resolution = self.getBins()
 
-            self.zoomPlot = ZoomPlotExternalTrigger(channels=channels, states=states, mins=mins, maxes=maxes, binSizes=binSizes, basename=self.basename)
+            self.zoomPlot = ZoomPlotExternalTrigger(channels=channels, states=states, mins=mins, maxes=maxes, resolution=resolution, basename=self.basename, good_only=self.goodIndsCheckBox.isChecked())
         
     def getBins(self):
         if self.eRangeLo.displayText() != '':
@@ -1441,11 +1441,6 @@ class ExternalTriggerSetup(QtWidgets.QDialog):
         else:
             ehi = 10000.0
 
-        if self.eBinBox.displayText() != '':
-            ebinSize = float(self.eBinBox.displayText())
-        else:
-            ebinSize = 3.0
-
         if self.tRangeLo.displayText() != '':
             tlo = float(self.tRangeLo.displayText())
         else:
@@ -1456,12 +1451,12 @@ class ExternalTriggerSetup(QtWidgets.QDialog):
         else:
             thi = 3.0
 
-        if self.tBinBox.displayText() != '':
-            tbinSize = float(self.tBinBox.displayText())
+        if self.resBox.displayText() != '':
+            resolution = int(self.resBox.displayText())
         else:
-            tbinSize = 0.01
+            resolution = 500.
         
-        return [tlo, elo], [thi, ehi], [tbinSize,ebinSize]
+        return [tlo, elo], [thi, ehi], resolution
 
     def uncheckAll(self):
         self.statesGrid.unfill_all()
@@ -1471,24 +1466,25 @@ class ExternalTriggerSetup(QtWidgets.QDialog):
 
 class ZoomPlotExternalTrigger(): #only works for external trigger plots.
 
-    def __init__(self, states, basename, mins, maxes, binSizes, channels):
+    def __init__(self, states, basename, mins, maxes, resolution, channels, good_only):
         matplotlib.use("QtAgg")
         self.mins = mins
         self.maxes = maxes
 
         self.fig = plt.figure()
 
+        
+        self.ax = self.fig.add_subplot(111)
+        self.ax.cla()
+        self.fig.clear()
         plt.xlabel("time since external trigger (s)")
         plt.ylabel("energy(eV)")
-        #plt.title(f"{data.shortName}, states={states}")
-        #plt.colorbar()
-        self.ax = self.fig.add_subplot(111)
+        plt.title(f"{len(channels)} channels,\n states={states}")
         fm = plt.get_current_fig_manager() #figure manager, for the toolbar
         fm.toolbar.actions()[0].triggered.connect(self.home_callback)   #when "home" is pressed on the toolbar, do self.home_callback()
         self.tmin = mins[0]; self.tmax = maxes[0] #time min and max
         self.emin = mins[1]; self.emax = maxes[1] #energy min and max
-        self.tbinSize = binSizes[0]
-        self.ebinSize = binSizes[1]
+        self.resolution = resolution
         self.xpress = self.tmin
         self.xrelease = self.tmax
         self.ypress = self.emin
@@ -1497,7 +1493,7 @@ class ZoomPlotExternalTrigger(): #only works for external trigger plots.
         self.states = states
 
         self.external_trigger_filename =  os.path.join(f"{basename}_external_trigger.bin")
-        self.external_trigger_rowcount = self.get_external_triggers(self.external_trigger_filename, good_only=True)
+        self.external_trigger_rowcount = self.get_external_triggers(self.external_trigger_filename, good_only=good_only)
         for ds in channels:
             self.calc_external_trigger_timing(ds, self.external_trigger_rowcount)
 
@@ -1505,24 +1501,31 @@ class ZoomPlotExternalTrigger(): #only works for external trigger plots.
         self.fig.canvas.mpl_connect('button_release_event', self.onrelease)
         self.plot_fixed_resolution(self.tmin, self.tmax,
                                    self.emin, self.emax)
+        cb = plt.colorbar()
 
     def home_callback(self):    #plot the original bounds
         self.plot_fixed_resolution(self.mins[0], self.maxes[0],
                                    self.mins[1], self.maxes[1])
 
     def plotExtTrigger(self, ts, es): #plots the external trigger plot
-        energies = np.hstack([ds.getAttr("energy", self.states) for ds in self.channels])
-        print(f'{[ds.getStatesIndicies(states=self.states) for ds in self.channels]}')
-        seconds_after_external_triggers = np.hstack([ds.seconds_after_external_trigger[ds.getStatesIndicies(states=self.states)] for ds in self.channels])
+        seconds_after_external_triggers = []
+        energies = []
+        for ds in self.channels:
+            sec = []
+            energy = []
+            for s in self.states:
+                sec = np.concatenate([sec,ds.seconds_after_external_trigger[ds.getStatesIndicies(states=[s])][ds.getAttr("cutNone", [s], "cutNone")]]) #change the cut by swapping out the first "cutNone" with another cut.
+                energy = np.concatenate([energy, ds.getAttr("energy", s, "cutNone")])
+            seconds_after_external_triggers = np.concatenate([seconds_after_external_triggers, sec])
+            energies = np.concatenate([energies, energy])
 
         plt.figure(self.fig)
-        plt.hist2d(seconds_after_external_triggers, 
-            energies, 
-            bins=(ts, es))
+        #print(f'{seconds_after_external_triggers.shape=}, {energies.shape=}')
+        plt.hist2d(seconds_after_external_triggers, energies, bins=(ts, es))
 
     def plot_fixed_resolution(self, x1, x2, y1, y2):
-        x = np.arange(x1, x2, self.tbinSize) #todo: can't use arange because lengths aren't the same
-        y = np.arange(y1, y2, self.ebinSize)
+        x = np.linspace(x1, x2, num=self.resolution) #todo: can't use arange because lengths aren't the same
+        y = np.linspace(y1, y2, num=self.resolution)
         self.ax.clear()
         self.ax.set_xlim(x1, x2)
         self.ax.set_ylim(y1, y2)
