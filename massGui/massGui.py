@@ -495,6 +495,12 @@ class MainWindow(QtWidgets.QWidget):
 
     def handleAvsB(self, type):
         keys = list(self.ds.recipes.craftedIngredients) + list(self.ds.recipes.baseIngredients)
+
+        #coefs is a list of three attributes: pulseMean, derivativeLike, and filtValue. We should be viewing them individually, so I don't include coefs here.
+        try:
+            keys.remove('coefs')         
+        except:
+            pass
         if type == "1D":
             self.AvsBsetup = AvsBSetup(self) 
             #print(self.data.keys())

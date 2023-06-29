@@ -1053,11 +1053,17 @@ class AvsBSetup(QtWidgets.QDialog): #for plotAvsB and plotAvsB2D functions. Allo
 
         if self.mode == "1D":
             self.binsFrame.hide()
+            self.rangeFrame.hide()
+        elif self.mode == "2D":
+            self.updateBounds()
 
     def connect(self):
         self.plotButton.clicked.connect(self.handlePlot)
         self.uncheckAllButton.clicked.connect(self.uncheckAll)
         self.checkAllButton.clicked.connect(self.checkAll)
+        if self.mode == "2D":
+            self.Abox.currentTextChanged.connect(self.updateBounds)
+            self.Bbox.currentTextChanged.connect(self.updateBounds)
 
     def handlePlot(self):
         #self.plotter = AvsBViewer(self)
@@ -1078,30 +1084,14 @@ class AvsBSetup(QtWidgets.QDialog): #for plotAvsB and plotAvsB2D functions. Allo
                     if self.mode == "1D":
                         channel.plotAvsB(A, B, axis=None, states=states)
                     if self.mode == "2D":
-                        Ahi = max(channel.getAttr(A, states))
-                        Alo = min(channel.getAttr(A, states))
+                        Ahi = float(self.aRangeHi.text())
+                        Alo = float(self.aRangeLo.text())
                         
-                        Bhi = max(channel.getAttr(B, states))
-                        Blo = min(channel.getAttr(B, states))
+                        Bhi = float(self.bRangeHi.text())
+                        Blo = float(self.bRangeLo.text())
 
                         res = int(self.binsBox.text())#500
                         self.zoomPlot = ZoomPlotAvsB(channel, states, A, B, mins = [Alo, Blo], maxes=[Ahi, Bhi], resolution = res)
-                    if self.mode == "3D": #2D, renamed for now
-                        Ahi = max(channel.getAttr(A, states))
-                        Alo = min(channel.getAttr(A, states))
-                        
-                        Bhi = max(channel.getAttr(B, states))
-                        Blo = min(channel.getAttr(B, states))
-
-                        num = int(self.binsBox.text())#500
-
-                        bins = [np.linspace(Alo, Ahi, num=num), np.linspace(Blo,Bhi,num=num)]#self.binsBox.text()
-                        channel.plotAvsB2d(A, B, binEdgesAB = bins, axis=None, states=states)
-                        #plotAvsB2d(self, nameA, nameB, binEdgesAB, axis=None, states=None, cutRecipeName=None, norm=None)
-
-                        #plotAvsB2d(self, nameA, nameB, binEdgesAB, axis=None, states=None)
-                    # self.plotter.setParams(self, A, B, states, channels, self.data, self.mode)
-                    # self.plotter.show()
                     
                 else:
                     print(f"attribute {B} doesn't exist for this channel")
@@ -1113,6 +1103,35 @@ class AvsBSetup(QtWidgets.QDialog): #for plotAvsB and plotAvsB2D functions. Allo
 
     def checkAll(self):
         self.statesGrid.fill_all()
+
+    def updateBounds(self):
+        A = self.Abox.currentText()
+        B = self.Bbox.currentText()
+        channel = self.data[int(self.channelBox.currentText())]
+        if (A in channel.recipes.baseIngredients) or (A in channel.recipes.craftedIngredients.keys()):
+            if (B in channel.recipes.baseIngredients) or ((B in channel.recipes.craftedIngredients.keys())):
+                ... #get some value near the upper percentile of each attr to suggest
+                try:
+                    Abound = np.percentile(channel.getAttr(A, self.states_list), 95) #get the value of the record at the 95th percentile (95th meaning close to the maximum)
+                    self.aRangeHi.setText("{:.3f}".format(Abound))
+                    Abound = np.percentile(channel.getAttr(A, self.states_list), 5) #get the value of the record at the 5th percentile (5th meaning close to the minimum)
+                    self.aRangeLo.setText("{:.3f}".format(Abound))
+                except:
+                    print(f"Could not automatically set bound for {A}")
+                try:
+                    Bbound = np.percentile(channel.getAttr(B, self.states_list), 95) #todo: get .A and .B into meaningful attrs
+                    self.bRangeHi.setText("{:.3f}".format(Bbound))
+                    Bbound = np.percentile(channel.getAttr(B, self.states_list), 5) #get the value of the record at the 5th percentile (5th meaning close to the minimum)
+                    self.bRangeLo.setText("{:.3f}".format(Bbound))
+                except:
+                    print(f"Could not automatically set bound for {B}")
+            else:
+                    print(f"attribute {B} doesn't exist for this channel")
+                    return
+        else:
+            print(f"attribute {A} doesn't exist for this channel")
+            return
+        
 
 class ZoomPlotAvsB(): #only works for 2D plots.
 
@@ -1132,7 +1151,6 @@ class ZoomPlotAvsB(): #only works for 2D plots.
         self.ypress = self.ymin
         self.yrelease = self.ymax
         self.resolution = resolution
-        #self.maxiters = 30
         self.channel = channel
         self.states = states
         self.A = A
@@ -1142,6 +1160,7 @@ class ZoomPlotAvsB(): #only works for 2D plots.
         self.fig.canvas.mpl_connect('button_release_event', self.onrelease)
         self.plot_fixed_resolution(self.xmin, self.xmax,
                                    self.ymin, self.ymax)
+        plt.colorbar()
 
     def home_callback(self):    #plot the original bounds
         self.plot_fixed_resolution(self.mins[0], self.maxes[0],
