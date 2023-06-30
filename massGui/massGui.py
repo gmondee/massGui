@@ -477,7 +477,7 @@ class MainWindow(QtWidgets.QWidget):
     def diagnoseCalibration(self):
         self.plotter = diagnoseViewer(self)
         self.plotter.setParams(self, self.data, self.ds.channum, highestFV = self.highestFV)
-        self.plotter.exec()
+        self.plotter.show()
 
 
     def startRTP(self):

@@ -212,9 +212,9 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
             keyslist = []
             for key in self.markersDict:
                 keyslist.append(key)
-            print("list: ",keyslist, "key: ",row)
-            print("dict: ",self.markersDict)
-            print("removed: ", self.markersDict[keyslist[row]])
+            # print("list: ",keyslist, "key: ",row)
+            # print("dict: ",self.markersDict)
+            # print("removed: ", self.markersDict[keyslist[row]])
             self.markersDict[keyslist[row]].remove() #removes the plotted marker from the plot
             self.markersDict.pop(keyslist[row])    #removes the (reference to the) plotted marker from the dictionary
 
@@ -327,7 +327,10 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
             self.highestFV = 0. #used to set better bounds in the diagnose plot
             for (states, fv, line, energy) in lines: 
                 # # log.debug(f"states {states}, fv {fv}, line {line}, energy {energy}")
-                self.highestFV = max(self.highestFV, float(fv))
+                try:
+                    self.highestFV = max(self.highestFV, float(fv))
+                except:
+                    self.highestFV = None
                 if line != 'Manual Energy':#in mass.spectra.keys() and not energy:
                     self.ds.calibrationPlanAddPoint(float(fv), line, states=states.split(","))
                 elif energy:# and not line in mass.spectra.keys():  
@@ -435,9 +438,8 @@ class HistViewer(QtWidgets.QWidget): #widget for hist calibrator and others. plo
         self.plotButton.clicked.connect(self.handle_plot)
  
     def handle_plot(self): #needs to use channel
-        #self.channum = self.parent().getChannum()  #can't use parent properly b/c initialised with .ui file. Use an update signal instead.
         colors, states_list = self.statesGrid.get_colors_and_states_list() 
-        #print(self.binSize)
+        self.photonCount = 0
         # log.debug(f"handle_plot: color: {colors}")
         # log.debug(f"handle_plot: states_list: {states_list}")
         if len(colors) == 0:
@@ -454,46 +456,33 @@ class HistViewer(QtWidgets.QWidget): #widget for hist calibrator and others. plo
         #print(self.data[int(self.channum)].channum)
         self.lastUsedChannel = self.data[int(self.channum)].channum
         self.canvas.clear()
-        self.line2marker = {}
-        self.line2states = {}
-        self.photonCount = 0
-        
-        for states, color in zip(states_list, colors):
-            x,y = self.data[int(self.channum)].hist(bin_edges, attr, states=states)
-            self.photonCount+=sum(y)
-            [line2d] = self.canvas.plot(x,y, c=color, ds='steps-mid', lw=2, picker=4) 
-            #self.canvas.axes = self.data[int(self.channum)].plotHist(bin_edges, attr, states=states, axis=self.canvas.axes)
-            # # log.debug(f"plot: loop: states={states} color={color}")
-            self.line2marker[line2d] = []
-            self.line2states[line2d] = states
-        self.canvas.legend([",".join(states) for states in states_list])
-        # self.canvas.set_xlabel(attr)
-        self.canvas.set_ylabel("counts per %0.1f unit bin" %(self.binSize))
-
-        #axis.set_ylabel("counts per %0.1f unit bin" % (binEdges[1]-binEdges[0]))
-        self.canvas.set_title(self.data[int(self.channum)].shortName + ", states = {}".format(states_list))
-        # plt.tight_layout()
+        self.line2marker = {} #pass in a line, get the markers associated with it
+        self.line2states = {} #pass in a line, get the states associated with it
+        ax = self.data[int(self.channum)].plotHist(bin_edges, attr, states=states_list, axis=self.canvas.axes, coAddStates=False)
+        for i, line in enumerate(ax.get_lines()):
+            line.set_picker(4) #enables clicking; '4' is the tolerance on picker range
+            self.photonCount += sum(line.get_ydata())
+            self.line2marker[line] = []
+            self.line2states[line] = states_list[i]
         self.parent.photonCountBox.setText(str(self.photonCount))
+        self.canvas.legend([",".join(states) for states in states_list])
         self.canvas.draw()
-        #plt.connect('button_press_event', self.mpl_click_event)
         self.canvas.mpl_connect('pick_event', self.mpl_click_event)
         self.plotted.emit()
 
     def plotAll(self, states_list, bin_edges, attr, colors):
         print("plotting all channels")
         self.canvas.clear()
-        self.line2marker = {}
-        self.line2states = {}
-        for states, color in zip(states_list, colors):
-            x,y = self.data.hist(bin_edges, attr, states=states)
-            [line2d] = self.canvas.plot(x,y, c=color, ds='steps-mid', lw=2, picker=4) 
-            # # log.debug(f"plot: loop: states={states} color={color}")
-            self.line2marker[line2d] = []
-            self.line2states[line2d] = states
+        self.line2marker = {} #pass in a line, get the markers associated with it
+        self.line2states = {} #pass in a line, get the states associated with it
+        ax = self.data.plotHist(bin_edges, attr, states=states_list, axis=self.canvas.axes, coAddStates=False)
+        for i, line in enumerate(ax.get_lines()):
+            line.set_picker(4) #enables clicking; '4' is the tolerance on picker range
+            self.photonCount += sum(line.get_ydata())
+            self.line2marker[line] = []
+            self.line2states[line] = states_list[i]
+        self.parent.photonCountBox.setText(str(self.photonCount))
         self.canvas.legend([",".join(states) for states in states_list])
-        self.canvas.set_xlabel(attr)
-        self.canvas.set_ylabel("counts per bin")
-        self.canvas.set_title(self.data.shortName + ", states = {}".format(states_list))
         # plt.tight_layout()
         self.canvas.draw()
         self.canvas.mpl_connect('pick_event', self.mpl_click_event)
@@ -797,29 +786,16 @@ class diagnoseViewer(QtWidgets.QDialog):    #displays the plots from the Mass di
 
     def diagnoseCalibration(self):
         ds = self.data[self.getChannum()]
-        calibration = ds.recipes[self.calibratedName].f
-        uncalibratedName = calibration.uncalibratedName
-        results = calibration.results
-        n_intermediate = len(calibration.intermediate_calibrations)
         self.canvas.fig.clear()
-        self.canvas.fig.suptitle(
-            ds.shortName+", cal diagnose for '{}'\n with {} intermediate calibrations".format(self.calibratedName, n_intermediate))
-        n = int(np.ceil(np.sqrt(len(results)+2)))
-        for i, result in enumerate(results):
-            ax = self.canvas.fig.add_subplot(n, n, i+1)
-            ax.cla()
-            # pass title to suppress showing the dataset shortName on each subplot
-            result.plotm(ax=ax, title=str(result.model.spect.shortname))
-        ax = self.canvas.fig.add_subplot(n, n, i+2)
-        calibration.plot(axis=ax)
-        ax = self.canvas.fig.add_subplot(n, n, i+3)
-        
-        ds.plotHist(np.arange(0, self.highestFV*1.5, 4), uncalibratedName,
-                      axis=ax, coAddStates=False) #todo: get better ranges using max of energy value
-        #ax.vlines(ds.calibrationPlan.uncalibratedVals, 0, self.canvas.fig.ylim()[1])
-        #plt.tight_layout()
-
-
+        try:
+            try:
+                binEdges=np.arange(0, self.highestFV*1.5, 4)
+            except:
+                binEdges=None
+            ds.diagnoseCalibration(binEdges = binEdges,fig=plt.get_fignums()[-1])
+        except Exception as exc:
+            print("Failed to diagnose calibration!")
+            print(traceback.format_exc())
 
 
 class rtpViewer(QtWidgets.QDialog): #window that hosts the real-time plotting routine.

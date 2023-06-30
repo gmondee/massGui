@@ -126,10 +126,13 @@ def test_cal(app, qtbot):
     #qtbot.mouseClick(app.loadCalButton, QtCore.Qt.MouseButton.LeftButton)
     #qtbot.addWidget(app.hdf5Opener)
 
-    qtbot.mouseClick(app.extTrigButton, QtCore.Qt.MouseButton.LeftButton)
-    qtbot.addWidget(app.ETsetup)
+    # qtbot.mouseClick(app.extTrigButton, QtCore.Qt.MouseButton.LeftButton)
+    # qtbot.addWidget(app.ETsetup)
 
-    qtbot.stop()
+    qtbot.mouseClick(app.diagCalButton, QtCore.Qt.MouseButton.LeftButton)
+    qtbot.addWidget(app.plotter)
+
+    #qtbot.stop()
     
     
 def test_realtime(app, qtbot):

@@ -3,11 +3,13 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as NavigationToolbar
 from matplotlib.figure import Figure
+import matplotlib.pyplot as plt
 
 class MplCanvas(QtWidgets.QWidget): #figsize=(20, 12)
-    def __init__(self, parent = None, width=20, height=12, dpi=100):
+    def __init__(self, parent = None, width=20, height=12, dpi=100, num=None):
         QtWidgets.QWidget.__init__(self).__init__(self, parent)
-        self.fig = Figure(figsize=(width,height), dpi=dpi)
+        #self.fig = Figure(figsize=(width,height), dpi=dpi)
+        self.fig = plt.figure(num=num, figsize=(width,height), dpi=dpi) #num is a unique identifier for this figure
         self.canvas = FigureCanvas(self.fig)
         self.axes = self.fig.add_subplot(111)
         self.canvas.setSizePolicy(QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Expanding)
