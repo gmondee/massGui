@@ -81,6 +81,7 @@ class MainWindow(QtWidgets.QWidget):
         self.qualityButton.clicked.connect(self.startQualityCheck)
         self.allChanAutoCalButton.clicked.connect(self.allChannelAutoCalibration)
         self.extTrigButton.clicked.connect(self.handleExternalTrigger)
+        self.readNewButton.clicked.connect(self.readNewFilesAndStates)
 
     def load_file(self, filename, maxChans = None):
         self._choose_file_lastdir = os.path.dirname(filename)
@@ -545,6 +546,8 @@ class MainWindow(QtWidgets.QWidget):
         self.qcsetup.setParams(self, lines, states_list=self.ds.stateLabels, data=self.data)
         self.qcsetup.show()  
           
+    def readNewFilesAndStates(self):
+        self.data.refreshFromFiles()
 
     def save_to_hdf5(self, name=None):
         with  h5py.File('saves.h5', 'a') as hf:

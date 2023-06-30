@@ -600,7 +600,7 @@ p, li { white-space: pre-wrap; }
       <property name="bottomMargin">
        <number>2</number>
       </property>
-      <item row="0" column="0">
+      <item row="0" column="2">
        <widget class="QFrame" name="frame">
         <property name="frameShape">
          <enum>QFrame::StyledPanel</enum>
@@ -621,7 +621,20 @@ p, li { white-space: pre-wrap; }
          <property name="bottomMargin">
           <number>2</number>
          </property>
-         <item row="0" column="3">
+         <item row="2" column="1">
+          <widget class="QPushButton" name="extTrigButton">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>22</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>External Trigger</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="4">
           <widget class="QPushButton" name="AvsBbutton">
            <property name="minimumSize">
             <size>
@@ -634,7 +647,7 @@ p, li { white-space: pre-wrap; }
            </property>
           </widget>
          </item>
-         <item row="2" column="1">
+         <item row="2" column="2">
           <widget class="QPushButton" name="ptmButton">
            <property name="minimumSize">
             <size>
@@ -647,7 +660,20 @@ p, li { white-space: pre-wrap; }
            </property>
           </widget>
          </item>
-         <item row="0" column="0">
+         <item row="1" column="2">
+          <widget class="QPushButton" name="startRTPButton">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>22</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Start Real-time Plotting</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
           <widget class="QPushButton" name="energyHistButton">
            <property name="minimumSize">
             <size>
@@ -660,7 +686,7 @@ p, li { white-space: pre-wrap; }
            </property>
           </widget>
          </item>
-         <item row="0" column="1">
+         <item row="0" column="2">
           <widget class="QPushButton" name="diagCalButton">
            <property name="minimumSize">
             <size>
@@ -673,7 +699,7 @@ p, li { white-space: pre-wrap; }
            </property>
           </widget>
          </item>
-         <item row="1" column="3">
+         <item row="1" column="4">
           <widget class="QPushButton" name="AvsB2Dbutton">
            <property name="minimumSize">
             <size>
@@ -687,19 +713,6 @@ p, li { white-space: pre-wrap; }
           </widget>
          </item>
          <item row="1" column="1">
-          <widget class="QPushButton" name="startRTPButton">
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>22</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>Start Real-time Plotting</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0">
           <widget class="QPushButton" name="linefitButton">
            <property name="minimumSize">
             <size>
@@ -712,7 +725,7 @@ p, li { white-space: pre-wrap; }
            </property>
           </widget>
          </item>
-         <item row="2" column="3">
+         <item row="2" column="4">
           <widget class="QPushButton" name="qualityButton">
            <property name="minimumSize">
             <size>
@@ -725,20 +738,33 @@ p, li { white-space: pre-wrap; }
            </property>
           </widget>
          </item>
-         <item row="2" column="0">
-          <widget class="QPushButton" name="extTrigButton">
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>22</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>External Trigger</string>
-           </property>
-          </widget>
-         </item>
         </layout>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QPushButton" name="readNewButton">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>22</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>120</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="autoFillBackground">
+         <bool>false</bool>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(255, 255, 127);</string>
+        </property>
+        <property name="text">
+         <string>Read New Records
+ and States</string>
+        </property>
        </widget>
       </item>
      </layout>
