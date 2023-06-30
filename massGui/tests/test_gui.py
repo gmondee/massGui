@@ -216,8 +216,8 @@ def test_realtime(app, qtbot):
     qtbot.mouseClick(app.allChanCalButton, QtCore.Qt.MouseButton.LeftButton)
     qtbot.waitUntil(lambda: qtbot.done_cal_open == 1, timeout = 1000)
 
-    qtbot.mouseClick(app.startRTPButton, QtCore.Qt.MouseButton.LeftButton)
-    qtbot.addWidget(app.plotter)
+    # qtbot.mouseClick(app.startRTPButton, QtCore.Qt.MouseButton.LeftButton)
+    # qtbot.addWidget(app.plotter)
 
     # qtbot.mouseClick(app.AvsB2Dbutton, QtCore.Qt.MouseButton.LeftButton)
     # qtbot.addWidget(app.AvsBsetup)
@@ -231,6 +231,10 @@ def test_realtime(app, qtbot):
     #qtbot.mouseClick(app.saveCalButton, QtCore.Qt.MouseButton.LeftButton)
     #qtbot.mouseClick(app.loadCalButton, QtCore.Qt.MouseButton.LeftButton)
     #qtbot.addWidget(app.hdf5Opener)
+
+    qtbot.mouseClick(app.extTrigButton, QtCore.Qt.MouseButton.LeftButton)
+    qtbot.addWidget(app.ETsetup)
+
     qtbot.stop()
 
 

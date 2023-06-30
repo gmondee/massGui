@@ -892,10 +892,10 @@ class rtpViewer(QtWidgets.QDialog): #window that hosts the real-time plotting ro
         #self.timer.start(self.updateFreq)
         self.UpdatePlots()
 
-    def stopRTP(self):
+    def stopRTP(self): #never called right now, but this is how you might do it
         try:    #timer might not exist yet
             self.timer.stop()
-        finally:
+        except:
             pass
 
     def getDataToPlot(self):    #determines the individual channel or channel group (data) to be plotted. restarts RTP if the selection changes.
@@ -1445,7 +1445,7 @@ class ExternalTriggerSetup(QtWidgets.QDialog):
 
             mins, maxes, resolution = self.getBins()
 
-            self.zoomPlot = ZoomPlotExternalTrigger(channels=channels, states=states, mins=mins, maxes=maxes, resolution=resolution, basename=self.basename, good_only=self.goodIndsCheckBox.isChecked())
+            self.zoomPlot = ZoomPlotExternalTrigger(parent = self.parent, channels=channels, states=states, mins=mins, maxes=maxes, resolution=resolution, basename=self.basename, good_only=self.goodIndsCheckBox.isChecked())
         
     def getBins(self):
         if self.eRangeLo.displayText() != '':
@@ -1482,10 +1482,12 @@ class ExternalTriggerSetup(QtWidgets.QDialog):
 
 class ZoomPlotExternalTrigger(): #only works for external trigger plots.
 
-    def __init__(self, states, basename, mins, maxes, resolution, channels, good_only):
+    def __init__(self, parent, states, basename, mins, maxes, resolution, channels, good_only):
         matplotlib.use("QtAgg")
         self.mins = mins
         self.maxes = maxes
+        self.parent=parent #parent here is the massGui itself
+        self.basename=basename
 
         self.fig = plt.figure()
 
@@ -1507,6 +1509,7 @@ class ZoomPlotExternalTrigger(): #only works for external trigger plots.
         self.yrelease = self.emax
         self.channels = channels #either data[channum] or all of data
         self.states = states
+        self.good_only = good_only
 
         self.external_trigger_filename =  os.path.join(f"{basename}_external_trigger.bin")
         self.external_trigger_rowcount = self.get_external_triggers(self.external_trigger_filename, good_only=good_only)
@@ -1518,6 +1521,20 @@ class ZoomPlotExternalTrigger(): #only works for external trigger plots.
         self.plot_fixed_resolution(self.tmin, self.tmax,
                                    self.emin, self.emax)
         cb = plt.colorbar()
+        #self.setAttribute(QtCore.Qt.WidgetAttribute.WA_DeleteOnClose)   #kills the timer when the RTP window is closed
+        self.timer = QTimer()       #timer is used to loop the real-time plotting updates  
+        self.timer.timeout.connect(self.updatePlots)
+        self.updateFreq_ms = int(5)*1000             #in ms after the multiplication
+        self.timer.start(self.updateFreq_ms)
+
+    def updatePlots(self, replot=True):
+        self.parent.data.refreshFromFiles()
+        self.external_trigger_rowcount = self.get_external_triggers(self.external_trigger_filename, good_only=self.good_only)
+        for ds in self.channels:
+            self.calc_external_trigger_timing(ds, self.external_trigger_rowcount)
+        
+        self.plot_fixed_resolution(self.tmin, self.tmax,
+                                self.emin, self.emax)
 
     def home_callback(self):    #plot the original bounds
         self.plot_fixed_resolution(self.mins[0], self.maxes[0],
