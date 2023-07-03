@@ -47,7 +47,6 @@ mass.off.Channel.learnCalibrationPlanFromEnergiesAndPeaks = ds_learnCalibrationP
 
 #     app.exec_()
 
-
 class MainWindow(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
@@ -139,10 +138,9 @@ class MainWindow(QtWidgets.QWidget):
 
     def handle_manual_cal(self):
         # log.debug("handle_manual_cal")
-        
-        #self.launch_channel(self.data[channum])
         self.launch_channel(self.data, self.channum)
 
+   
     def launch_channel(self, data, channum):
         self.checkHCI()
         self.plotsGroup.setEnabled(False)
@@ -157,8 +155,8 @@ class MainWindow(QtWidgets.QWidget):
         self.hc.DCcheckbox.setChecked(self.DCcheckbox.isChecked())
         self.hc.TDCcheckbox.setChecked(self.TDCcheckbox.isChecked())
         self.hc.Acheckbox.setChecked(self.Acheckbox.isChecked())
-        self.hc.dlo_dhiBox.setText(self.dlo_dhiBox.text())
-        self.hc.calBinBox.setText(self.binSizeBox.text())
+        self.hc.dlo_dhiBox.setValue(self.dlo_dhiBox.value())
+        self.hc.calBinBox.setValue(self.binSizeBox.value())
         self.hc.autoListOfLines.setText(self.autoListOfLines.toPlainText())
 
         #hc.setWindowModality(self, QtCore.Qt.ApplicationModal)
@@ -166,6 +164,7 @@ class MainWindow(QtWidgets.QWidget):
         self.hc.exec()
         self.calibrationGroup.setEnabled(True)
         self.get_data_from_channel(data)
+
 
     def get_data_from_channel(self, data): #grabs calibration info from the single channel cal window
         self.setChannum()
@@ -177,16 +176,16 @@ class MainWindow(QtWidgets.QWidget):
         self.artistMarkersDict = self.hc.artistMarkersDict
         self.markerIndex = self.hc.markerIndex
         self.linesNames = self.hc.linesNames
-        self.autoFWHM = float(self.hc.autoFWHMBox.text())
-        self.maxacc = float(self.hc.autoMaxAccBox.text())
+        self.autoFWHM = self.hc.autoFWHMBox.value()
+        self.maxacc = self.hc.autoMaxAccBox.value()
         self.PCcheckbox.setChecked(self.hc.PCcheckbox.isChecked())
         self.DCcheckbox.setChecked(self.hc.DCcheckbox.isChecked())
         self.TDCcheckbox.setChecked(self.hc.TDCcheckbox.isChecked())
         self.Acheckbox.setChecked(self.hc.Acheckbox.isChecked())
-        self.dlo_dhiBox.setText(self.hc.dlo_dhiBox.text())
-        self.binSizeBox.setText(self.hc.calBinBox.text())
-        self.autoFWHMBox.setText(self.hc.autoFWHMBox.text())
-        self.autoMaxAccBox.setText(self.hc.autoMaxAccBox.text())
+        self.dlo_dhiBox.setValue(self.hc.dlo_dhiBox.value())
+        self.binSizeBox.setValue(self.hc.calBinBox.value())
+        self.autoFWHMBox.setValue(self.hc.autoFWHMBox.value())
+        self.autoMaxAccBox.setValue(self.hc.autoMaxAccBox.value())
         self.clear_table()
         self.importTableRows()
         self.importAutoList()
@@ -206,25 +205,28 @@ class MainWindow(QtWidgets.QWidget):
 
     def initCal(self):
         #self.data = self.data_no_cal
-
-        self.data = ChannelGroup(self.filenames, verbose=True)
-        self.set_std_dev_threshold()
-        self.data.learnResidualStdDevCut()
-        self.ds = self.data[self.channum]
-        self.ds.calibrationPlanInit("filtValue")
-        for (states, fv, line, energy) in self.cal_info: 
-            # # log.debug(f"states {states}, fv {fv}, line {line}, energy {energy}")
-            #print(states.split(","))
-            if line != 'Manual Energy': #in mass.spectra.keys() and not energy:
-                self.ds.calibrationPlanAddPoint(float(fv), line, states=states.split(","))
-            elif energy:# and not line in mass.spectra.keys():  
-                self.ds.calibrationPlanAddPoint(float(fv), energy, states=states.split(","), energy=float(energy))
-            # elif line in mass.spectra.keys() and energy:
-            #     self.ds.calibrationPlanAddPoint(float(fv), line, states=states.split(","), energy=float(energy))
+        try:
+            self.data = ChannelGroup(self.filenames, verbose=True)
+            self.set_std_dev_threshold()
+            self.data.learnResidualStdDevCut()
+            self.ds = self.data[self.channum]
+            self.ds.calibrationPlanInit("filtValue")
+        
+            for (states, fv, line, energy) in self.cal_info: 
+                # # log.debug(f"states {states}, fv {fv}, line {line}, energy {energy}")
+                if line != 'Manual Energy':
+                    self.ds.calibrationPlanAddPoint(float(fv), line, states=states.split(","))
+                elif energy:
+                    self.ds.calibrationPlanAddPoint(float(fv), energy, states=states.split(","), energy=float(energy))
+                # elif line in mass.spectra.keys() and energy:
+                #     self.ds.calibrationPlanAddPoint(float(fv), line, states=states.split(","), energy=float(energy))
+        except Exception as exc:
+            print("Failed to align to reference channel!")
+            print(traceback.format_exc())
+            return
         self.data.referenceDs = self.ds
         # log.debug(f"{ds.calibrationPlan}")
         self.plotsGroup.setEnabled(True) 
-        #self.lineFitComboBox.setEnabled(True)
 
     def getcalTableRows(self):
         rows = []
@@ -248,7 +250,7 @@ class MainWindow(QtWidgets.QWidget):
         self.markerIndex = 0
         self.linesNames = None
         self.clear_table()
-        self.data = ChannelGroup(self.filenames, verbose=True)
+        self.data = ChannelGroup(self.filenames, verbose=True) #marks channels good, removes recipes
 
     def get_line_names(self):
         if self.self.HCIonCheckbox.isChecked()==True:       #optional import of highly charged ions to the dropdown. Does not work now.

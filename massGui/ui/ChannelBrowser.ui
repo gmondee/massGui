@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1010</width>
+    <width>1029</width>
     <height>1000</height>
    </rect>
   </property>
@@ -106,26 +106,6 @@
                <enum>QFrame::Raised</enum>
               </property>
               <layout class="QGridLayout" name="gridLayout_3">
-               <item row="0" column="0">
-                <widget class="QLabel" name="label">
-                 <property name="minimumSize">
-                  <size>
-                   <width>0</width>
-                   <height>0</height>
-                  </size>
-                 </property>
-                 <property name="text">
-                  <string>Channel:</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="1">
-                <widget class="QComboBox" name="channelBox">
-                 <property name="currentText">
-                  <string/>
-                 </property>
-                </widget>
-               </item>
                <item row="0" column="2">
                 <widget class="QFrame" name="frame_6">
                  <property name="maximumSize">
@@ -149,12 +129,15 @@
                    </widget>
                   </item>
                   <item>
-                   <widget class="QLineEdit" name="eRangeLow">
-                    <property name="enabled">
-                     <bool>false</bool>
+                   <widget class="QDoubleSpinBox" name="eRangeLow">
+                    <property name="buttonSymbols">
+                     <enum>QAbstractSpinBox::NoButtons</enum>
                     </property>
-                    <property name="inputMethodHints">
-                     <set>Qt::ImhDigitsOnly</set>
+                    <property name="decimals">
+                     <number>2</number>
+                    </property>
+                    <property name="maximum">
+                     <double>10000000.000000000000000</double>
                     </property>
                    </widget>
                   </item>
@@ -166,13 +149,39 @@
                    </widget>
                   </item>
                   <item>
-                   <widget class="QLineEdit" name="eRangeHi">
-                    <property name="inputMethodHints">
-                     <set>Qt::ImhDigitsOnly</set>
+                   <widget class="QDoubleSpinBox" name="eRangeHi">
+                    <property name="buttonSymbols">
+                     <enum>QAbstractSpinBox::NoButtons</enum>
+                    </property>
+                    <property name="decimals">
+                     <number>2</number>
+                    </property>
+                    <property name="maximum">
+                     <double>10000000.000000000000000</double>
                     </property>
                    </widget>
                   </item>
                  </layout>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QComboBox" name="channelBox">
+                 <property name="currentText">
+                  <string/>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="0">
+                <widget class="QLabel" name="label">
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string>Channel:</string>
+                 </property>
                 </widget>
                </item>
               </layout>
@@ -209,9 +218,15 @@
                 </widget>
                </item>
                <item row="0" column="1">
-                <widget class="QLineEdit" name="binSizeBox">
-                 <property name="inputMethodHints">
-                  <set>Qt::ImhDigitsOnly|Qt::ImhPreferNumbers</set>
+                <widget class="QDoubleSpinBox" name="binSizeBox">
+                 <property name="buttonSymbols">
+                  <enum>QAbstractSpinBox::NoButtons</enum>
+                 </property>
+                 <property name="decimals">
+                  <number>2</number>
+                 </property>
+                 <property name="maximum">
+                  <double>10000000.000000000000000</double>
                  </property>
                 </widget>
                </item>
@@ -294,6 +309,32 @@
                   <enum>QFrame::Raised</enum>
                  </property>
                  <layout class="QGridLayout" name="gridLayout">
+                  <item row="0" column="2">
+                   <widget class="QDoubleSpinBox" name="dlo_dhiBox">
+                    <property name="buttonSymbols">
+                     <enum>QAbstractSpinBox::NoButtons</enum>
+                    </property>
+                    <property name="decimals">
+                     <number>2</number>
+                    </property>
+                    <property name="maximum">
+                     <double>10000000.000000000000000</double>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="2">
+                   <widget class="QDoubleSpinBox" name="calBinBox">
+                    <property name="buttonSymbols">
+                     <enum>QAbstractSpinBox::NoButtons</enum>
+                    </property>
+                    <property name="decimals">
+                     <number>2</number>
+                    </property>
+                    <property name="maximum">
+                     <double>10000000.000000000000000</double>
+                    </property>
+                   </widget>
+                  </item>
                   <item row="0" column="0">
                    <widget class="QLabel" name="label_8">
                     <property name="text">
@@ -305,26 +346,6 @@
                    <widget class="QLabel" name="label_9">
                     <property name="text">
                      <string>Bin Size (eV)</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="0" column="2">
-                   <widget class="QLineEdit" name="dlo_dhiBox">
-                    <property name="inputMethodHints">
-                     <set>Qt::ImhPreferNumbers</set>
-                    </property>
-                    <property name="text">
-                     <string>100</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="1" column="2">
-                   <widget class="QLineEdit" name="calBinBox">
-                    <property name="inputMethodHints">
-                     <set>Qt::ImhPreferNumbers</set>
-                    </property>
-                    <property name="text">
-                     <string>1</string>
                     </property>
                    </widget>
                   </item>
@@ -476,13 +497,6 @@
                            </property>
                           </widget>
                          </item>
-                         <item row="0" column="1">
-                          <widget class="QLineEdit" name="autoFWHMBox">
-                           <property name="text">
-                            <string>25</string>
-                           </property>
-                          </widget>
-                         </item>
                          <item row="1" column="0">
                           <widget class="QLabel" name="label_10">
                            <property name="text">
@@ -491,9 +505,34 @@
                           </widget>
                          </item>
                          <item row="1" column="1">
-                          <widget class="QLineEdit" name="autoMaxAccBox">
-                           <property name="text">
-                            <string>0.015</string>
+                          <widget class="QDoubleSpinBox" name="autoMaxAccBox">
+                           <property name="buttonSymbols">
+                            <enum>QAbstractSpinBox::NoButtons</enum>
+                           </property>
+                           <property name="decimals">
+                            <number>4</number>
+                           </property>
+                           <property name="maximum">
+                            <double>10000000.000000000000000</double>
+                           </property>
+                           <property name="value">
+                            <double>0.015000000000000</double>
+                           </property>
+                          </widget>
+                         </item>
+                         <item row="0" column="1">
+                          <widget class="QDoubleSpinBox" name="autoFWHMBox">
+                           <property name="buttonSymbols">
+                            <enum>QAbstractSpinBox::NoButtons</enum>
+                           </property>
+                           <property name="decimals">
+                            <number>2</number>
+                           </property>
+                           <property name="maximum">
+                            <double>10000000.000000000000000</double>
+                           </property>
+                           <property name="value">
+                            <double>25.000000000000000</double>
                            </property>
                           </widget>
                          </item>

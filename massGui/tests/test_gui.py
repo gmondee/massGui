@@ -26,6 +26,7 @@ def app(qtbot):
 def test_open(app):
     assert app.selectFileButton.text()=="Select .OFF File"
 
+@pytest.mark.timeout(5)
 def test_cal(app, qtbot):
     logging.basicConfig(filename='testLog.txt',
                         filemode='a',
@@ -44,16 +45,6 @@ def test_cal(app, qtbot):
         hc = app._selected_window#QtWidgets.QApplication.activeWindow()#app.hc
         qtbot.addWidget(hc)
         assert isinstance(hc, massGui.massless.HistCalibrator) #exists but not clicking on it
-        #QtGui.QMouseEvent(QtCore.QEvent)
-        #qtbot.mouseClick(hc.histHistViewer.canvas, QtCore.Qt.MouseButton.LeftButton, pos=QtCore.QPoint(379, 225))
-        #qtbot.mouseClick(hc, QtCore.Qt.MouseButton.LeftButton, pos=QtCore.QPoint(411, 106))
-        #QtTest.QTest.mouseClick(hc.histHistViewer, QtCore.Qt.MouseButton.LeftButton ,pos=QtCore.QPoint(379, 225))
-        
-        #qtbot.keyClicks(hc.table.item(0,2), "AlKAlpha")
-        #assert hc.table.item(0, 0).text() == "D"
-        #assert 1 == 0
-        #qtbot.keyClicks(hc.table.item(0,2), "SiKAlpha")
-
         mock_cal(hc)
         #qtbot.mouseClick(hc.closeButton, QtCore.Qt.MouseButton.LeftButton)
         hc.reject()

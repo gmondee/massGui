@@ -75,18 +75,18 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
         for channel in self.data.keys():
             self.channelBox.addItem("{}".format(channel))
         self.channelBox.setCurrentText(str(channum))
-        self.eRangeLow.insert(str(0))
-        self.eRangeHi.insert(str(20000))
-        self.binSizeBox.insert(str(50))
+        self.eRangeLow.setValue(0)
+        self.eRangeHi.setValue(20000)
+        self.binSizeBox.setValue(50)
         self.histHistViewer.setParams(self, data, channum, attr, state_labels, colors, self.binSize, statesConfig=statesConfig)
         if autoFWHM == None:
-            self.autoFWHMBox.setText('25')
+            self.autoFWHMBox.setValue(25)
         else:
-            self.autoFWHMBox.setText(str(autoFWHM))
+            self.autoFWHMBox.setValue(autoFWHM)
         if maxacc == None:
-            self.autoMaxAccBox.setText('0.015')
+            self.autoMaxAccBox.setValue(0.015)
         else:
-            self.autoMaxAccBox.setText(str(maxacc))
+            self.autoMaxAccBox.setValue(maxacc)
         self.importMarkers()
         self.importList()
 
@@ -95,9 +95,9 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
         self.histHistViewer.plotted.connect(self.handle_plotted)
         self.histHistViewer.markered.connect(self.handle_markered)
         self.channelBox.currentTextChanged.connect(self.updateChild)
-        self.eRangeLow.textChanged.connect(self.updateChild)
-        self.eRangeHi.textChanged.connect(self.updateChild)
-        self.binSizeBox.textChanged.connect(self.updateChild)
+        self.eRangeLow.valueChanged.connect(self.updateChild)
+        self.eRangeHi.valueChanged.connect(self.updateChild)
+        self.binSizeBox.valueChanged.connect(self.updateChild)
 
         self.diagCalButton.clicked.connect(self.diagnoseCalibration)
         self.autocalButton.clicked.connect(self.autoCalibration)
@@ -153,9 +153,6 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
 
 
     def clear_table(self):
-        # for i in range(self.table.columnCount()):
-        #     for j in range(self.table.rowCount()):
-        #         self.table.setHorizontalHeaderItem(j, QtWidgets.QTableWidgetItem())
         self.table.setRowCount(0)
         self.markerIndex = 0
         self.markersDict = {}
@@ -265,18 +262,18 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
         return self.channum
     
     def getBins(self):
-        if self.eRangeLow.displayText() != '':
-            self.histHistViewer.binLo = float(self.eRangeLow.displayText())
+        if self.eRangeLow.value() != 0:
+            self.histHistViewer.binLo = self.eRangeLow.value()
         else:
             self.histHistViewer.binLo = 0
 
-        if self.eRangeHi.displayText() != '':
-            self.histHistViewer.binHi = float(self.eRangeHi.displayText())
+        if self.eRangeHi.value() != 0:
+            self.histHistViewer.binHi = self.eRangeHi.value()
         else:
             self.histHistViewer.binHi = 20000
 
-        if self.binSizeBox.displayText() != '':
-            self.histHistViewer.binSize = float(self.binSizeBox.displayText())
+        if self.binSizeBox.value() != 0:
+            self.histHistViewer.binSize = self.binSizeBox.value()
         else:
             self.histHistViewer.binSize = 50
 
@@ -289,13 +286,13 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
         colors, states_list = self.histHistViewer.statesGrid.get_colors_and_states_list()
         states_list = states_list[0] 
         try:
-            autoFWHM = float(self.autoFWHMBox.text())
+            autoFWHM = self.autoFWHMBox.value()
         except:
             print("failed to get autoFWHM")
             return
 
         try:
-            maxacc = float(self.autoMaxAccBox.text())
+            maxacc = self.autoMaxAccBox.value()
         except:
             print("failed to get Max Acc")  
             return 
@@ -331,43 +328,52 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
                     self.highestFV = max(self.highestFV, float(fv))
                 except:
                     self.highestFV = None
-                if line != 'Manual Energy':#in mass.spectra.keys() and not energy:
-                    self.ds.calibrationPlanAddPoint(float(fv), line, states=states.split(","))
-                elif energy:# and not line in mass.spectra.keys():  
-                    self.ds.calibrationPlanAddPoint(float(fv), energy, states=states.split(","), energy=float(energy))
-                # elif line in mass.spectra.keys() and energy:
-                #     ds.calibrationPlanAddPoint(float(fv), line, states=states.split(","), energy=float(energy))
+                try:
+                    if line != 'Manual Energy':#in mass.spectra.keys() and not energy:
+                        self.ds.calibrationPlanAddPoint(float(fv), line, states=states.split(","))
+                    elif energy:# and not line in mass.spectra.keys():  
+                        self.ds.calibrationPlanAddPoint(float(fv), energy, states=states.split(","), energy=float(energy))
+                    # elif line in mass.spectra.keys() and energy:
+                    #     ds.calibrationPlanAddPoint(float(fv), line, states=states.split(","), energy=float(energy))
+                except Exception as exc:
+                    print(f"Failed to add {line} to calibration plan!")
+                    print(traceback.format_exc())
+                    return
 
 
-        dlo_dhi = float(self.dlo_dhiBox.text())/2.
-        binsize=float(self.calBinBox.text())
+        dlo_dhi = float(self.dlo_dhiBox.value()/2.)
+        binsize=float(self.calBinBox.value())
         
-        #self.data.cutAdd("cutForLearnDC", lambda energyRough: np.logical_and(energyRough > 0, energyRough < 10000), setDefault=False) #ideally, user can set the bounds
-        #self.ds.alignToReferenceChannel(referenceChannel=self.ds, binEdges=np.arange(float(self.eRangeLow.text()),float(self.eRangeHi.text()),binsize), attr="filtValue", states=self.ds.stateLabels)
-        self.newestName = "filtValue"
-        if self.PCcheckbox.isChecked():
-            uncorr = self.newestName
-            self.newestName+="PC"
-            self.ds.learnPhaseCorrection(indicatorName="filtPhase", uncorrectedName=uncorr, correctedName = self.newestName, states=self.ds.stateLabels, overwriteRecipe=True)
+        try:
+            #self.data.cutAdd("cutForLearnDC", lambda energyRough: np.logical_and(energyRough > 0, energyRough < 10000), setDefault=False) #ideally, user can set the bounds
+            #self.ds.alignToReferenceChannel(referenceChannel=self.ds, binEdges=np.arange(float(self.eRangeLow.text()),float(self.eRangeHi.text()),binsize), attr="filtValue", states=self.ds.stateLabels)
+            self.newestName = "filtValue"
+            if self.PCcheckbox.isChecked():
+                uncorr = self.newestName
+                self.newestName+="PC"
+                self.ds.learnPhaseCorrection(indicatorName="filtPhase", uncorrectedName=uncorr, correctedName = self.newestName, states=self.ds.stateLabels, overwriteRecipe=True)
 
-        if self.DCcheckbox.isChecked():
-            uncorr = self.newestName
-            self.newestName+="DC"
-            self.ds.learnDriftCorrection(indicatorName="pretriggerMean", uncorrectedName=uncorr, correctedName = self.newestName, states=self.ds.stateLabels, overwriteRecipe=True)#, cutRecipeName="cutForLearnDC")
+            if self.DCcheckbox.isChecked():
+                uncorr = self.newestName
+                self.newestName+="DC"
+                self.ds.learnDriftCorrection(indicatorName="pretriggerMean", uncorrectedName=uncorr, correctedName = self.newestName, states=self.ds.stateLabels, overwriteRecipe=True)#, cutRecipeName="cutForLearnDC")
 
-        if self.TDCcheckbox.isChecked():
-            uncorr = self.newestName
-            self.newestName+="TC"
-            self.ds.learnTimeDriftCorrection(indicatorName="relTimeSec", uncorrectedName=uncorr, correctedName = self.newestName, states=self.ds.stateLabels, overwriteRecipe=True)#,cutRecipeName="cutForLearnDC", _rethrow=True) 
-        self.ds.calibrateFollowingPlan(self.newestName, dlo=dlo_dhi,dhi=dlo_dhi, binsize=binsize, overwriteRecipe=True, approximate=self.Acheckbox.isChecked())
-        print(f'Calibrated channel {self.ds.channum}')
-        self.parent.calibratedChannels = set([self.ds.channum])
+            if self.TDCcheckbox.isChecked():
+                uncorr = self.newestName
+                self.newestName+="TC"
+                self.ds.learnTimeDriftCorrection(indicatorName="relTimeSec", uncorrectedName=uncorr, correctedName = self.newestName, states=self.ds.stateLabels, overwriteRecipe=True)#,cutRecipeName="cutForLearnDC", _rethrow=True) 
+            self.ds.calibrateFollowingPlan(self.newestName, dlo=dlo_dhi,dhi=dlo_dhi, binsize=binsize, overwriteRecipe=True, approximate=self.Acheckbox.isChecked())
+            print(f'Calibrated channel {self.ds.channum}')
+            self.parent.calibratedChannels = set([self.ds.channum])
 
-        #self.ds.calibrateFollowingPlan("filtValue", dlo=50,dhi=50, binsize=1, overwriteRecipe=True)
-        self.plotter = diagnoseViewer(self)
-        self.plotter.setParams(self.parent, self.data, self.ds.channum, highestFV = self.highestFV)
-        self.plotter.frame.setEnabled(False)
-        self.plotter.exec()
+            #self.ds.calibrateFollowingPlan("filtValue", dlo=50,dhi=50, binsize=1, overwriteRecipe=True)
+            self.plotter = diagnoseViewer(self)
+            self.plotter.setParams(self.parent, self.data, self.ds.channum, highestFV = self.highestFV)
+            self.plotter.frame.setEnabled(False)
+            self.plotter.exec()
+        except Exception as exc:
+            print("Failed to diagnose calibration!")
+            print(traceback.format_exc())
 
         
 
@@ -728,13 +734,13 @@ class HistPlotter(QtWidgets.QDialog):   #general-purpose histogram plotter. feat
         else:
             self.pHistViewer.plotAllChans = False
         #crashes if the range boxes are empty. Use default values instead to avoid crash.
-        if self.eRangeLow.displayText() != '':
-            self.pHistViewer.binLo = float(self.eRangeLow.displayText())
+        if self.eRangeLow.text() != '':
+            self.pHistViewer.binLo = float(self.eRangeLow.text())
         else:
             self.pHistViewer.binLo = 0.
 
-        if self.eRangeHi.displayText() != '':
-            self.pHistViewer.binHi = float(self.eRangeHi.displayText())
+        if self.eRangeHi.text() != '':
+            self.pHistViewer.binHi = float(self.eRangeHi.text())
         else:
             self.pHistViewer.binHi = 20000.
         ##energy range updating
@@ -789,10 +795,10 @@ class diagnoseViewer(QtWidgets.QDialog):    #displays the plots from the Mass di
         self.canvas.fig.clear()
         try:
             try:
-                binEdges=np.arange(0, self.highestFV*1.5, 4)
+                filtValuePlotBinEdges=np.arange(0, self.highestFV*1.5, 4)
             except:
-                binEdges=None
-            ds.diagnoseCalibration(binEdges = binEdges,fig=plt.get_fignums()[-1])
+                filtValuePlotBinEdges=np.arange(0, 16000.0*1.5, 4)
+            ds.diagnoseCalibration(filtValuePlotBinEdges = filtValuePlotBinEdges, fig=plt.get_fignums()[-1])
         except Exception as exc:
             print("Failed to diagnose calibration!")
             print(traceback.format_exc())
@@ -905,13 +911,13 @@ class rtpViewer(QtWidgets.QDialog): #window that hosts the real-time plotting ro
         self.rtpline.append([])                     #stores every line that is plotted according to the updateIndex
 
     def getEnergyBounds(self):
-        if self.eRangeLow.displayText() != '':
-            binLo = float(self.eRangeLow.displayText())
+        if self.eRangeLow.text() != '':
+            binLo = float(self.eRangeLow.text())
         else:
             binLo = 0.
 
-        if self.eRangeHi.displayText() != '':
-            binHi = float(self.eRangeHi.displayText())
+        if self.eRangeHi.text() != '':
+            binHi = float(self.eRangeHi.text())
         else:
             binHi = 20000.
         return binLo, binHi
@@ -1424,27 +1430,27 @@ class ExternalTriggerSetup(QtWidgets.QDialog):
             self.zoomPlot = ZoomPlotExternalTrigger(parent = self.parent, channels=channels, states=states, mins=mins, maxes=maxes, resolution=resolution, basename=self.basename, good_only=self.goodIndsCheckBox.isChecked())
         
     def getBins(self):
-        if self.eRangeLo.displayText() != '':
-            elo = float(self.eRangeLo.displayText())
+        if self.eRangeLo.text() != '':
+            elo = float(self.eRangeLo.text())
         else:
             elo = 0.0
-        if self.eRangeHi.displayText() != '':
-            ehi = float(self.eRangeHi.displayText())
+        if self.eRangeHi.text() != '':
+            ehi = float(self.eRangeHi.text())
         else:
             ehi = 10000.0
 
-        if self.tRangeLo.displayText() != '':
-            tlo = float(self.tRangeLo.displayText())
+        if self.tRangeLo.text() != '':
+            tlo = float(self.tRangeLo.text())
         else:
             tlo = 0.0
 
-        if self.tRangeHi.displayText() != '':
-            thi = float(self.tRangeHi.displayText())
+        if self.tRangeHi.text() != '':
+            thi = float(self.tRangeHi.text())
         else:
             thi = 3.0
 
-        if self.resBox.displayText() != '':
-            resolution = int(self.resBox.displayText())
+        if self.resBox.text() != '':
+            resolution = int(self.resBox.text())
         else:
             resolution = 500.
         
