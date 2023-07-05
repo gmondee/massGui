@@ -38,6 +38,15 @@ MPL_DEFAULT_COLORS = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728',
 
 DEFAULT_LINES = list(mass.spectra.keys())
 
+def show_popup(parent, text, traceback=None):
+        msg = QtWidgets.QMessageBox(text=text, parent=parent)
+        msg.setWindowTitle("Error")
+        msg.setIcon(QtWidgets.QMessageBox.Icon.Warning)
+        if traceback is not None:
+            msg.setDetailedText(traceback)
+        msg.resize(300,200)
+        ret = msg.exec()
+
 class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable canvas for manual line ID
     def __init__(self, parent=None):
         super(HistCalibrator, self).__init__(parent)
@@ -163,6 +172,7 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
         self.clear_table()
 
     def handle_markered(self, x, states, marker, i, artist_markers):
+        
         n = self.table.rowCount()
         try: 
             self.table.disconnect()
@@ -262,20 +272,17 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
         return self.channum
     
     def getBins(self):
-        if self.eRangeLow.value() != 0:
-            self.histHistViewer.binLo = self.eRangeLow.value()
-        else:
-            self.histHistViewer.binLo = 0
-
-        if self.eRangeHi.value() != 0:
-            self.histHistViewer.binHi = self.eRangeHi.value()
-        else:
-            self.histHistViewer.binHi = 20000
-
         if self.binSizeBox.value() != 0:
             self.histHistViewer.binSize = self.binSizeBox.value()
         else:
             self.histHistViewer.binSize = 50
+        self.histHistViewer.binLo = self.eRangeLow.value()
+
+
+        if self.eRangeHi.value() > self.histHistViewer.binLo+self.histHistViewer.binSize:
+            self.histHistViewer.binHi = self.eRangeHi.value()
+        else:
+            self.histHistViewer.binHi = self.histHistViewer.binLo+self.histHistViewer.binSize*2.0
 
     def updateChild(self):
         self.histHistViewer.channum = self.getChannum()
@@ -285,27 +292,19 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
         self.linesNames = [item.text() for item in self.linesList.selectedItems()]
         colors, states_list = self.histHistViewer.statesGrid.get_colors_and_states_list()
         states_list = states_list[0] 
-        try:
-            autoFWHM = self.autoFWHMBox.value()
-        except:
-            print("failed to get autoFWHM")
-            return
-
-        try:
-            maxacc = self.autoMaxAccBox.value()
-        except:
-            print("failed to get Max Acc")  
-            return 
-
+        autoFWHM = float(self.autoFWHMBox.value())
+        maxacc = float(self.autoMaxAccBox.value())
         try:
             self.ds = self.data[int(self.getChannum())]
             #print(self.linesNames)
             names, filtValues = self.ds.learnCalibrationPlanFromEnergiesAndPeaks('filtValue', states=states_list, ph_fwhm=autoFWHM, line_names=self.linesNames, maxacc=maxacc)
             #todo: import the cal stuff into the table.
+            self.highestFV=max(filtValues)
             self.diagnoseCalibration(auto=True)
         except Exception as exc:
             print("Failed to autocalibrate!")
             print(traceback.format_exc())
+            show_popup(self, "Failed to autocalibrate!", traceback=traceback.format_exc())
 
 
     def diagnoseCalibration(self, auto=False):
@@ -338,6 +337,7 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
                 except Exception as exc:
                     print(f"Failed to add {line} to calibration plan!")
                     print(traceback.format_exc())
+                    show_popup(self, f"Failed to add {line} to calibration plan!", traceback=traceback.format_exc())
                     return
 
 
@@ -374,6 +374,7 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
         except Exception as exc:
             print("Failed to diagnose calibration!")
             print(traceback.format_exc())
+            show_popup(self, "Failed to diagnose calibration!", traceback=traceback.format_exc())
 
         
 
@@ -799,6 +800,7 @@ class diagnoseViewer(QtWidgets.QDialog):    #displays the plots from the Mass di
         except Exception as exc:
             print("Failed to diagnose calibration!")
             print(traceback.format_exc())
+            show_popup(self, "Failed to diagnose calibration!", traceback=traceback.format_exc())
 
 
 class rtpViewer(QtWidgets.QDialog): #window that hosts the real-time plotting routine.
@@ -932,9 +934,8 @@ class rtpViewer(QtWidgets.QDialog): #window that hosts the real-time plotting ro
             self.oldStates = States
         except:
             States = self.oldStates
-            print("except", States)
+            print("No states checked, using last set of valid states:", States)
 
-                                  #temporary storage of data points
         self.rtpline.append([])                     #stores every line that is plotted according to the updateIndex
         self.dataToPlot = self.getDataToPlot()
         #print(f"Length of channel 1: {len(self.parent.data[1].offFile._mmap)}")
@@ -1101,10 +1102,12 @@ class AvsBSetup(QtWidgets.QDialog): #for plotAvsB and plotAvsB2D functions. Allo
                 except:
                     print(f"Could not automatically set bound for {B}")
             else:
+                    show_popup(self, f"attribute {B} doesn't exist for this channel")
                     print(f"attribute {B} doesn't exist for this channel")
                     return
         else:
             print(f"attribute {A} doesn't exist for this channel")
+            show_popup(self, f"attribute {A} doesn't exist for this channel")
             return
         
 
@@ -1220,7 +1223,7 @@ class linefitSetup(QtWidgets.QDialog):  #handles linefit function call. lets use
             self.oldStates = states
         except:
             print("No states selected in Line Fit window.")
-            #states='A'
+            show_popup(self, "No states selected in Line Fit window.")
             return 0
         line = self.lineBox.currentText()
         has_linear_background = self.lbCheckbox.isChecked()
@@ -1325,7 +1328,7 @@ class qualityCheckLinefitSetup(QtWidgets.QDialog):  #handles linefit function ca
             self.oldStates = states
         except:
             print("No states selected in Quality Check Line Fit window.")
-            #states='A'
+            show_popup(self,"No states selected in Line Fit window.")
             return 0
         line = self.lineBox.currentText()
 
@@ -1359,6 +1362,7 @@ class qualityCheckLinefitSetup(QtWidgets.QDialog):  #handles linefit function ca
         except Exception as exc:
             print("Failed quality check line fit!")
             print(traceback.format_exc())
+            show_popup(self, "Failed quality check line fit!", traceback=traceback.format_exc())
         finally:
             for channel in self.parent.goodChannels:
                 self.data[channel].markGood()

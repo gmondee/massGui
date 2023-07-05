@@ -33,18 +33,14 @@ def ds_learnCalibrationPlanFromEnergiesAndPeaks(self, attr, states, ph_fwhm, lin
     return _name_e, opt_assignments
 mass.off.Channel.learnCalibrationPlanFromEnergiesAndPeaks = ds_learnCalibrationPlanFromEnergiesAndPeaks
 
-# def main():
-#     app = qt.QApplication([])
-#     label = qt.QLabel("Hello")
-#     label.show()
-
-#     #button.clicked.connect(on_button_clicked)
-#     #os.path.join(os.path.dirname(__file__), ... )
-
-#     #def selectFile():
-#     #   lineEdit.setText(QFileDialog.getOpenFileName())
-
-#     app.exec_()
+def show_popup(parent, text, traceback=None):
+        msg = QtWidgets.QMessageBox(text=text, parent=parent)
+        msg.setWindowTitle("Error")
+        msg.setIcon(QtWidgets.QMessageBox.Icon.Warning)
+        if traceback is not None:
+            msg.setDetailedText(traceback)
+        msg.resize(300,200) #doesn't work?
+        ret = msg.exec()
 
 class MainWindow(QtWidgets.QWidget):
     def __init__(self):
@@ -220,6 +216,7 @@ class MainWindow(QtWidgets.QWidget):
                 # elif line in mass.spectra.keys() and energy:
                 #     self.ds.calibrationPlanAddPoint(float(fv), line, states=states.split(","), energy=float(energy))
         except Exception as exc:
+            show_popup(self, "Failed to align to reference channel!", traceback=traceback.format_exc())
             print("Failed to align to reference channel!")
             print(traceback.format_exc())
             return
@@ -345,16 +342,10 @@ class MainWindow(QtWidgets.QWidget):
                     self.ds.learnTimeDriftCorrection(indicatorName="relTimeSec", uncorrectedName=uncorr, correctedName = self.newestName, states=self.ds.stateLabels, overwriteRecipe=True)#,cutRecipeName="cutForLearnDC", _rethrow=True) 
                 self.ds.calibrateFollowingPlan(self.newestName, dlo=dlo_dhi,dhi=dlo_dhi, binsize=binsize, overwriteRecipe=True, approximate=self.Acheckbox.isChecked())
                 print(f'Calibrated channel {self.ds.channum}')
-            except:
+            except Exception as exc:
+                show_popup(self, "Failed single channel calibration!", traceback=traceback.format_exc())
                 print('exception in singleChannelCalibration')
-
-
-
-        # self.plotter = HistPlotter(self) 
-        # self.plotter.setParams(self.data, self.ds.channum, "energy", self.ds.stateLabels, binSize=binsize)
-        # self.plotter.channelBox.setEnabled(False)
-        # self.plotter.exec()
-
+                print(traceback.format_exc())
 
     def allChannelCalibration(self):
         dlo_dhi = self.getDloDhi()
@@ -365,6 +356,7 @@ class MainWindow(QtWidgets.QWidget):
         except Exception as exc:
             print("Failed to align to reference channel!")
             print(traceback.format_exc())
+            show_popup(self, "Failed to align to reference channel!", traceback=traceback.format_exc())
             return
         self.newestName = "filtValue"
         try:
@@ -386,6 +378,7 @@ class MainWindow(QtWidgets.QWidget):
         except Exception as exc:
             print("exception in all channel calibration")
             print(traceback.format_exc())
+            show_popup(self, "Failed all-channel calibration!", traceback=traceback.format_exc())
             pass
         
         try:
@@ -393,6 +386,7 @@ class MainWindow(QtWidgets.QWidget):
         except Exception as exc:
             print("Failed to calibrate following plan!")
             print(traceback.format_exc())
+            show_popup(self, "Failed to calibrate following plan!", traceback=traceback.format_exc())
             return
 
         self.saveCalButton.setEnabled(True)
@@ -405,13 +399,13 @@ class MainWindow(QtWidgets.QWidget):
         states = self.launch_channel_states[0]
         linesNames = self.linesNames # self.autoListOfLines.toPlainText()
         try:
-            autoFWHM = float(self.autoFWHMBox.text())
+            autoFWHM = float(self.autoFWHMBox.value())
         except:
             print("failed to get autoFWHM")
             return
 
         try:
-            maxacc = float(self.autoMaxAccBox.text())
+            maxacc = float(self.autoMaxAccBox.value())
         except:
             print("failed to get Max Acc")  
             return 
@@ -428,8 +422,10 @@ class MainWindow(QtWidgets.QWidget):
             self.ds.learnCalibrationPlanFromEnergiesAndPeaks('filtValue', states=states, ph_fwhm=autoFWHM, line_names=linesNames, maxacc=maxacc)
             self.data.alignToReferenceChannel(referenceChannel=self.ds, binEdges=np.arange(0,35000,10), attr="filtValue", states=self.ds.stateLabels)
             self.newestName = "filtValue"
-        except:
+        except Exception as exc:
+            print(traceback.format_exc())
             print("failed to learn autocal")
+            show_popup(self, "Failed automatic calibration!", traceback.format_exc())
             return
         try:
             if self.PCcheckbox.isChecked():
@@ -450,6 +446,7 @@ class MainWindow(QtWidgets.QWidget):
         except Exception as exc:
             print("exception in all channel calibration")
             print(traceback.format_exc())
+            show_popup(self, "Exception in all-channel calibration", traceback.format_exc())
             pass
 
         try:
@@ -457,6 +454,7 @@ class MainWindow(QtWidgets.QWidget):
         except Exception as exc:
             print("Failed to calibrate following plan!")
             print(traceback.format_exc())
+            show_popup(self, "Failed to calibrate following plan!", traceback.format_exc())
             return
         self.saveCalButton.setEnabled(True)
         self.qualityButton.setEnabled(True)
@@ -548,7 +546,11 @@ class MainWindow(QtWidgets.QWidget):
         self.qcsetup.show()  
           
     def readNewFilesAndStates(self):
-        self.data.refreshFromFiles()
+        try:
+            self.data.refreshFromFiles()
+        except:
+            self.data.markAllGood() #if all channels somehow get marked bad, refresh will fail
+            self.data.refreshFromFiles()
 
     def save_to_hdf5(self, name=None):
         with  h5py.File('saves.h5', 'a') as hf:
