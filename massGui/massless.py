@@ -709,40 +709,37 @@ class HistPlotter(QtWidgets.QDialog):   #general-purpose histogram plotter. feat
         for channum in self.parent.calibratedChannels:#.data.keys():
             self.channelBox.addItem("{}".format(channum))
         self.channelBox.setCurrentText(str(self.channum))
-        self.eRangeLow.insert(str(0))
-        self.eRangeHi.insert(str(20000))
+        self.eRangeLow.setValue(0)
+        self.eRangeHi.setValue(10000)
         self.pHistViewer.setParams(self, data, int(self.channum), attr, state_labels, colors,binSize=self.binsize, clickable=False)
+        self.updateChild()
+        self.pHistViewer.handle_plot()
 
 
     def connect(self):
         self.channelBox.currentTextChanged.connect(self.updateChild)
-        self.eRangeLow.textChanged.connect(self.updateChild)
-        self.eRangeHi.textChanged.connect(self.updateChild)
+        self.eRangeLow.valueChanged.connect(self.updateChild)
+        self.eRangeHi.valueChanged.connect(self.updateChild)
 
     def getChannum(self):
         self.channum = self.channelBox.currentText()
         return self.channum
     
     def updateChild(self): #send channum and bins to the pHistViewer
-        # if arg == 'chan':
-        #     self.pHistViewer.channum=self.getChannum()
-        # if arg == 'checkbox':
-        #     self.pHistViewer.plotAllChans = (not self.pHistViewer.plotAllChans)
         self.pHistViewer.channum=self.getChannum()
         if self.channum == 'All':
             self.pHistViewer.plotAllChans = True
         else:
             self.pHistViewer.plotAllChans = False
-        #crashes if the range boxes are empty. Use default values instead to avoid crash.
-        if self.eRangeLow.text() != '':
-            self.pHistViewer.binLo = float(self.eRangeLow.text())
+        if self.eRangeLow.value() >= 0.0:
+            self.pHistViewer.binLo = self.eRangeLow.value()
         else:
-            self.pHistViewer.binLo = 0.
+            self.pHistViewer.binLo = 0.0
 
-        if self.eRangeHi.text() != '':
-            self.pHistViewer.binHi = float(self.eRangeHi.text())
+        if self.eRangeHi.value() > self.binsize:
+            self.pHistViewer.binHi = self.eRangeHi.value()
         else:
-            self.pHistViewer.binHi = 20000.
+            self.pHistViewer.binHi = 2*self.binsize #minimum of 2 bins needed
         ##energy range updating
 
 
@@ -808,7 +805,6 @@ class rtpViewer(QtWidgets.QDialog): #window that hosts the real-time plotting ro
     def __init__(self, parent=None):
         super(rtpViewer, self).__init__(parent)
         QtWidgets.QDialog.__init__(self)
-        plt.ion()
     def setParams(self, parent):
         self.colors =MPL_DEFAULT_COLORS[1]
         
@@ -821,7 +817,7 @@ class rtpViewer(QtWidgets.QDialog): #window that hosts the real-time plotting ro
 
     def build(self):
         PyQt6.uic.loadUi(os.path.join(os.path.dirname(__file__), "ui/realtimeviewer.ui"), self)
-        self.RTPdelay = self.intervalBox.text() 
+        self.RTPdelay = self.intervalBox.value() 
         self.statesGrid.setParams(state_labels=self.parent.ds.stateLabels, colors=MPL_DEFAULT_COLORS[:1], one_state_per_line=False)
         self.statesGrid.fill_simple()
         if len(self.parent.calibratedChannels)==len(self.parent.data.keys()):
@@ -829,8 +825,8 @@ class rtpViewer(QtWidgets.QDialog): #window that hosts the real-time plotting ro
         for channum in self.parent.calibratedChannels:#.data.keys():
             self.channelBox.addItem("{}".format(channum))
         self.channelBox.setCurrentIndex(0)
-        self.eRangeLow.insert(str(0))
-        self.eRangeHi.insert(str(20000))
+        self.eRangeLow.setValue(0)
+        self.eRangeHi.setValue(10000)
         self.initRTP()
 
     def connect(self):
@@ -861,7 +857,7 @@ class rtpViewer(QtWidgets.QDialog): #window that hosts the real-time plotting ro
         self.canvas.fig.clear()
         self.energyAxis = self.canvas.fig.add_subplot(111)
         self.energyAxis.grid()
-        
+        self.canvas.fig.set_tight_layout(True)
         self.energyAxis.set_title('Real-time energy')
         self.energyAxis.set_xlabel('Energy (eV)')
         self.energyAxis.set_ylabel('Counts per'+str(self.parent.binSize)+'eV bin')
@@ -903,7 +899,7 @@ class rtpViewer(QtWidgets.QDialog): #window that hosts the real-time plotting ro
         self.canvas.fig.clear()
         self.energyAxis = self.canvas.fig.add_subplot(111)
         self.energyAxis.grid()
-        
+        self.canvas.fig.set_tight_layout(True)
         self.energyAxis.set_title('Real-time energy')
         self.energyAxis.set_xlabel('Energy (eV)')
         self.energyAxis.set_ylabel('Counts per '+str(self.parent.getBinsizeCal())+'eV bin')
@@ -911,22 +907,19 @@ class rtpViewer(QtWidgets.QDialog): #window that hosts the real-time plotting ro
         self.rtpline.append([])                     #stores every line that is plotted according to the updateIndex
 
     def getEnergyBounds(self):
-        if self.eRangeLow.text() != '':
-            binLo = float(self.eRangeLow.text())
-        else:
-            binLo = 0.
+        binLo = self.eRangeLow.value()
 
-        if self.eRangeHi.text() != '':
-            binHi = float(self.eRangeHi.text())
+        if self.eRangeHi.value() > binLo:
+            binHi = self.eRangeHi.value()
         else:
-            binHi = 20000.
+            binHi = 10000.
         return binLo, binHi
 
     def UpdatePlots(self):  #real-time plotting routine. refreshes data, adjust alphas, and replots graphs
         print(f"iteration {self.updateIndex}")
         
          
-        self.updateFreq_ms = int(self.intervalBox.text())*1000             #in ms after the multiplication
+        self.updateFreq_ms = self.intervalBox.value()*1000             #in ms after the multiplication
         self.timer.start(self.updateFreq_ms)
 
         self.updateFilesAndStates()
@@ -1028,7 +1021,7 @@ class AvsBSetup(QtWidgets.QDialog): #for plotAvsB and plotAvsB2D functions. Allo
         for B in self.AvsBDict:
             self.Bbox.addItem("{}".format(B))
         eIndx = self.Bbox.findText("energy")
-        if eIndx == -1:
+        if eIndx == -1: #if "energy" isn't found in the list of attrs
             self.Bbox.setCurrentIndex(1)
         else:
             self.Bbox.setCurrentIndex(eIndx)  
@@ -1066,13 +1059,13 @@ class AvsBSetup(QtWidgets.QDialog): #for plotAvsB and plotAvsB2D functions. Allo
                     if self.mode == "1D":
                         channel.plotAvsB(A, B, axis=None, states=states)
                     if self.mode == "2D":
-                        Ahi = float(self.aRangeHi.text())
-                        Alo = float(self.aRangeLo.text())
+                        Ahi = self.aRangeHi.value()
+                        Alo = self.aRangeLo.value()
                         
-                        Bhi = float(self.bRangeHi.text())
-                        Blo = float(self.bRangeLo.text())
+                        Bhi = self.bRangeHi.value()
+                        Blo = self.bRangeLo.value()
 
-                        res = int(self.binsBox.text())#500
+                        res = int(self.binsBox.value())
                         self.zoomPlot = ZoomPlotAvsB(channel, states, A, B, mins = [Alo, Blo], maxes=[Ahi, Bhi], resolution = res)
                     
                 else:
@@ -1095,16 +1088,16 @@ class AvsBSetup(QtWidgets.QDialog): #for plotAvsB and plotAvsB2D functions. Allo
                 ... #get some value near the upper percentile of each attr to suggest
                 try:
                     Abound = np.percentile(channel.getAttr(A, self.states_list), 95) #get the value of the record at the 95th percentile (95th meaning close to the maximum)
-                    self.aRangeHi.setText("{:.3f}".format(Abound))
+                    self.aRangeHi.setValue(Abound)
                     Abound = np.percentile(channel.getAttr(A, self.states_list), 5) #get the value of the record at the 5th percentile (5th meaning close to the minimum)
-                    self.aRangeLo.setText("{:.3f}".format(Abound))
+                    self.aRangeLo.setValue(Abound)
                 except:
                     print(f"Could not automatically set bound for {A}")
                 try:
                     Bbound = np.percentile(channel.getAttr(B, self.states_list), 95) #todo: get .A and .B into meaningful attrs
-                    self.bRangeHi.setText("{:.3f}".format(Bbound))
+                    self.bRangeHi.setValue(Bbound)
                     Bbound = np.percentile(channel.getAttr(B, self.states_list), 5) #get the value of the record at the 5th percentile (5th meaning close to the minimum)
-                    self.bRangeLo.setText("{:.3f}".format(Bbound))
+                    self.bRangeLo.setValue(Bbound)
                 except:
                     print(f"Could not automatically set bound for {B}")
             else:
@@ -1233,21 +1226,21 @@ class linefitSetup(QtWidgets.QDialog):  #handles linefit function call. lets use
         has_linear_background = self.lbCheckbox.isChecked()
         has_tails = self.tailCheckbox.isChecked()
 
-        dlo = self.dlo.text()
-        if dlo != '': #not empty
-            dlo = abs(float(self.dlo.text()))
+        dlo = self.dlo.value()
+        if dlo != 0: #not zero
+            dlo = abs(self.dlo.value())
         else:
             dlo = 15
 
-        dhi = self.dhi.text()
-        if dhi != '': #not empty
-            dhi = abs(float(self.dhi.text()))
+        dhi = self.dhi.value()
+        if dhi != 0: #not empty
+            dhi = abs(self.dhi.value())
         else:
             dhi = 15
 
-        binsize = self.binSizeBox.text()
-        if binsize != '':
-            binsize = float(self.binSizeBox.text())
+        binsize = self.binSizeBox.value()
+        if binsize > 0:
+            binsize = abs(self.binSizeBox.value())
         else:
             binsize = 1.0
 
@@ -1336,32 +1329,21 @@ class qualityCheckLinefitSetup(QtWidgets.QDialog):  #handles linefit function ca
             return 0
         line = self.lineBox.currentText()
 
-        dlo = self.dlo.text()
-        dhi = self.dhi.text()
-        binsize = self.binSizeBox.text()
-        fwhm = self.fwhmBox.text()
-
-        paramsList = [dlo, dhi, binsize, fwhm]
-        for i, param in enumerate(paramsList):
-            if param != '': #if param has been filled
-                paramsList[i] = abs(float(param))
-            else:
-                paramsList[i] = None
-        dlo, dhi, binsize, fwhm = paramsList      
+        dlo = self.dlo.value()
+        dhi = self.dhi.value()
+        binsize = self.binSizeBox.value()
+        if binsize == 0:
+            print("Bin size must be larger than zero.")
+            return
+        fwhm = self.fwhmBox.value()     
 
         if self.radioSigma.isChecked():
-            if self.sigmaBox.text() != '':
-                sigma = abs(float(self.sigmaBox.text()))
-            else:
-                sigma = None
+            sigma = self.sigmaBox.value()
         else:
             sigma = None
         
         if self.radioAbsolute.isChecked():
-            if self.absoluteBox.text() != '':
-                absolute = abs(float(self.absoluteBox.text()))
-            else:
-                absolute = None
+            absolute = self.absoluteBox.value()
         else:
             absolute = None
 
@@ -1370,11 +1352,16 @@ class qualityCheckLinefitSetup(QtWidgets.QDialog):  #handles linefit function ca
         if dhi == None:
             dhi = 50
 
-        self.data.qualityCheckLinefit(line, sigma, fwhm, absolute, 'energy', states, dlo, dhi, binsize, binEdges=None,
-                            guessParams=None, cutRecipeName=None, holdvals=None, resolutionPlot=True, hdf5Group=None,
-                            _rethrow=False)
-        for channel in self.parent.goodChannels:
-            self.data[channel].markGood()
+        try:
+            self.data.qualityCheckLinefit(line, sigma, fwhm, absolute, 'energy', states, dlo, dhi, binsize, binEdges=None,
+                                guessParams=None, cutRecipeName=None, holdvals=None, resolutionPlot=True, hdf5Group=None,
+                                _rethrow=False)
+        except Exception as exc:
+            print("Failed quality check line fit!")
+            print(traceback.format_exc())
+        finally:
+            for channel in self.parent.goodChannels:
+                self.data[channel].markGood()
         
     def closeEvent(self, event):
         for channel in self.parent.goodChannels:

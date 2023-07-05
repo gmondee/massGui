@@ -99,7 +99,17 @@
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="eRangeLow"/>
+       <widget class="QDoubleSpinBox" name="eRangeLow">
+        <property name="buttonSymbols">
+         <enum>QAbstractSpinBox::NoButtons</enum>
+        </property>
+        <property name="decimals">
+         <number>2</number>
+        </property>
+        <property name="maximum">
+         <double>10000000.000000000000000</double>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="QLabel" name="label_4">
@@ -109,7 +119,17 @@
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="eRangeHi"/>
+       <widget class="QDoubleSpinBox" name="eRangeHi">
+        <property name="buttonSymbols">
+         <enum>QAbstractSpinBox::NoButtons</enum>
+        </property>
+        <property name="decimals">
+         <number>2</number>
+        </property>
+        <property name="maximum">
+         <double>10000000.000000000000000</double>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="QLabel" name="label_5">
@@ -126,12 +146,18 @@
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="intervalBox">
-        <property name="inputMethodHints">
-         <set>Qt::ImhPreferNumbers</set>
+       <widget class="QDoubleSpinBox" name="intervalBox">
+        <property name="buttonSymbols">
+         <enum>QAbstractSpinBox::NoButtons</enum>
         </property>
-        <property name="text">
-         <string>15</string>
+        <property name="decimals">
+         <number>2</number>
+        </property>
+        <property name="maximum">
+         <double>10000000.000000000000000</double>
+        </property>
+        <property name="value">
+         <double>15.000000000000000</double>
         </property>
        </widget>
       </item>

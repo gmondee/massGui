@@ -16,7 +16,6 @@ import progress
 import traceback
 from mass.calibration import algorithms
 
-
 import mass
 from mass.off import ChannelGroup, Channel, getOffFileListFromOneFile
 
@@ -536,9 +535,9 @@ class MainWindow(QtWidgets.QWidget):
         self.lfsetup = linefitSetup(self) 
         lines = list(mass.spectra.keys())
         self.lfsetup.setParams(self, lines, states_list=self.ds.stateLabels, channels=self.data.keys(), data=self.data)
-        self.lfsetup.dlo.setText(str(self.getDloDhi()))
-        self.lfsetup.dhi.setText(str(self.getDloDhi()))
-        self.lfsetup.binSizeBox.setText(str(self.getBinsizeCal()))
+        self.lfsetup.dlo.setValue(self.getDloDhi())
+        self.lfsetup.dhi.setValue(self.getDloDhi())
+        self.lfsetup.binSizeBox.setValue(self.getBinsizeCal())
         self.lfsetup.show()
 
     def startQualityCheck(self):

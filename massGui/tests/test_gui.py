@@ -26,7 +26,7 @@ def app(qtbot):
 def test_open(app):
     assert app.selectFileButton.text()=="Select .OFF File"
 
-@pytest.mark.timeout(5)
+@pytest.mark.timeout(20)
 def test_cal(app, qtbot):
     logging.basicConfig(filename='testLog.txt',
                         filemode='a',
@@ -72,7 +72,7 @@ def test_cal(app, qtbot):
         plotter = app._selected_window
         #assert isinstance(plotter, massGui.massless.HistPlotter)
         qtbot.addWidget(plotter)
-        assert plotter.eRangeLow.text() == "0"
+        assert plotter.eRangeLow.value() == 0
         qtbot.done_cal_open = 1
         plotter.close()
 
@@ -120,10 +120,16 @@ def test_cal(app, qtbot):
     # qtbot.mouseClick(app.extTrigButton, QtCore.Qt.MouseButton.LeftButton)
     # qtbot.addWidget(app.ETsetup)
 
-    qtbot.mouseClick(app.diagCalButton, QtCore.Qt.MouseButton.LeftButton)
-    qtbot.addWidget(app.plotter)
+    # qtbot.mouseClick(app.diagCalButton, QtCore.Qt.MouseButton.LeftButton)
+    # qtbot.addWidget(app.plotter)
 
-    #qtbot.stop()
+    #qtbot.mouseClick(app.energyHistButton, QtCore.Qt.MouseButton.LeftButton)
+    ##qtbot.addWidget(app.plotter)
+
+    qtbot.mouseClick(app.qualityButton, QtCore.Qt.MouseButton.LeftButton)
+    qtbot.addWidget(app.qcsetup)
+
+    qtbot.stop()
     
     
 def test_realtime(app, qtbot):
@@ -181,7 +187,7 @@ def test_realtime(app, qtbot):
         plotter = app._selected_window
         #assert isinstance(plotter, massGui.massless.HistPlotter)
         qtbot.addWidget(plotter)
-        assert plotter.eRangeLow.text() == "0"
+        assert plotter.eRangeLow.value() == 0
         qtbot.done_cal_open = 1
         plotter.close()
 

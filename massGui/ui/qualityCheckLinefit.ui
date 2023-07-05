@@ -57,7 +57,17 @@
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="sigmaBox"/>
+       <widget class="QDoubleSpinBox" name="sigmaBox">
+        <property name="buttonSymbols">
+         <enum>QAbstractSpinBox::NoButtons</enum>
+        </property>
+        <property name="decimals">
+         <number>2</number>
+        </property>
+        <property name="maximum">
+         <double>10000000.000000000000000</double>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="QRadioButton" name="radioAbsolute">
@@ -74,9 +84,15 @@
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="absoluteBox">
-        <property name="text">
-         <string/>
+       <widget class="QDoubleSpinBox" name="absoluteBox">
+        <property name="buttonSymbols">
+         <enum>QAbstractSpinBox::NoButtons</enum>
+        </property>
+        <property name="decimals">
+         <number>2</number>
+        </property>
+        <property name="maximum">
+         <double>10000000.000000000000000</double>
         </property>
        </widget>
       </item>
@@ -94,12 +110,18 @@
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="binSizeBox">
-        <property name="inputMethodHints">
-         <set>Qt::ImhPreferNumbers</set>
+       <widget class="QDoubleSpinBox" name="binSizeBox">
+        <property name="buttonSymbols">
+         <enum>QAbstractSpinBox::NoButtons</enum>
         </property>
-        <property name="text">
-         <string/>
+        <property name="decimals">
+         <number>2</number>
+        </property>
+        <property name="maximum">
+         <double>10000000.000000000000000</double>
+        </property>
+        <property name="value">
+         <double>1.000000000000000</double>
         </property>
        </widget>
       </item>
@@ -111,12 +133,18 @@
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="dlo">
-        <property name="inputMethodHints">
-         <set>Qt::ImhDigitsOnly|Qt::ImhFormattedNumbersOnly|Qt::ImhPreferNumbers</set>
+       <widget class="QDoubleSpinBox" name="dlo">
+        <property name="buttonSymbols">
+         <enum>QAbstractSpinBox::NoButtons</enum>
         </property>
-        <property name="text">
-         <string>50</string>
+        <property name="decimals">
+         <number>2</number>
+        </property>
+        <property name="maximum">
+         <double>10000000.000000000000000</double>
+        </property>
+        <property name="value">
+         <double>50.000000000000000</double>
         </property>
        </widget>
       </item>
@@ -128,12 +156,18 @@
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="dhi">
-        <property name="inputMethodHints">
-         <set>Qt::ImhDigitsOnly|Qt::ImhFormattedNumbersOnly|Qt::ImhPreferNumbers</set>
+       <widget class="QDoubleSpinBox" name="dhi">
+        <property name="buttonSymbols">
+         <enum>QAbstractSpinBox::NoButtons</enum>
         </property>
-        <property name="text">
-         <string>50</string>
+        <property name="decimals">
+         <number>2</number>
+        </property>
+        <property name="maximum">
+         <double>10000000.000000000000000</double>
+        </property>
+        <property name="value">
+         <double>50.000000000000000</double>
         </property>
        </widget>
       </item>
@@ -145,7 +179,17 @@
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="fwhmBox"/>
+       <widget class="QDoubleSpinBox" name="fwhmBox">
+        <property name="buttonSymbols">
+         <enum>QAbstractSpinBox::NoButtons</enum>
+        </property>
+        <property name="decimals">
+         <number>2</number>
+        </property>
+        <property name="maximum">
+         <double>10000000.000000000000000</double>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>

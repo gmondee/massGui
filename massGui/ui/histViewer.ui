@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>300</height>
+    <height>631</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -83,17 +83,37 @@
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="eRangeLow"/>
+       <widget class="QDoubleSpinBox" name="eRangeLow">
+        <property name="buttonSymbols">
+         <enum>QAbstractSpinBox::NoButtons</enum>
+        </property>
+        <property name="decimals">
+         <number>2</number>
+        </property>
+        <property name="maximum">
+         <double>10000000.000000000000000</double>
+        </property>
+       </widget>
       </item>
       <item>
-       <widget class="QLabel" name="label_3">
+       <widget class="QLabel" name="label_5">
         <property name="text">
          <string>to</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="eRangeHi"/>
+       <widget class="QDoubleSpinBox" name="eRangeHi">
+        <property name="buttonSymbols">
+         <enum>QAbstractSpinBox::NoButtons</enum>
+        </property>
+        <property name="decimals">
+         <number>2</number>
+        </property>
+        <property name="maximum">
+         <double>10000000.000000000000000</double>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="QLabel" name="label_4">

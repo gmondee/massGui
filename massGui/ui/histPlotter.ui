@@ -72,23 +72,35 @@
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="eRangeLow">
-        <property name="inputMethodHints">
-         <set>Qt::ImhDigitsOnly</set>
+       <widget class="QDoubleSpinBox" name="eRangeLow">
+        <property name="buttonSymbols">
+         <enum>QAbstractSpinBox::NoButtons</enum>
+        </property>
+        <property name="decimals">
+         <number>2</number>
+        </property>
+        <property name="maximum">
+         <double>10000000.000000000000000</double>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QLabel" name="label_3">
+       <widget class="QLabel" name="label_5">
         <property name="text">
          <string>to</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="eRangeHi">
-        <property name="inputMethodHints">
-         <set>Qt::ImhDigitsOnly</set>
+       <widget class="QDoubleSpinBox" name="eRangeHi">
+        <property name="buttonSymbols">
+         <enum>QAbstractSpinBox::NoButtons</enum>
+        </property>
+        <property name="decimals">
+         <number>2</number>
+        </property>
+        <property name="maximum">
+         <double>10000000.000000000000000</double>
         </property>
        </widget>
       </item>
