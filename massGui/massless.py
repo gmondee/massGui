@@ -384,15 +384,12 @@ class HistViewer(QtWidgets.QWidget): #widget for hist calibrator and others. plo
     plotted = QtCore.pyqtSignal()
     markered = QtCore.pyqtSignal(float, list, object, object, object)
     def __init__(self, parent, s=None, attr=None, state_labels=None, colors=None):
-        QtWidgets.QWidget.__init__(self, parent)#, s, attr, state_labels, colors)
-        #super(HistViewer, self).__init__(parent)
+        QtWidgets.QWidget.__init__(self, parent)
         super(HistViewer, self).__init__(parent)
  
         # PyQt6.uic.loadUi(os.path.join(os.path.dirname(__file__), "ui/channel.ui"), self) 
 
     def setParams(self, parent, data, channum, attr, state_labels, colors, binSize, clickable=True, binLo=None, binHi=None, statesConfig=None):
-        # QtWidgets.QWidget.__init__(self, parent)#, s, attr, state_labels, colors)
-        #super(HistViewer, self).__init__(parent)
         log.debug(f"set params for histviewer")
         self.parent = parent
         self.plotAllChans = False #used to switch between self.plot and self.plotAll
@@ -419,19 +416,9 @@ class HistViewer(QtWidgets.QWidget): #widget for hist calibrator and others. plo
             self.statesGrid.fill(statesConfig)
         self.handle_plot()
         
-    # def importMarkers(self, artistmarkers):
-    #     self.artistMarkersDict = artistmarkers    #self.artistMarkersDict[str(n)]=[artist_markers, i, marker, artist]
-    #     self.markersDict = self.parent.markersDict
-    #     for i in self.artistMarkersDict:
-            
-    #         am = self.artistMarkersDict[str(i)] 
-    #         self.markersDict[str(i)]=am[2]
-    #         print("323",self.markersDict)
-    #         self.add_marker(am[3], am[1], emit=False) 
-        
     def build(self, state_labels, colors):
         layout = QtWidgets.QVBoxLayout()
-        self.canvas = MplCanvas()
+        self.canvas = MplCanvas()   ### this line makes an extra plot
         self.statesGrid = StatesGrid(self)
         self.statesGrid.setParams(state_labels, colors)
         self.plotButton = QtWidgets.QPushButton("Plot/Reset", self)
@@ -490,7 +477,7 @@ class HistViewer(QtWidgets.QWidget): #widget for hist calibrator and others. plo
             self.line2states[line] = states_list[i]
         self.parent.photonCountBox.setText(str(self.photonCount))
         self.canvas.legend([",".join(states) for states in states_list])
-        # plt.tight_layout()
+        plt.tight_layout()
         self.canvas.draw()
         self.canvas.mpl_connect('pick_event', self.mpl_click_event)
         self.plotted.emit()
@@ -994,7 +981,6 @@ class AvsBSetup(QtWidgets.QDialog): #for plotAvsB and plotAvsB2D functions. Allo
     def __init__(self, parent=None):
         super(AvsBSetup, self).__init__(parent)
         QtWidgets.QDialog.__init__(self)
-        plt.ion()
     def setParams(self, parent, AvsBDict, states_list, channels, data, mode):
         self.colors = MPL_DEFAULT_COLORS[0]
         self.parent = parent
@@ -1059,6 +1045,8 @@ class AvsBSetup(QtWidgets.QDialog): #for plotAvsB and plotAvsB2D functions. Allo
 
                     if self.mode == "1D":
                         channel.plotAvsB(A, B, axis=None, states=states)
+                        [plt.close(f) for f in plt.get_fignums() if f != plt.get_fignums()[-1]]
+                        plt.show()
                     if self.mode == "2D":
                         Ahi = self.aRangeHi.value()
                         Alo = self.aRangeLo.value()
@@ -1139,6 +1127,10 @@ class ZoomPlotAvsB(): #only works for 2D plots.
         self.plot_fixed_resolution(self.xmin, self.xmax,
                                    self.ymin, self.ymax)
         plt.colorbar()
+        print(f'before {len(plt.get_fignums())}')
+        [plt.close(f) for f in plt.get_fignums() if f != plt.get_fignums()[-1]]
+        plt.show()
+        print(f'after {len(plt.get_fignums())}')
 
     def home_callback(self):    #plot the original bounds
         self.plot_fixed_resolution(self.mins[0], self.maxes[0],
@@ -1179,7 +1171,6 @@ class linefitSetup(QtWidgets.QDialog):  #handles linefit function call. lets use
     def __init__(self, parent=None):
         super(linefitSetup, self).__init__(parent)
         QtWidgets.QDialog.__init__(self)
-        plt.ion()
     def setParams(self, parent, lines, states_list, channels, data):
         self.colors = MPL_DEFAULT_COLORS[0]
         self.parent = parent
@@ -1251,8 +1242,12 @@ class linefitSetup(QtWidgets.QDialog):  #handles linefit function call. lets use
             dataToPlot=self.data
         else:
             dataToPlot = self.data[int(self.channelBox.currentText())]
-        dataToPlot.linefit(lineNameOrEnergy=line, attr="energy", states=states, has_linear_background=has_linear_background, 
+        result = dataToPlot.linefit(lineNameOrEnergy=line, attr="energy", states=states, has_linear_background=has_linear_background, 
                            has_tails=has_tails, dlo=dlo, dhi=dhi, binsize=binsize)
+        print(f'before {len(plt.get_fignums())}')
+        [plt.close(f) for f in plt.get_fignums() if f != plt.get_fignums()[-1]]
+        plt.show()
+        print(f'after {len(plt.get_fignums())}')
 
 
 
@@ -1260,7 +1255,6 @@ class hdf5Opener(QtWidgets.QDialog): #dialog with a combobox which lists all of 
     def __init__(self, parent=None):
         super(hdf5Opener, self).__init__(parent)
         QtWidgets.QDialog.__init__(self)
-        plt.ion()
     def setParams(self, parent):
         self.parent = parent
         self.build()
@@ -1359,6 +1353,8 @@ class qualityCheckLinefitSetup(QtWidgets.QDialog):  #handles linefit function ca
             self.data.qualityCheckLinefit(line, sigma, fwhm, absolute, 'energy', states, dlo, dhi, binsize, binEdges=None,
                                 guessParams=None, cutRecipeName=None, holdvals=None, resolutionPlot=True, hdf5Group=None,
                                 _rethrow=False)
+            [plt.close(f) for f in plt.get_fignums() if f != plt.get_fignums()[-1]]
+            plt.show()
         except Exception as exc:
             print("Failed quality check line fit!")
             print(traceback.format_exc())
@@ -1376,7 +1372,6 @@ class ExternalTriggerSetup(QtWidgets.QDialog):
     def __init__(self, parent=None):
         super(ExternalTriggerSetup, self).__init__(parent)
         QtWidgets.QDialog.__init__(self)
-        plt.ion()
     def setParams(self, parent, states_list, channels, data, basename):
         self.colors = MPL_DEFAULT_COLORS[0]
         self.parent = parent
@@ -1498,7 +1493,7 @@ class ZoomPlotExternalTrigger(): #only works for external trigger plots.
         self.timer = QTimer()       #timer is used to loop the real-time plotting updates  
         #self.timer.setSingleShot(True)
         self.timer.timeout.connect(self.updatePlots)
-        self.updateFreq_ms = int(15)*1000             #in ms after the multiplication
+        self.updateFreq_ms = int(30)*1000             #in ms after the multiplication
         self.timer.start(self.updateFreq_ms)
         self.fig.canvas.mpl_connect('close_event', self.on_close)
 
@@ -1536,6 +1531,9 @@ class ZoomPlotExternalTrigger(): #only works for external trigger plots.
             plt.figure(self.fig)
             #print(f'{seconds_after_external_triggers.shape=}, {energies.shape=}')
             plt.hist2d(seconds_after_external_triggers, energies, bins=(ts, es))
+
+            [plt.close(f) for f in plt.get_fignums() if f != plt.get_fignums()[-1]]
+            plt.show()
 
     def plot_fixed_resolution(self, x1, x2, y1, y2):
         x = np.linspace(x1, x2, num=self.resolution) #todo: can't use arange because lengths aren't the same
