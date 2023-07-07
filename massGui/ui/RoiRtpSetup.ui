@@ -6,107 +6,82 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>569</width>
-    <height>389</height>
+    <width>609</width>
+    <height>380</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="1" column="1">
-    <widget class="QFrame" name="frame_3">
+   <item row="2" column="0">
+    <widget class="QFrame" name="frame_5">
      <property name="frameShape">
       <enum>QFrame::StyledPanel</enum>
      </property>
      <property name="frameShadow">
       <enum>QFrame::Raised</enum>
      </property>
-     <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <layout class="QVBoxLayout" name="verticalLayout">
       <item>
-       <widget class="QLabel" name="label_4">
-        <property name="text">
-         <string>Update Interval (sec)</string>
+       <widget class="QTableWidget" name="table">
+        <property name="minimumSize">
+         <size>
+          <width>200</width>
+          <height>100</height>
+         </size>
         </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLineEdit" name="intervalBox">
-        <property name="inputMethodHints">
-         <set>Qt::ImhPreferNumbers</set>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>999999</height>
+         </size>
         </property>
-        <property name="text">
-         <string>15</string>
-        </property>
+        <column>
+         <property name="text">
+          <string>ROI Name</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Line</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Energy (eV)</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Width (eV)</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Delete</string>
+         </property>
+        </column>
        </widget>
       </item>
      </layout>
     </widget>
    </item>
-   <item row="3" column="0" colspan="2">
+   <item row="6" column="0" colspan="2">
+    <widget class="QPushButton" name="startRTPButton">
+     <property name="text">
+      <string>Start RTP on Regions of Interest</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="0" colspan="2">
     <widget class="StatesGrid" name="statesGrid" native="true">
      <property name="autoFillBackground">
       <bool>false</bool>
      </property>
     </widget>
    </item>
-   <item row="0" column="0" colspan="2">
-    <widget class="QFrame" name="frame">
-     <property name="frameShape">
-      <enum>QFrame::StyledPanel</enum>
-     </property>
-     <property name="frameShadow">
-      <enum>QFrame::Raised</enum>
-     </property>
-     <layout class="QHBoxLayout" name="horizontalLayout_2">
-      <item>
-       <widget class="QLabel" name="label">
-        <property name="text">
-         <string>Region of interest:</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QComboBox" name="linesBox">
-        <item>
-         <property name="text">
-          <string>AlKAlpha</string>
-         </property>
-        </item>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="label_2">
-        <property name="text">
-         <string>or</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLineEdit" name="energyBox">
-        <property name="placeholderText">
-         <string>Energy (eV)</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLineEdit" name="widthBox">
-        <property name="placeholderText">
-         <string>Width of Region (eV)</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="addButton">
-        <property name="text">
-         <string>Add</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item row="2" column="0" colspan="2">
+   <item row="3" column="0" colspan="2">
     <widget class="QFrame" name="frame_2">
      <property name="enabled">
       <bool>true</bool>
@@ -138,55 +113,119 @@
         </property>
        </widget>
       </item>
+      <item>
+       <widget class="QLabel" name="label_4">
+        <property name="text">
+         <string>Rolling Average Interval (sec)</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QDoubleSpinBox" name="intervalBox">
+        <property name="buttonSymbols">
+         <enum>QAbstractSpinBox::NoButtons</enum>
+        </property>
+        <property name="decimals">
+         <number>2</number>
+        </property>
+        <property name="maximum">
+         <double>9999999.990000000223517</double>
+        </property>
+        <property name="value">
+         <double>120.000000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_7">
+        <property name="text">
+         <string>Samples in Each Interval</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QSpinBox" name="chunksBox">
+        <property name="buttonSymbols">
+         <enum>QAbstractSpinBox::NoButtons</enum>
+        </property>
+        <property name="maximum">
+         <number>100000</number>
+        </property>
+        <property name="value">
+         <number>5</number>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="0" column="0" colspan="2">
+    <widget class="QFrame" name="frame">
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <item>
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>Create region of interest:    Line</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QComboBox" name="linesBox"/>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_5">
+        <property name="text">
+         <string>or Energy (eV):</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QDoubleSpinBox" name="energyBox">
+        <property name="buttonSymbols">
+         <enum>QAbstractSpinBox::NoButtons</enum>
+        </property>
+        <property name="maximum">
+         <double>999999999999999.000000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>Region Width (eV)</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QDoubleSpinBox" name="widthBox">
+        <property name="buttonSymbols">
+         <enum>QAbstractSpinBox::NoButtons</enum>
+        </property>
+        <property name="maximum">
+         <double>999999999999999.000000000000000</double>
+        </property>
+        <property name="value">
+         <double>50.000000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="addButton">
+        <property name="text">
+         <string>Add</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
    </item>
    <item row="5" column="0" colspan="2">
-    <widget class="QPushButton" name="pushButton_2">
-     <property name="text">
-      <string>Start RTP on Regions of Interest</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="0">
-    <widget class="QTableWidget" name="RoiTable">
-     <property name="enabled">
-      <bool>true</bool>
-     </property>
-     <property name="inputMethodHints">
-      <set>Qt::ImhPreferNumbers</set>
-     </property>
-     <property name="alternatingRowColors">
-      <bool>false</bool>
-     </property>
-     <row>
-      <property name="text">
-       <string>ROI 1</string>
-      </property>
-     </row>
-     <column>
-      <property name="text">
-       <string>Line Energy (eV)</string>
-      </property>
-     </column>
-     <column>
-      <property name="text">
-       <string>Width (eV)</string>
-      </property>
-     </column>
-     <item row="0" column="0">
-      <property name="text">
-       <string>1240</string>
-      </property>
-     </item>
-     <item row="0" column="1">
-      <property name="text">
-       <string>40</string>
-      </property>
-     </item>
-    </widget>
-   </item>
-   <item row="4" column="0" colspan="2">
     <widget class="QFrame" name="frame_4">
      <property name="frameShape">
       <enum>QFrame::StyledPanel</enum>

@@ -646,19 +646,6 @@ p, li { white-space: pre-wrap; }
          <property name="bottomMargin">
           <number>2</number>
          </property>
-         <item row="2" column="1">
-          <widget class="QPushButton" name="extTrigButton">
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>22</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>External Trigger</string>
-           </property>
-          </widget>
-         </item>
          <item row="0" column="4">
           <widget class="QPushButton" name="AvsBbutton">
            <property name="minimumSize">
@@ -669,32 +656,6 @@ p, li { white-space: pre-wrap; }
            </property>
            <property name="text">
             <string>AvsB Viewer</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="2">
-          <widget class="QPushButton" name="ptmButton">
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>22</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>Pretrigger Mean</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="2">
-          <widget class="QPushButton" name="startRTPButton">
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>22</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>Start Real-time Plotting</string>
            </property>
           </widget>
          </item>
@@ -737,7 +698,7 @@ p, li { white-space: pre-wrap; }
            </property>
           </widget>
          </item>
-         <item row="1" column="1">
+         <item row="1" column="2">
           <widget class="QPushButton" name="linefitButton">
            <property name="minimumSize">
             <size>
@@ -750,7 +711,20 @@ p, li { white-space: pre-wrap; }
            </property>
           </widget>
          </item>
-         <item row="2" column="4">
+         <item row="1" column="1">
+          <widget class="QPushButton" name="startRTPButton">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>22</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Start Real-Time Plotting</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="2">
           <widget class="QPushButton" name="qualityButton">
            <property name="minimumSize">
             <size>
@@ -760,6 +734,45 @@ p, li { white-space: pre-wrap; }
            </property>
            <property name="text">
             <string>Quality Check Line Fit</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QPushButton" name="startROIRTPButton">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>22</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Start Real-Time Regions of Interest</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="5">
+          <widget class="QPushButton" name="extTrigButton">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>22</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>External Trigger</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="5">
+          <widget class="QPushButton" name="ptmButton">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>22</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Pretrigger Mean</string>
            </property>
           </widget>
          </item>

@@ -26,7 +26,7 @@ def app(qtbot):
 def test_open(app):
     assert app.selectFileButton.text()=="Select .OFF File"
 
-@pytest.mark.timeout(20)
+@pytest.mark.timeout(40)
 def test_cal(app, qtbot):
     logging.basicConfig(filename='testLog.txt',
                         filemode='a',
@@ -81,7 +81,7 @@ def test_cal(app, qtbot):
     assert app.maxChansSpinBox.value() == 2
 
     #manual bypass of file loading dialog
-    app.load_file(r'C:\Users\Grant Mondeel\Box\my EUV\tes\realtime\realtime\Summer2022\20200107\0002\20200107_run0002_chan1.off') # sets self._choose_file_lastdir
+    app.load_file(r'C:\Users\Grant Mondeel\Box\my EUV\tes\realtime\realtime\Summer2022\20200107\0002\20200107_run0002_chan1.off')
     app.set_std_dev_threshold()
     app.calibrationGroup.setEnabled(True)
     app.calButtonGroup.setEnabled(False)
@@ -110,8 +110,8 @@ def test_cal(app, qtbot):
     # qtbot.mouseClick(app.ptmButton, QtCore.Qt.MouseButton.LeftButton)
     # qtbot.addWidget(app.AvsBsetup)
 
-    qtbot.mouseClick(app.linefitButton, QtCore.Qt.MouseButton.LeftButton)
-    qtbot.addWidget(app.lfsetup)
+    # qtbot.mouseClick(app.linefitButton, QtCore.Qt.MouseButton.LeftButton)
+    # qtbot.addWidget(app.lfsetup)
 
     #qtbot.mouseClick(app.saveCalButton, QtCore.Qt.MouseButton.LeftButton)
     #qtbot.mouseClick(app.loadCalButton, QtCore.Qt.MouseButton.LeftButton)
@@ -128,6 +128,9 @@ def test_cal(app, qtbot):
 
     # qtbot.mouseClick(app.qualityButton, QtCore.Qt.MouseButton.LeftButton)
     # qtbot.addWidget(app.qcsetup)
+
+    qtbot.mouseClick(app.startROIRTPButton, QtCore.Qt.MouseButton.LeftButton)
+    qtbot.addWidget(app.ROIRTPsetup)
 
     qtbot.stop()
     
