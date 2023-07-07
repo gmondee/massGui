@@ -1590,7 +1590,7 @@ class ZoomPlotExternalTrigger(): #only works for external trigger plots.
         ds.seconds_until_next_external_trigger = rows_until_next_external_trigger*ds.rowPeriodSeconds
     
 
-class RoiRtpSetup(QtWidgets.QDialog):    #plots filtValues on a clickable canvas for manual line ID
+class RoiRtpSetup(QtWidgets.QDialog): #real-time regions of interest todo: add realtime 
     def __init__(self, parent=None):
         super(RoiRtpSetup, self).__init__(parent)
         #self.setWindowModality(QtCore.Qt.ApplicationModal)
@@ -1626,10 +1626,6 @@ class RoiRtpSetup(QtWidgets.QDialog):    #plots filtValues on a clickable canvas
         self.linesBox.currentTextChanged.connect(self.updateLinesBox)
         self.addButton.clicked.connect(self.handle_add_row)
 
-    def updateButtonClicked(self):
-        self.timer.stop()
-        self.UpdatePlots()
-
     def uncheckAll(self):
         self.statesGrid.unfill_all()
 
@@ -1637,6 +1633,8 @@ class RoiRtpSetup(QtWidgets.QDialog):    #plots filtValues on a clickable canvas
         self.statesGrid.fill_all()
 
     def updateLinesBox(self, line):
+        #called when the user switches the selected line in linesBox
+        #switches the autofilled energy in energyBox and, unless the user selects "Manual Energy", prevents user from changing it
         if self.linesBox.currentText() == line and line in mass.spectra.keys():
             self.energyBox.setEnabled(False)
             self.energyBox.setValue(mass.spectra[line].nominal_peak_energy)
@@ -1647,6 +1645,7 @@ class RoiRtpSetup(QtWidgets.QDialog):    #plots filtValues on a clickable canvas
         self.table.setRowCount(0)
 
     def handle_add_row(self):
+        #get the info for a new region and add it with add_row()
         line = self.linesBox.currentText() 
         energy = str(self.energyBox.value())
         width = str(self.widthBox.value())
@@ -1654,12 +1653,10 @@ class RoiRtpSetup(QtWidgets.QDialog):    #plots filtValues on a clickable canvas
 
     def add_row(self, line, energy, width):
         n = self.table.rowCount()
-        try: 
+        try: #i don't remember why this is here
             self.table.disconnect()
         except:
             pass
-         #todo: set the name automatically
-
         name = f'ROI{self.numberOfRegionsMade}'
         self.numberOfRegionsMade+=1
         self.table.setRowCount(n+1)
@@ -1669,9 +1666,10 @@ class RoiRtpSetup(QtWidgets.QDialog):    #plots filtValues on a clickable canvas
         self.table.setItem(n, 2, QtWidgets.QTableWidgetItem("{}".format(energy)))
         self.table.setItem(n, 3, QtWidgets.QTableWidgetItem("{}".format(width)))
 
-        for row in [1,2,3]:
+        for row in [1,2,3]: #users shouldn't edit the line, energy, and width once it's added. they SHOULD still edit the name--table.item(n,0)
             self.table.item(n,row).setFlags(self.table.item(n,row).flags() & ~QtCore.Qt.ItemFlag.ItemIsEditable)
 
+        #add a delete button on the end of the row
         delButton = QtWidgets.QPushButton()
         delButton.setText("Delete")
         delButton.clicked.connect(self.deleteRow)
@@ -1679,7 +1677,7 @@ class RoiRtpSetup(QtWidgets.QDialog):    #plots filtValues on a clickable canvas
         self.table.resizeColumnsToContents()
        
 
-    def addDelButton(self, row, col):
+    def addDelButton(self, row, col): #if you want to add a delete button manually
         delButton = QtWidgets.QPushButton()
         delButton.setText("Delete")
         delButton.clicked.connect(self.deleteRow)
@@ -1712,7 +1710,7 @@ class RoiRtpSetup(QtWidgets.QDialog):    #plots filtValues on a clickable canvas
             return
         ROIdict = {}
         _colors, states = self.statesGrid.get_colors_and_states_list()
-        states = states[0] #get_colors_and_states_list returns a list of lists of states; we only use one row of states, so we only care about the first list of states.
+        states = states[0] #get_colors_and_states_list returns a list of lists of states; we only use one row of states in the grid, so we only care about the first list of states.
         if self.getChannum() == 'All':
             channums = self.data.keys()
         else:
@@ -1733,7 +1731,10 @@ class RoiRtpSetup(QtWidgets.QDialog):    #plots filtValues on a clickable canvas
         #takes in an array and returns the rolling average of each value and the k=windowSize values to its left.
         #when there are not windowSize number of values to the left, repeat the first value.
         #one chunk is defined as one of numberOfChunks parts of the rollingAvgTimeSec, which is how much of the past you want to consider for the rolling average.
+        #if windowSize=1, i.e. if there is only one chunk, then this returns avgs=arr/chunkTimeSec
         #avgs is an array of counts per second in each chunk.
+        if windowSize==1:
+            return np.array(arr)/chunkTimeSec
         avgs = []
         for i, val in enumerate(arr):
             if i-windowSize<0:
@@ -1751,41 +1752,32 @@ class RoiRtpSetup(QtWidgets.QDialog):    #plots filtValues on a clickable canvas
             avgs.append(sum(values)/len(values)/chunkTimeSec)
         return avgs
 
-    def getColorfromState(self, s): #pass in a state label string like 'A' or 'AC' (for states past Z) and get a color index using plt.colormaps() 
-            c=['#d8434e', '#f67a49', '#fdbf6f', '#feeda1', '#f1f9a9', '#bfe5a0', '#74c7a5', '#378ebb'] #8 colors from seaborn's Spectral_r colormap
-            maxColors = len(c)
-
-            cIndex =  ord(s[-1])-ord('A')
-            if len(s)!=1:   #for states like AA, AB, etc., 27 is added to the value of the ones place
-                cIndex=cIndex+26+ord(s[0])-ord('A')+1 #26 + value of first letter (making A=1 so AA != Z)
-            while cIndex >= maxColors:       #colors repeat after maxColors states. loops until there is a valid interpolated index from cinter
-                cIndex=cIndex-maxColors
-            #print(s, cIndex)
-            return c[cIndex]
-
     def plotRollingAverages(self, data, channums, states, rollingAvgTimeSec, numberOfChunks, ROIdict, figure):
-        channelAvgs = None
-        lastState=states[-1]
-        lastStateCounts=np.zeros(len(ROIdict.keys()))
+        #data is a ChannelGroup
+        #channums is a list containing a single channel or all channels
+        #states is a list of states
+        #rollingAvgTimeSec is the period of time to 'look back' when calculating the rolling average
+        #numberOfChunks is how many times we sample/split up the rollingAvgTimeSec time period
+        #ROIdict is a dictionary that contains info about the bounds for each region of interest (ROI). it looks like ROIdict['name']=[lower energy bound, upper energy bound]
+        #figure is a plt.figure() so we don't keep creating new ones. needed for real-time purposes.
+
+        channelAvgs = None #this will store how many counts show up in each ROI for each bin of unixnanos. each channel gets added to this total.
+        lastState=states[-1] #used to get the counts in the last plotted state
+        lastStateCounts=np.zeros(len(ROIdict.keys())) #stores the number of counts in the last state
         for channel in channums:
             ds = data[channel]
             unixnano, energy = ds.getAttr(['unixnano', 'energy'], states)
-            startTime = unixnano[0]
-            endTime = unixnano[-1]
-            chunkTimeSec = rollingAvgTimeSec/numberOfChunks
-            chunkStartTime=startTime
-            chunkStartIndecies=[]
-            chunkStartTimes = []
-            t=np.arange(startTime, endTime, step = chunkTimeSec*10**9)
+            chunkTimeSec = rollingAvgTimeSec/numberOfChunks #how long each chunk lasts, in seconds
+            chunkStartTime=unixnano[0] #keeps track of the next chunk's start time, in unixnanos
+            chunkStartIndecies=[] #defines chunks in terms of indecies of the 'energy' attribute
+            t=np.arange(unixnano[0], unixnano[-1], step = chunkTimeSec*10**9)
             
-            while chunkStartTime <= endTime:
+            while chunkStartTime <= unixnano[-1]: #go until you reach the end of the state
                 #break unixnano into "chunks" according to their indicies
                 chunkStartIndecies.append(np.searchsorted(unixnano, chunkStartTime))
-                chunkStartTimes.append(chunkStartTime)
                 chunkStartTime+=chunkTimeSec*10**9
             regionAvgs=[]
             for j, ROIbounds in enumerate(ROIdict.values()):
-                #ROIdict['name']=[low, high]
                 lastStateCounts[j]+=len([pulse for pulse in ds.getAttr('energy',lastState) if (pulse>=ROIbounds[0]) and (pulse<=ROIbounds[1])])
                 chunkCounts = []
                 for i, chunkIndex in enumerate(chunkStartIndecies):

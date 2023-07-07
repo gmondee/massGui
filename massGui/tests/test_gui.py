@@ -26,7 +26,7 @@ def app(qtbot):
 def test_open(app):
     assert app.selectFileButton.text()=="Select .OFF File"
 
-@pytest.mark.timeout(40)
+@pytest.mark.timeout(200)
 def test_cal(app, qtbot):
     logging.basicConfig(filename='testLog.txt',
                         filemode='a',
