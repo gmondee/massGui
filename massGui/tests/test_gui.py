@@ -11,9 +11,16 @@ import os
 import massGui
 #import massGui.massGui
 import logging
+from .offWriterTests import main as offWriterTests
+import threading
+import time
+import matplotlib.pyplot as plt
 
+def OffWriterThread():
+    offWriterTests() #start writing the off files
 
-
+offThread = threading.Thread(target=OffWriterThread, daemon=True)
+basedir = os.path.dirname(os.path.abspath(__file__))
 
 @pytest.fixture
 def app(qtbot):
@@ -28,6 +35,8 @@ def test_open(app):
 
 @pytest.mark.timeout(20)
 def test_cal(app, qtbot):
+    offThread.start()
+    time.sleep(1)
     logging.basicConfig(filename='testLog.txt',
                         filemode='a',
                         format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
@@ -52,14 +61,14 @@ def test_cal(app, qtbot):
 
     def mock_cal(hc): #adds elements to the table instead of clicking. couldn't get clicking to work.
         hc.table.setRowCount(2)
-        hc.table.setItem(0, 0, QtWidgets.QTableWidgetItem("D"))
+        hc.table.setItem(0, 0, QtWidgets.QTableWidgetItem("A"))
         hc.table.setItem(0, 1, QtWidgets.QTableWidgetItem("6015.0"))
         #hc.table.setItem(0, 2, QtWidgets.QTableWidgetItem("AlKAlpha"))
         hc.table.setItem(0, 3, QtWidgets.QTableWidgetItem(""))
         cbox = QtWidgets.QComboBox()
         cbox.addItem("AlKAlpha")
         hc.table.setCellWidget(0, 2, cbox)
-        hc.table.setItem(1, 0, QtWidgets.QTableWidgetItem("D"))
+        hc.table.setItem(1, 0, QtWidgets.QTableWidgetItem("A"))
         hc.table.setItem(1, 1, QtWidgets.QTableWidgetItem("6995.0"))
         #hc.table.setItem(1, 2, QtWidgets.QTableWidgetItem("SiKAlpha"))     
         hc.table.setItem(1, 3, QtWidgets.QTableWidgetItem(""))
@@ -81,7 +90,7 @@ def test_cal(app, qtbot):
     assert app.maxChansSpinBox.value() == 2
 
     #manual bypass of file loading dialog
-    app.load_file(r'C:\Users\Grant Mondeel\Box\my EUV\tes\realtime\realtime\Summer2022\20200107\0002\20200107_run0002_chan1.off') # sets self._choose_file_lastdir
+    app.load_file(basedir+r"\DataForTests\20200107_Realtime\20200107_run0002_chan1.off")
     app.set_std_dev_threshold()
     app.calibrationGroup.setEnabled(True)
     app.calButtonGroup.setEnabled(False)
@@ -101,35 +110,83 @@ def test_cal(app, qtbot):
     qtbot.mouseClick(app.allChanCalButton, QtCore.Qt.MouseButton.LeftButton)
     qtbot.waitUntil(lambda: qtbot.done_cal_open == 1, timeout = 1000)
 
-    # qtbot.mouseClick(app.startRTPButton, QtCore.Qt.MouseButton.LeftButton)
-    # qtbot.addWidget(app.plotter)
+    ###Test Real-time plotter
+    qtbot.mouseClick(app.startRTPButton, QtCore.Qt.MouseButton.LeftButton)
+    qtbot.addWidget(app.plotter)
+    assert app.plotter.eRangeHi.value() == 10000
+    ax.title.get_text() == 'testing'
+    #app.plotter.close()
 
-    # qtbot.mouseClick(app.AvsB2Dbutton, QtCore.Qt.MouseButton.LeftButton)
-    # qtbot.addWidget(app.AvsBsetup)
+    ###Test AvsB2d plotting
+    plt.close() #hack to avoid multithreading. the plot created will block the rest of the code in plt.ioff.
+    plt.ion()
+    qtbot.mouseClick(app.AvsB2Dbutton, QtCore.Qt.MouseButton.LeftButton)
+    qtbot.addWidget(app.AvsBsetup)
+    qtbot.mouseClick(app.AvsBsetup.plotButton, QtCore.Qt.MouseButton.LeftButton)  
+    assert app.AvsBsetup.zoomPlot.ax.has_data()
+    plt.close()
 
-    # qtbot.mouseClick(app.ptmButton, QtCore.Qt.MouseButton.LeftButton)
-    # qtbot.addWidget(app.AvsBsetup)
+    ###Test AvsB (1D) plotting
+    qtbot.mouseClick(app.ptmButton, QtCore.Qt.MouseButton.LeftButton)
+    qtbot.addWidget(app.AvsBsetup)
+    qtbot.mouseClick(app.AvsBsetup.plotButton, QtCore.Qt.MouseButton.LeftButton) 
+    ax = plt.gca()
+    assert ax.has_data()
+    plt.close()
+    app.AvsBsetup.close()
 
+    ###Test linefit plotting
     qtbot.mouseClick(app.linefitButton, QtCore.Qt.MouseButton.LeftButton)
     qtbot.addWidget(app.lfsetup)
+    app.lfsetup.lineBox.setCurrentText('AlKAlpha')
+    qtbot.mouseClick(app.lfsetup.plotButton, QtCore.Qt.MouseButton.LeftButton)
+    ax = plt.gca()
+    assert ax.has_data()
+    plt.close()
+    app.plotter.close()
+    app.lfsetup.close()
+
 
     #qtbot.mouseClick(app.saveCalButton, QtCore.Qt.MouseButton.LeftButton)
     #qtbot.mouseClick(app.loadCalButton, QtCore.Qt.MouseButton.LeftButton)
     #qtbot.addWidget(app.hdf5Opener)
 
-    # qtbot.mouseClick(app.extTrigButton, QtCore.Qt.MouseButton.LeftButton)
-    # qtbot.addWidget(app.ETsetup)
+    ###Test external trigger plot
+    qtbot.mouseClick(app.extTrigButton, QtCore.Qt.MouseButton.LeftButton)
+    qtbot.addWidget(app.ETsetup)
+    qtbot.mouseClick(app.ETsetup.plotButton, QtCore.Qt.MouseButton.LeftButton)
+    ax = plt.gca()
+    assert ax.has_data()
+    plt.close()
+    app.ETsetup.close()
 
-    # qtbot.mouseClick(app.diagCalButton, QtCore.Qt.MouseButton.LeftButton)
-    # qtbot.addWidget(app.plotter)
+    ###Test ds.diagnoseCalibration plot
+    qtbot.mouseClick(app.diagCalButton, QtCore.Qt.MouseButton.LeftButton)
+    qtbot.addWidget(app.plotter)
+    ax = plt.gca()
+    assert ax.has_data()
+    plt.close()
+    app.plotter.close()
 
-    #qtbot.mouseClick(app.energyHistButton, QtCore.Qt.MouseButton.LeftButton)
-    ##qtbot.addWidget(app.plotter)
+    ###Test energy histogram plot
+    qtbot.mouseClick(app.energyHistButton, QtCore.Qt.MouseButton.LeftButton)
+    qtbot.addWidget(app._selected_window)
+    ax = plt.gca()
+    assert ax.has_data()
+    #plt.close()
+    app._selected_window.close()
 
     # qtbot.mouseClick(app.qualityButton, QtCore.Qt.MouseButton.LeftButton)
     # qtbot.addWidget(app.qcsetup)
 
+    # qtbot.mouseClick(app.startROIRTPButton, QtCore.Qt.MouseButton.LeftButton)
+    # qtbot.addWidget(app.ROIRTPsetup)
+
+    #qtbot.mouseClick(app.startROIRTPButton, QtCore.Qt.MouseButton.LeftButton)
+
     qtbot.stop()
+
+
     
     
 def test_realtime(app, qtbot):

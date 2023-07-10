@@ -1127,10 +1127,10 @@ class ZoomPlotAvsB(): #only works for 2D plots.
         self.plot_fixed_resolution(self.xmin, self.xmax,
                                    self.ymin, self.ymax)
         plt.colorbar()
-        print(f'before {len(plt.get_fignums())}')
+
         [plt.close(f) for f in plt.get_fignums() if f != plt.get_fignums()[-1]]
         plt.show()
-        print(f'after {len(plt.get_fignums())}')
+
 
     def home_callback(self):    #plot the original bounds
         self.plot_fixed_resolution(self.mins[0], self.maxes[0],
@@ -1244,10 +1244,9 @@ class linefitSetup(QtWidgets.QDialog):  #handles linefit function call. lets use
             dataToPlot = self.data[int(self.channelBox.currentText())]
         result = dataToPlot.linefit(lineNameOrEnergy=line, attr="energy", states=states, has_linear_background=has_linear_background, 
                            has_tails=has_tails, dlo=dlo, dhi=dhi, binsize=binsize)
-        print(f'before {len(plt.get_fignums())}')
         [plt.close(f) for f in plt.get_fignums() if f != plt.get_fignums()[-1]]
         plt.show()
-        print(f'after {len(plt.get_fignums())}')
+
 
 
 
@@ -1590,3 +1589,249 @@ class ZoomPlotExternalTrigger(): #only works for external trigger plots.
         ds.seconds_after_external_trigger = rows_after_last_external_trigger*ds.rowPeriodSeconds
         ds.seconds_until_next_external_trigger = rows_until_next_external_trigger*ds.rowPeriodSeconds
     
+
+class RoiRtpSetup(QtWidgets.QDialog): #real-time regions of interest todo: add realtime 
+    def __init__(self, parent=None):
+        super(RoiRtpSetup, self).__init__(parent)
+        #self.setWindowModality(QtCore.Qt.ApplicationModal)
+        QtWidgets.QDialog.__init__(self)
+        self.lines = list(mass.spectra.keys())
+        self.numberOfRegionsMade = 0 #goes up by 1 when a new ROI is made. Doesn't go down when one is deleted. Used to make unique names for the ROIdict.
+
+    def setParams(self, parent, data, channum, state_labels, colors=MPL_DEFAULT_COLORS[:6]):
+        self.parent=parent
+        self.build(data, channum, state_labels, colors)
+        self.connect()
+
+    def build(self, data, channum, state_labels, colors):
+        PyQt6.uic.loadUi(os.path.join(os.path.dirname(__file__), "ui/RoiRtpSetup.ui"), self)
+        self.statesGrid.setParams(state_labels=state_labels, colors=MPL_DEFAULT_COLORS[:1], one_state_per_line=False)
+        self.statesGrid.fill_all()
+        self.data = data
+        self.channum = channum
+        if len(self.parent.calibratedChannels)==len(self.data.keys()):
+            self.channelBox.addItem("All")
+        self.channelBox.setCurrentText(str(self.channum))
+        for channel in self.data.keys():
+            self.channelBox.addItem("{}".format(channel))
+        self.channelBox.setCurrentText(str(channum))
+        #if all chans
+        self.linesBox.addItem("Manual Energy")
+        self.linesBox.addItems(self.lines) 
+
+    def connect(self):
+        self.startRTPButton.clicked.connect(self.startROIRTP)
+        self.checkAllButton.clicked.connect(self.checkAll)
+        self.uncheckAllButton.clicked.connect(self.uncheckAll)
+        self.linesBox.currentTextChanged.connect(self.updateLinesBox)
+        self.addButton.clicked.connect(self.handle_add_row)
+
+    def uncheckAll(self):
+        self.statesGrid.unfill_all()
+
+    def checkAll(self):
+        self.statesGrid.fill_all()
+
+    def updateLinesBox(self, line):
+        #called when the user switches the selected line in linesBox
+        #switches the autofilled energy in energyBox and, unless the user selects "Manual Energy", prevents user from changing it
+        if self.linesBox.currentText() == line and line in mass.spectra.keys():
+            self.energyBox.setEnabled(False)
+            self.energyBox.setValue(mass.spectra[line].nominal_peak_energy)
+        elif self.linesBox.currentText() == "Manual Energy":
+            self.energyBox.setEnabled(True)
+
+    def clear_table(self):
+        self.table.setRowCount(0)
+
+    def handle_add_row(self):
+        #get the info for a new region and add it with add_row()
+        line = self.linesBox.currentText() 
+        energy = str(self.energyBox.value())
+        width = str(self.widthBox.value())
+        self.add_row(line, energy, width)
+
+    def add_row(self, line, energy, width):
+        n = self.table.rowCount()
+        try: #i don't remember why this is here
+            self.table.disconnect()
+        except:
+            pass
+        name = f'ROI{self.numberOfRegionsMade}'
+        self.numberOfRegionsMade+=1
+        self.table.setRowCount(n+1)
+        # log.debug(f"handle_markered, x {x}, states {states}, n {n}")   
+        self.table.setItem(n, 0, QtWidgets.QTableWidgetItem("{}".format(name)))
+        self.table.setItem(n, 1, QtWidgets.QTableWidgetItem("{}".format(line)))
+        self.table.setItem(n, 2, QtWidgets.QTableWidgetItem("{}".format(energy)))
+        self.table.setItem(n, 3, QtWidgets.QTableWidgetItem("{}".format(width)))
+
+        for row in [1,2,3]: #users shouldn't edit the line, energy, and width once it's added. they SHOULD still edit the name--table.item(n,0)
+            self.table.item(n,row).setFlags(self.table.item(n,row).flags() & ~QtCore.Qt.ItemFlag.ItemIsEditable)
+
+        #add a delete button on the end of the row
+        delButton = QtWidgets.QPushButton()
+        delButton.setText("Delete")
+        delButton.clicked.connect(self.deleteRow)
+        self.table.setCellWidget(n, 4, delButton)
+        self.table.resizeColumnsToContents()
+       
+
+    def addDelButton(self, row, col): #if you want to add a delete button manually
+        delButton = QtWidgets.QPushButton()
+        delButton.setText("Delete")
+        delButton.clicked.connect(self.deleteRow)
+        self.table.setCellWidget(row, col, delButton)
+
+    @QtCore.pyqtSlot()
+    def deleteRow(self):
+        button=self.sender()
+        if button:
+            row = self.table.indexAt(button.pos()).row()
+            self.table.removeRow(row)
+
+    def getTableRows(self):
+        rows = []
+        for i in range(self.table.rowCount()):
+            row = []
+            for j in [0,1,2,3]:
+                row.append(self.table.item(i, j).text())
+            rows.append(row)
+        return rows
+    
+    def getChannum(self):
+        #returns one channel number OR 'All' to indicate that all channels should be used.
+        self.channum = self.channelBox.currentText()
+        return self.channum
+
+    def startROIRTP(self):
+        if len(self.getTableRows()) == 0:
+            show_popup(self, "Create at least one region of interest first.\nOnce a line or energy has been specified, click the Add button to add it to the table.")
+            return
+        ROIdict = {}
+        _colors, states = self.statesGrid.get_colors_and_states_list()
+        states = states[0] #get_colors_and_states_list returns a list of lists of states; we only use one row of states in the grid, so we only care about the first list of states.
+        if self.getChannum() == 'All':
+            channums = self.data.keys()
+        else:
+            channums = [int(self.getChannum())]
+
+        rollingAvgTimeSec = self.intervalBox.value()
+        numberOfChunks = self.chunksBox.value()
+        self.fig = plt.figure()
+        for row in self.getTableRows():
+            print(row)
+            Name = row[0]
+            Energy = float(row[2])
+            Width = float(row[3])
+            ROIdict[Name]=[Energy-Width/2, Energy+Width/2]
+        self.plotRollingAverages(self.data, channums, states, rollingAvgTimeSec, numberOfChunks, ROIdict, self.fig)
+
+    def getAvgs(self, arr, windowSize, chunkTimeSec):
+        #takes in an array and returns the rolling average of each value and the k=windowSize values to its left.
+        #when there are not windowSize number of values to the left, repeat the first value.
+        #one chunk is defined as one of numberOfChunks parts of the rollingAvgTimeSec, which is how much of the past you want to consider for the rolling average.
+        #if windowSize=1, i.e. if there is only one chunk, then this returns avgs=arr/chunkTimeSec
+        #avgs is an array of counts per second in each chunk.
+        if windowSize==1:
+            return np.array(arr)/chunkTimeSec
+        avgs = []
+        for i, val in enumerate(arr):
+            if i-windowSize<0:
+                iInd = i
+                values=[]
+                while iInd-windowSize < 0:
+                    values.append(arr[0])
+                    iInd+=1
+                arrInd=1
+                while len(values)<windowSize:
+                    values.append(arr[arrInd])
+                    arrInd+=1
+            else:
+                values = arr[i-windowSize+1:i+1]
+            avgs.append(sum(values)/len(values)/chunkTimeSec)
+        return avgs
+
+    def plotRollingAverages(self, data, channums, states, rollingAvgTimeSec, numberOfChunks, ROIdict, figure):
+        #data is a ChannelGroup
+        #channums is a list containing a single channel or all channels
+        #states is a list of states
+        #rollingAvgTimeSec is the period of time to 'look back' when calculating the rolling average
+        #numberOfChunks is how many times we sample/split up the rollingAvgTimeSec time period
+        #ROIdict is a dictionary that contains info about the bounds for each region of interest (ROI). it looks like ROIdict['name']=[lower energy bound, upper energy bound]
+        #figure is a plt.figure() so we don't keep creating new ones. needed for real-time purposes.
+
+        channelAvgs = None #this will store how many counts show up in each ROI for each bin of unixnanos. each channel gets added to this total.
+        lastState=states[-1] #used to get the counts in the last plotted state
+        lastStateCounts=np.zeros(len(ROIdict.keys())) #stores the number of counts in the last state
+        for channel in channums:
+            ds = data[channel]
+            unixnano, energy = ds.getAttr(['unixnano', 'energy'], states)
+            chunkTimeSec = rollingAvgTimeSec/numberOfChunks #how long each chunk lasts, in seconds
+            chunkStartTime=unixnano[0] #keeps track of the next chunk's start time, in unixnanos
+            chunkStartIndecies=[] #defines chunks in terms of indecies of the 'energy' attribute
+            t=np.arange(unixnano[0], unixnano[-1], step = chunkTimeSec*10**9)
+            
+            while chunkStartTime <= unixnano[-1]: #go until you reach the end of the state(s)
+                #break unixnano into "chunks" according to their indicies
+                chunkStartIndecies.append(np.searchsorted(unixnano, chunkStartTime))
+                chunkStartTime+=chunkTimeSec*10**9
+            regionAvgs=[]
+            for j, ROIbounds in enumerate(ROIdict.values()):
+                lastStateCounts[j]+=len([pulse for pulse in ds.getAttr('energy',lastState) if (pulse>=ROIbounds[0]) and (pulse<=ROIbounds[1])])
+                chunkCounts = []
+                for i, chunkIndex in enumerate(chunkStartIndecies):
+                    if i < len(chunkStartIndecies)-1:
+                        pulses = energy[chunkStartIndecies[i]:chunkStartIndecies[i+1]]
+                    else:
+                        pulses = energy[chunkStartIndecies[i]:] #if its the last chunk, go until the end of that state
+                    chunkCounts.append(len([pulse for pulse in pulses if (pulse>=ROIbounds[0]) and (pulse<=ROIbounds[1])]))
+                regionAvgs.append(self.getAvgs(chunkCounts, numberOfChunks, chunkTimeSec)  )
+            if np.equal(channelAvgs,None).all():
+                channelAvgs=np.array(regionAvgs)
+            else:
+                channelAvgs = channelAvgs + np.array(regionAvgs)
+        
+        #replace values btwn requested states with np.nan
+        #NaN time will be the same for each region, so just loop through the first axis of channelAvgs
+        """
+        loop through the requested states. For each state:
+            get the start and stop times with ds.getAttr('unixnano', state)[0 or -1]
+            find the start and stop indecies of 'energy' with np.searchsorted(unixnano, stateStartOrEndTime), make slices (ranges?) of t
+        if a values in t/channelAvgs lies outside of the state ranges, set channelAvgs to np.nan
+        """
+        unixnano = ds.getAttr('unixnano', states)
+        stateIndexRanges = []
+        for state in states:
+            stateUnixnano = ds.getAttr('unixnano', state)
+            stateIndexRanges.append(np.searchsorted(t, [stateUnixnano[0], stateUnixnano[-1]]))
+        stateIndexRanges = np.array(stateIndexRanges, dtype=int)  
+        currentIndex = 0
+        for iRange in stateIndexRanges:
+            for region in channelAvgs:
+                region[currentIndex:iRange[0]] = np.nan
+            currentIndex = iRange[1]
+        
+        fig=plt.figure(figure)
+        fig.clear()
+        ax=plt.gca()
+        customLegend=[]
+        colors=['#d8434e', '#f67a49', '#fdbf6f', '#feeda1', '#f1f9a9', '#bfe5a0', '#74c7a5', '#378ebb']
+        for i, region in enumerate(channelAvgs):
+            color = colors[i % len(colors)]
+            ax.plot(t, region*chunkTimeSec, color=color)
+            customLegend.append(f"{[k for k in ROIdict.keys()][i]} Counts in {lastState} :{lastStateCounts[i]}")
+        ax.legend(customLegend)
+        plt.xlabel('Time (unixnanos)')
+        plt.ylabel(f'Counts per {chunkTimeSec} seconds')
+        plt.title(f'{len(channums)} Channels\nStates: {",".join(states)}')
+        plt.grid(True)
+        x_bounds = ax.get_xlim()
+        y_bounds = ax.get_ylim()
+        for s in states:
+            stateStart = ds.getAttr('unixnano',s)[0]
+            plt.vlines(stateStart,0,y_bounds[1], linestyles='dashed',color='k', label=s) 
+
+            ax.annotate(text=s, xy =(((stateStart-x_bounds[0])/(x_bounds[1]-x_bounds[0])),0.98), xycoords='axes fraction', verticalalignment='top', horizontalalignment='center' , rotation = 0)
+        [plt.close(f) for f in plt.get_fignums() if f != plt.get_fignums()[-1]]
+        plt.show()

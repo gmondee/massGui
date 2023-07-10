@@ -10,7 +10,7 @@ import os
 #import pytest
 #import pytestqt
 from matplotlib.lines import Line2D
-from .massless import HistCalibrator, HistPlotter, diagnoseViewer, rtpViewer, AvsBSetup, linefitSetup, hdf5Opener, qualityCheckLinefitSetup, ExternalTriggerSetup
+from .massless import HistCalibrator, HistPlotter, diagnoseViewer, rtpViewer, AvsBSetup, linefitSetup, hdf5Opener, qualityCheckLinefitSetup, ExternalTriggerSetup, RoiRtpSetup
 from .canvas import MplCanvas
 import progress
 import traceback
@@ -76,6 +76,7 @@ class MainWindow(QtWidgets.QWidget):
         self.allChanAutoCalButton.clicked.connect(self.allChannelAutoCalibration)
         self.extTrigButton.clicked.connect(self.handleExternalTrigger)
         self.readNewButton.clicked.connect(self.readNewFilesAndStates)
+        self.startROIRTPButton.clicked.connect(self.startROIRTP)
 
     def load_file(self, filename, maxChans = None):
         self._choose_file_lastdir = os.path.dirname(filename)
@@ -471,7 +472,7 @@ class MainWindow(QtWidgets.QWidget):
         plotter = HistPlotter(self)
         self._selected_window = plotter
         plotter.setParams(self, self.data, self.ds.channum, "energy", self.ds.stateLabels, binSize=self.getBinsizeCal())
-        plotter.exec()
+        plotter.show()
 
     def diagnoseCalibration(self):
         self.plotter = diagnoseViewer(self)
@@ -512,7 +513,7 @@ class MainWindow(QtWidgets.QWidget):
             self.AvsBsetup.show()
 
     def handleExternalTrigger(self):
-        if not os.path.isfile(os.path.join(f"{self.basename}_external_trigger.bin")):
+        if not os.path.isfile(os.path.join(f"{self.basename}_external_trigger.bin")): #todo: open file dialog instead
             print("Error: No external trigger file found in ",self.basename)
             return
 
@@ -545,6 +546,11 @@ class MainWindow(QtWidgets.QWidget):
         self.qcsetup.setParams(self, lines, states_list=self.ds.stateLabels, data=self.data)
         self.qcsetup.show()  
           
+    def startROIRTP(self):
+        self.ROIRTPsetup = RoiRtpSetup(self) 
+        self.ROIRTPsetup.setParams(self, self.data, self.ds.channum, state_labels=self.ds.stateLabels)
+        self.ROIRTPsetup.show()
+
     def readNewFilesAndStates(self):
         try:
             self.data.refreshFromFiles()

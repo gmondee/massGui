@@ -19,7 +19,16 @@ dependencies = [
   "pytest-qt",
   "matplotlib",
   "numpy",
-  "h5py"
+  "h5py",
+  "progress",
+  "traceback",
+  "h5py",
+  "logging",
+  "copy",
+  "warnings",
+  "time",
+  "threading",
+  "pytest"
 ]
 
 [project.scripts]

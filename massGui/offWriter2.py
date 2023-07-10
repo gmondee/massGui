@@ -11,8 +11,6 @@ for each state:
         recordsInState = ds.offFile[stateSlice]
         write records to new off file?
 
-can we get a direct link between file.read and the off records?
-
 
 alternative: write records as it is done below, and read them as they come in. 
 Then, update the states file as the unixnanos time from the most recent ds.offFile record advances.
