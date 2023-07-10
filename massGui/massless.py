@@ -1772,7 +1772,7 @@ class RoiRtpSetup(QtWidgets.QDialog): #real-time regions of interest todo: add r
             chunkStartIndecies=[] #defines chunks in terms of indecies of the 'energy' attribute
             t=np.arange(unixnano[0], unixnano[-1], step = chunkTimeSec*10**9)
             
-            while chunkStartTime <= unixnano[-1]: #go until you reach the end of the state
+            while chunkStartTime <= unixnano[-1]: #go until you reach the end of the state(s)
                 #break unixnano into "chunks" according to their indicies
                 chunkStartIndecies.append(np.searchsorted(unixnano, chunkStartTime))
                 chunkStartTime+=chunkTimeSec*10**9
@@ -1792,6 +1792,29 @@ class RoiRtpSetup(QtWidgets.QDialog): #real-time regions of interest todo: add r
             else:
                 channelAvgs = channelAvgs + np.array(regionAvgs)
         
+        #replace values btwn requested states with np.nan
+        #plotting x=t and y=channelAvgs; channelAvgs is a list of the regions.
+        #NaN time will be the same for each region, so just loop through the first(?) axis of channelAvgs
+        """
+        loop through the requested states. For each state:
+            get the start and stop times with ds.getAttr('unixnano', state)[0 or -1]
+            find the start and stop indecies of 'energy' with np.searchsorted(unixnano, stateStartOrEndTime), make slices (ranges?) of t
+        if a values in t/channelAvgs lies outside of the state ranges, set channelAvgs to np.nan
+        """
+        unixnano = ds.getAttr('unixnano', states)
+        stateIndexRanges = []
+        for state in states:
+            stateUnixnano = ds.getAttr('unixnano', state)
+            stateIndexRanges.append(np.searchsorted(t, [stateUnixnano[0], stateUnixnano[-1]]))
+        stateIndexRanges = np.array(stateIndexRanges, dtype=int)  
+        currentIndex = 0
+        for iRange in stateIndexRanges:
+            for region in channelAvgs:
+                region[currentIndex:iRange[0]] = np.nan
+            currentIndex = iRange[1]
+        
+
+
         fig=plt.figure(figure)
         fig.clear()
         ax=plt.gca()
