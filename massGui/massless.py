@@ -1793,8 +1793,7 @@ class RoiRtpSetup(QtWidgets.QDialog): #real-time regions of interest todo: add r
                 channelAvgs = channelAvgs + np.array(regionAvgs)
         
         #replace values btwn requested states with np.nan
-        #plotting x=t and y=channelAvgs; channelAvgs is a list of the regions.
-        #NaN time will be the same for each region, so just loop through the first(?) axis of channelAvgs
+        #NaN time will be the same for each region, so just loop through the first axis of channelAvgs
         """
         loop through the requested states. For each state:
             get the start and stop times with ds.getAttr('unixnano', state)[0 or -1]
@@ -1813,8 +1812,6 @@ class RoiRtpSetup(QtWidgets.QDialog): #real-time regions of interest todo: add r
                 region[currentIndex:iRange[0]] = np.nan
             currentIndex = iRange[1]
         
-
-
         fig=plt.figure(figure)
         fig.clear()
         ax=plt.gca()

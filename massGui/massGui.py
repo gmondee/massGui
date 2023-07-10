@@ -472,7 +472,7 @@ class MainWindow(QtWidgets.QWidget):
         plotter = HistPlotter(self)
         self._selected_window = plotter
         plotter.setParams(self, self.data, self.ds.channum, "energy", self.ds.stateLabels, binSize=self.getBinsizeCal())
-        plotter.exec()
+        plotter.show()
 
     def diagnoseCalibration(self):
         self.plotter = diagnoseViewer(self)
