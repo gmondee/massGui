@@ -1773,7 +1773,6 @@ class RoiRtpSetup(QtWidgets.QDialog): #real-time regions of interest todo: add r
             chunkStartTime=unixnano[0] #keeps track of the next chunk's start time, in unixnanos
             chunkStartIndecies=[] #defines chunks in terms of indecies of the 'energy' attribute
             t=np.arange(unixnano[0], unixnano[-1], step = chunkTimeSec*10**9)
-            
             while chunkStartTime <= unixnano[-1]: #go until you reach the end of the state(s)
                 #break unixnano into "chunks" according to their indicies
                 chunkStartIndecies.append(np.searchsorted(unixnano, chunkStartTime))
@@ -1793,7 +1792,7 @@ class RoiRtpSetup(QtWidgets.QDialog): #real-time regions of interest todo: add r
                 channelAvgs=np.array(regionAvgs)
             else:
                 channelAvgs = channelAvgs + np.array(regionAvgs)
-        
+
         #replace values btwn requested states with np.nan
         #NaN time will be the same for each region, so just loop through the first axis of channelAvgs
         """
@@ -1804,14 +1803,25 @@ class RoiRtpSetup(QtWidgets.QDialog): #real-time regions of interest todo: add r
         """
         unixnano = ds.getAttr('unixnano', states)
         stateIndexRanges = []
+        stateTimeEnds = np.array([])
         for state in states:
             stateUnixnano = ds.getAttr('unixnano', state)
             stateIndexRanges.append(np.searchsorted(t, [stateUnixnano[0], stateUnixnano[-1]]))
+            stateTimeEnds = np.append(stateTimeEnds, [stateUnixnano[-1]]) #last unixnano in each state
         stateIndexRanges = np.array(stateIndexRanges, dtype=int)  
         currentIndex = 0
-        for iRange in stateIndexRanges:
+        for i, iRange in enumerate(stateIndexRanges):
             for region in channelAvgs:
                 region[currentIndex:iRange[0]] = np.nan
+                if i <= len(stateTimeEnds)-2:
+                    shortStateIndex = np.searchsorted(t, stateTimeEnds[i])+1 #find the chunk that would contain the end of this state
+                    lastStateDurationSec = abs(stateTimeEnds[i] - t[shortStateIndex])*10**-9
+                    region[iRange[1]] = region[iRange[1]]*(chunkTimeSec/lastStateDurationSec)
+
+                else:
+                    lastChunkTime = abs((unixnano[-1] - chunkStartTime)*10**-9)
+                    print(f'{lastChunkTime=}')
+                    region[-1] = region[-1]*(chunkTimeSec/lastChunkTime)
             currentIndex = iRange[1]
         
         fig=plt.figure(figure)

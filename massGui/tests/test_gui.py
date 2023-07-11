@@ -203,10 +203,12 @@ def test_cal(app, qtbot):
     qtbot.mouseClick(app.ROIRTPsetup.addButton, QtCore.Qt.MouseButton.LeftButton)
     qtbot.mouseClick(app.ROIRTPsetup.startRTPButton, QtCore.Qt.MouseButton.LeftButton)
     ax = plt.gca()
+    qtbot.stop()
     assert ax.has_data()
     assert 'Channels' in ax.title.get_text()
     plt.close()
     app.ROIRTPsetup.close()
+    
 
 
     
