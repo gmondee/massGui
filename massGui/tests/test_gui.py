@@ -79,9 +79,10 @@ def test_cal(app, qtbot):
 
     def cal_opened():
         plotter = app._selected_window
-        #assert isinstance(plotter, massGui.massless.HistPlotter)
+        assert isinstance(plotter, massGui.massless.HistCalibrator)
         qtbot.addWidget(plotter)
         assert plotter.eRangeLow.value() == 0
+        print(f'{plotter.parent.ds.statesDict}')
         qtbot.done_cal_open = 1
         plotter.close()
 
@@ -114,7 +115,10 @@ def test_cal(app, qtbot):
     qtbot.mouseClick(app.startRTPButton, QtCore.Qt.MouseButton.LeftButton)
     qtbot.addWidget(app.plotter)
     assert app.plotter.eRangeHi.value() == 10000
-    ax.title.get_text() == 'testing'
+    ax = app.plotter.energyAxis
+    assert 'run0002' in ax.title.get_text()
+    assert ax.has_data()
+    #qtbot.stop()
     #app.plotter.close()
 
     ###Test AvsB2d plotting
@@ -123,6 +127,7 @@ def test_cal(app, qtbot):
     qtbot.mouseClick(app.AvsB2Dbutton, QtCore.Qt.MouseButton.LeftButton)
     qtbot.addWidget(app.AvsBsetup)
     qtbot.mouseClick(app.AvsBsetup.plotButton, QtCore.Qt.MouseButton.LeftButton)  
+    assert '2 chans' in ax.title.get_text()
     assert app.AvsBsetup.zoomPlot.ax.has_data()
     plt.close()
 
@@ -132,6 +137,7 @@ def test_cal(app, qtbot):
     qtbot.mouseClick(app.AvsBsetup.plotButton, QtCore.Qt.MouseButton.LeftButton) 
     ax = plt.gca()
     assert ax.has_data()
+    assert 'cutRecipeName' in ax.title.get_text()
     plt.close()
     app.AvsBsetup.close()
 
@@ -142,6 +148,7 @@ def test_cal(app, qtbot):
     qtbot.mouseClick(app.lfsetup.plotButton, QtCore.Qt.MouseButton.LeftButton)
     ax = plt.gca()
     assert ax.has_data()
+    assert 'AlKAlpha' in ax.title.get_text()
     plt.close()
     app.plotter.close()
     app.lfsetup.close()
@@ -156,6 +163,7 @@ def test_cal(app, qtbot):
     qtbot.addWidget(app.ETsetup)
     qtbot.mouseClick(app.ETsetup.plotButton, QtCore.Qt.MouseButton.LeftButton)
     ax = plt.gca()
+    assert 'channels' in ax.title.get_text()
     assert ax.has_data()
     plt.close()
     app.ETsetup.close()
@@ -164,6 +172,8 @@ def test_cal(app, qtbot):
     qtbot.mouseClick(app.diagCalButton, QtCore.Qt.MouseButton.LeftButton)
     qtbot.addWidget(app.plotter)
     ax = plt.gca()
+    #qtbot.stop()
+    assert 'chan1' in ax.title.get_text()
     assert ax.has_data()
     plt.close()
     app.plotter.close()
@@ -172,19 +182,31 @@ def test_cal(app, qtbot):
     qtbot.mouseClick(app.energyHistButton, QtCore.Qt.MouseButton.LeftButton)
     qtbot.addWidget(app._selected_window)
     ax = plt.gca()
+    assert 'run0002' in ax.title.get_text()
     assert ax.has_data()
     #plt.close()
     app._selected_window.close()
 
-    # qtbot.mouseClick(app.qualityButton, QtCore.Qt.MouseButton.LeftButton)
-    # qtbot.addWidget(app.qcsetup)
+    ###Test quality check linefit plot
+    qtbot.mouseClick(app.qualityButton, QtCore.Qt.MouseButton.LeftButton)
+    qtbot.addWidget(app.qcsetup)
+    ax = plt.gca()
+    assert ax.has_data()
+    assert 'chan1' in ax.title.get_text()
+    plt.close()
+    app.qcsetup.close()
 
-    # qtbot.mouseClick(app.startROIRTPButton, QtCore.Qt.MouseButton.LeftButton)
-    # qtbot.addWidget(app.ROIRTPsetup)
-
-    #qtbot.mouseClick(app.startROIRTPButton, QtCore.Qt.MouseButton.LeftButton)
-
-    qtbot.stop()
+    ###Test real-time regions of interest plot
+    qtbot.mouseClick(app.startROIRTPButton, QtCore.Qt.MouseButton.LeftButton)
+    qtbot.addWidget(app.ROIRTPsetup)
+    app.ROIRTPsetup.linesBox.setCurrentText('AlKAlpha')
+    qtbot.mouseClick(app.ROIRTPsetup.addButton, QtCore.Qt.MouseButton.LeftButton)
+    qtbot.mouseClick(app.ROIRTPsetup.startRTPButton, QtCore.Qt.MouseButton.LeftButton)
+    ax = plt.gca()
+    assert ax.has_data()
+    assert 'Channels' in ax.title.get_text()
+    plt.close()
+    app.ROIRTPsetup.close()
 
 
     

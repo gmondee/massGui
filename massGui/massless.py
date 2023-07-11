@@ -22,8 +22,8 @@ import h5py
 from copy import copy
 import traceback
 import warnings 
-
-logging.basicConfig(filename='masslessLog.txt',
+basedir = os.path.dirname(os.path.abspath(__file__))
+logging.basicConfig(filename=basedir+r'\masslessLog.txt',
                     filemode='w',
                     format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
                     datefmt='%H:%M:%S',
@@ -667,6 +667,8 @@ class StatesGrid(QtWidgets.QWidget): #widget that makes a grid of checkboxes. al
                 box.setStyleSheet("background-color: {}".format(color))
                 self.grid.addWidget(box, j+1, i+1)
                 boxes.append(box)
+                if j == 0:
+                    box.setChecked(True)
             self.boxes.append(boxes)
         self.numberOfStates+= len(newStates)
         self.state_labels = state_labels
@@ -930,7 +932,6 @@ class rtpViewer(QtWidgets.QDialog): #window that hosts the real-time plotting ro
         for s in range(len(States)):    #looping over each state passed in
             x,y = self.dataToPlot.hist(np.arange(eLow, eHi, float(self.parent.getBinsizeCal())), "energy", states=States[s])
             self.energyAxis.plot(x, y ,alpha=1, color=self.getColorfromState(States[s]))    #plots the [x,y] points and assigns color based on the state
-            self.energyAxis.set_xlim([eLow, eHi])
             #print(f'{s=},{np.sum(y)=}')
             if States[s] not in self.plottedStates:     #new states are added to the legend; old ones are already there                      
                 self.plottedStates.append(States[s])
@@ -973,6 +974,7 @@ class rtpViewer(QtWidgets.QDialog): #window that hosts the real-time plotting ro
         if len(newStates)>0:
             print("New states found: ",newStates)
             self.statesGrid.appendStates(newStates, self.parent.ds.stateLabels)
+
         #print(self.parent.ds.statesDict)
 
     
@@ -1295,7 +1297,7 @@ class qualityCheckLinefitSetup(QtWidgets.QDialog):  #handles linefit function ca
 
 
     def build(self):
-        PyQt6.uic.loadUi(os.path.join(os.path.dirname(__file__), "ui/QualityCheckLinefit.ui"), self) 
+        PyQt6.uic.loadUi(os.path.join(os.path.dirname(__file__), "ui/qualityCheckLinefit.ui"), self) 
         self.statesGrid.setParams(state_labels=self.states_list, colors=MPL_DEFAULT_COLORS[:1], one_state_per_line=False)
         self.statesGrid.fill_simple()
 
@@ -1720,7 +1722,7 @@ class RoiRtpSetup(QtWidgets.QDialog): #real-time regions of interest todo: add r
         numberOfChunks = self.chunksBox.value()
         self.fig = plt.figure()
         for row in self.getTableRows():
-            print(row)
+            #print(row)
             Name = row[0]
             Energy = float(row[2])
             Width = float(row[3])
