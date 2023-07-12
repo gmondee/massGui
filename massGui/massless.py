@@ -1873,8 +1873,11 @@ class RoiRtpSetup(QtWidgets.QDialog): #real-time regions of interest todo: add r
             print("Failed to plot regions of interest!")
             print(traceback.format_exc())
             show_popup(self, "Failed to plot regions of interest!", traceback=traceback.format_exc())
+            try:
+                self.timer.stop()
+            except:
+                pass
 
-<<<<<<< Updated upstream
     def startRTP(self):
         #make a timer
         #every [interval] seconds, refresh from files. then, call (basically) the code above but on the same plot
@@ -1918,10 +1921,6 @@ class RoiRtpSetup(QtWidgets.QDialog): #real-time regions of interest todo: add r
         self.rollingAvgTimeSec = self.intervalBox.value()
         self.numberOfChunks = self.chunksBox.value()
         self.plotRollingAverages(self.data, self.channums, self.states, self.rollingAvgTimeSec, self.numberOfChunks, self.ROIdict, self.fig)
-=======
-            ax.annotate(text=s, xy =(((stateStart-x_bounds[0])/(x_bounds[1]-x_bounds[0])),0.98), xycoords='axes fraction', verticalalignment='top', horizontalalignment='center' , rotation = 0)
-        [plt.close(f) for f in plt.get_fignums() if f != plt.get_fignums()[-1]]
-        plt.show()
 
 class progressPopup(QtWidgets.QDialog):
     def __init__(self, parent=None):
@@ -1941,4 +1940,3 @@ class progressPopup(QtWidgets.QDialog):
     def nextValue(self):
         self.progressBar.setValue(self.progressBar.value()+1)
     
->>>>>>> Stashed changes
