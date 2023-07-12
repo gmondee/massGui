@@ -22,8 +22,8 @@ import h5py
 from copy import copy
 import traceback
 import warnings 
-
-logging.basicConfig(filename='masslessLog.txt',
+basedir = os.path.dirname(os.path.abspath(__file__))
+logging.basicConfig(filename=basedir+r'\masslessLog.txt',
                     filemode='w',
                     format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
                     datefmt='%H:%M:%S',
@@ -370,7 +370,7 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
             self.plotter = diagnoseViewer(self)
             self.plotter.setParams(self.parent, self.data, self.ds.channum, highestFV = self.highestFV)
             self.plotter.frame.setEnabled(False)
-            self.plotter.exec()
+            self.plotter.show()
         except Exception as exc:
             print("Failed to diagnose calibration!")
             print(traceback.format_exc())
@@ -667,6 +667,8 @@ class StatesGrid(QtWidgets.QWidget): #widget that makes a grid of checkboxes. al
                 box.setStyleSheet("background-color: {}".format(color))
                 self.grid.addWidget(box, j+1, i+1)
                 boxes.append(box)
+                if j == 0:
+                    box.setChecked(True)
             self.boxes.append(boxes)
         self.numberOfStates+= len(newStates)
         self.state_labels = state_labels
@@ -930,7 +932,6 @@ class rtpViewer(QtWidgets.QDialog): #window that hosts the real-time plotting ro
         for s in range(len(States)):    #looping over each state passed in
             x,y = self.dataToPlot.hist(np.arange(eLow, eHi, float(self.parent.getBinsizeCal())), "energy", states=States[s])
             self.energyAxis.plot(x, y ,alpha=1, color=self.getColorfromState(States[s]))    #plots the [x,y] points and assigns color based on the state
-            self.energyAxis.set_xlim([eLow, eHi])
             #print(f'{s=},{np.sum(y)=}')
             if States[s] not in self.plottedStates:     #new states are added to the legend; old ones are already there                      
                 self.plottedStates.append(States[s])
@@ -973,6 +974,7 @@ class rtpViewer(QtWidgets.QDialog): #window that hosts the real-time plotting ro
         if len(newStates)>0:
             print("New states found: ",newStates)
             self.statesGrid.appendStates(newStates, self.parent.ds.stateLabels)
+
         #print(self.parent.ds.statesDict)
 
     
@@ -1295,7 +1297,7 @@ class qualityCheckLinefitSetup(QtWidgets.QDialog):  #handles linefit function ca
 
 
     def build(self):
-        PyQt6.uic.loadUi(os.path.join(os.path.dirname(__file__), "ui/QualityCheckLinefit.ui"), self) 
+        PyQt6.uic.loadUi(os.path.join(os.path.dirname(__file__), "ui/qualityCheckLinefit.ui"), self) 
         self.statesGrid.setParams(state_labels=self.states_list, colors=MPL_DEFAULT_COLORS[:1], one_state_per_line=False)
         self.statesGrid.fill_simple()
 
@@ -1625,6 +1627,7 @@ class RoiRtpSetup(QtWidgets.QDialog): #real-time regions of interest todo: add r
         self.uncheckAllButton.clicked.connect(self.uncheckAll)
         self.linesBox.currentTextChanged.connect(self.updateLinesBox)
         self.addButton.clicked.connect(self.handle_add_row)
+        self.readNewButton.clicked.connect(self.updateFilesAndStates)
 
     def uncheckAll(self):
         self.statesGrid.unfill_all()
@@ -1710,6 +1713,9 @@ class RoiRtpSetup(QtWidgets.QDialog): #real-time regions of interest todo: add r
             return
         ROIdict = {}
         _colors, states = self.statesGrid.get_colors_and_states_list()
+        if len(states)==0:
+            show_popup(self, "Select at least one state using the state grid.")
+            return
         states = states[0] #get_colors_and_states_list returns a list of lists of states; we only use one row of states in the grid, so we only care about the first list of states.
         if self.getChannum() == 'All':
             channums = self.data.keys()
@@ -1719,13 +1725,22 @@ class RoiRtpSetup(QtWidgets.QDialog): #real-time regions of interest todo: add r
         rollingAvgTimeSec = self.intervalBox.value()
         numberOfChunks = self.chunksBox.value()
         self.fig = plt.figure()
+        self.channums = channums
+        self.states = states
+        self.rollingAvgTimeSec = rollingAvgTimeSec
+        self.numberOfChunks = numberOfChunks
+        self.ROIdict = ROIdict
+        [plt.close(f) for f in plt.get_fignums() if f != plt.get_fignums()[-1]]
+        plt.ion()
         for row in self.getTableRows():
-            print(row)
+            #print(row)
             Name = row[0]
             Energy = float(row[2])
             Width = float(row[3])
             ROIdict[Name]=[Energy-Width/2, Energy+Width/2]
         self.plotRollingAverages(self.data, channums, states, rollingAvgTimeSec, numberOfChunks, ROIdict, self.fig)
+
+        self.startRTP()
 
     def getAvgs(self, arr, windowSize, chunkTimeSec):
         #takes in an array and returns the rolling average of each value and the k=windowSize values to its left.
@@ -1760,78 +1775,145 @@ class RoiRtpSetup(QtWidgets.QDialog): #real-time regions of interest todo: add r
         #numberOfChunks is how many times we sample/split up the rollingAvgTimeSec time period
         #ROIdict is a dictionary that contains info about the bounds for each region of interest (ROI). it looks like ROIdict['name']=[lower energy bound, upper energy bound]
         #figure is a plt.figure() so we don't keep creating new ones. needed for real-time purposes.
+        try:
+            channelAvgs = None #this will store how many counts show up in each ROI for each bin of unixnanos. each channel gets added to this total.
+            lastState=states[-1] #used to get the counts in the last plotted state
+            lastStateCounts=np.zeros(len(ROIdict.keys())) #stores the number of counts in the last state
+            for channel in channums:
+                ds = data[channel]
+                unixnano, energy = ds.getAttr(['unixnano', 'energy'], states)
+                chunkTimeSec = rollingAvgTimeSec/numberOfChunks #how long each chunk lasts, in seconds
+                chunkStartTime=unixnano[0] #keeps track of the next chunk's start time, in unixnanos
+                chunkStartIndecies=[] #defines chunks in terms of indecies of the 'energy' attribute
+                t=np.arange(unixnano[0], unixnano[-1], step = chunkTimeSec*10**9)
+                while chunkStartTime <= unixnano[-1]: #go until you reach the end of the state(s)
+                    #break unixnano into "chunks" according to their indicies
+                    chunkStartIndecies.append(np.searchsorted(unixnano, chunkStartTime))
+                    chunkStartTime+=chunkTimeSec*10**9
+                regionAvgs=[]
+                for j, ROIbounds in enumerate(ROIdict.values()):
+                    lastStateCounts[j]+=len([pulse for pulse in ds.getAttr('energy',lastState) if (pulse>=ROIbounds[0]) and (pulse<=ROIbounds[1])])
+                    chunkCounts = []
+                    for i, chunkIndex in enumerate(chunkStartIndecies):
+                        if i < len(chunkStartIndecies)-1:
+                            pulses = energy[chunkStartIndecies[i]:chunkStartIndecies[i+1]]
+                        else:
+                            pulses = energy[chunkStartIndecies[i]:] #if its the last chunk, go until the end of that state
+                        chunkCounts.append(len([pulse for pulse in pulses if (pulse>=ROIbounds[0]) and (pulse<=ROIbounds[1])]))
+                    regionAvgs.append(self.getAvgs(chunkCounts, numberOfChunks, chunkTimeSec)  )
+                if np.equal(channelAvgs,None).all():
+                    channelAvgs=np.array(regionAvgs)
+                else:
+                    regionAvgs = np.array(regionAvgs)
+                    #make sure regionAvgs and channelAvgs are the same shape. Pad with zeros if necessary.
+                    if regionAvgs.shape[1]>channelAvgs.shape[1]:
+                        temp = channelAvgs
+                        channelAvgs = np.ones(regionAvgs.shape)*0
+                        channelAvgs[:,:temp.shape[1]] = temp
+                    elif regionAvgs.shape[1]<channelAvgs.shape[1]:
+                        temp = regionAvgs
+                        regionAvgs = np.ones(channelAvgs.shape)*0
+                        regionAvgs[:,:temp.shape[1]] = temp
 
-        channelAvgs = None #this will store how many counts show up in each ROI for each bin of unixnanos. each channel gets added to this total.
-        lastState=states[-1] #used to get the counts in the last plotted state
-        lastStateCounts=np.zeros(len(ROIdict.keys())) #stores the number of counts in the last state
-        for channel in channums:
-            ds = data[channel]
-            unixnano, energy = ds.getAttr(['unixnano', 'energy'], states)
-            chunkTimeSec = rollingAvgTimeSec/numberOfChunks #how long each chunk lasts, in seconds
-            chunkStartTime=unixnano[0] #keeps track of the next chunk's start time, in unixnanos
-            chunkStartIndecies=[] #defines chunks in terms of indecies of the 'energy' attribute
-            t=np.arange(unixnano[0], unixnano[-1], step = chunkTimeSec*10**9)
-            
-            while chunkStartTime <= unixnano[-1]: #go until you reach the end of the state(s)
-                #break unixnano into "chunks" according to their indicies
-                chunkStartIndecies.append(np.searchsorted(unixnano, chunkStartTime))
-                chunkStartTime+=chunkTimeSec*10**9
-            regionAvgs=[]
-            for j, ROIbounds in enumerate(ROIdict.values()):
-                lastStateCounts[j]+=len([pulse for pulse in ds.getAttr('energy',lastState) if (pulse>=ROIbounds[0]) and (pulse<=ROIbounds[1])])
-                chunkCounts = []
-                for i, chunkIndex in enumerate(chunkStartIndecies):
-                    if i < len(chunkStartIndecies)-1:
-                        pulses = energy[chunkStartIndecies[i]:chunkStartIndecies[i+1]]
+                    channelAvgs = channelAvgs + regionAvgs
+
+            #replace values btwn requested states with np.nan
+            #NaN time will be the same for each region, so just loop through the first axis of channelAvgs
+            """
+            loop through the requested states. For each state:
+                get the start and stop times with ds.getAttr('unixnano', state)[0 or -1]
+                find the start and stop indecies of 'energy' with np.searchsorted(unixnano, stateStartOrEndTime), make slices (ranges?) of t
+            if a values in t/channelAvgs lies outside of the state ranges, set channelAvgs to np.nan
+            """
+            unixnano = ds.getAttr('unixnano', states)
+            stateIndexRanges = []
+            stateTimeEnds = np.array([])
+            for state in states:
+                stateUnixnano = ds.getAttr('unixnano', state)
+                stateIndexRanges.append(np.searchsorted(t, [stateUnixnano[0], stateUnixnano[-1]]))
+                stateTimeEnds = np.append(stateTimeEnds, [stateUnixnano[-1]]) #last unixnano in each state
+            stateIndexRanges = np.array(stateIndexRanges, dtype=int)  
+            currentIndex = 0
+            for i, iRange in enumerate(stateIndexRanges):
+                for region in channelAvgs:
+                    region[currentIndex:iRange[0]] = np.nan
+                    if i <= len(stateTimeEnds)-2:
+                        shortStateIndex = np.searchsorted(t, stateTimeEnds[i])+1 #find the chunk that would contain the end of this state
+                        lastStateDurationSec = abs(stateTimeEnds[i] - t[shortStateIndex])*10**-9
+                        region[iRange[1]] = region[iRange[1]]*(chunkTimeSec/lastStateDurationSec)
+
                     else:
-                        pulses = energy[chunkStartIndecies[i]:] #if its the last chunk, go until the end of that state
-                    chunkCounts.append(len([pulse for pulse in pulses if (pulse>=ROIbounds[0]) and (pulse<=ROIbounds[1])]))
-                regionAvgs.append(self.getAvgs(chunkCounts, numberOfChunks, chunkTimeSec)  )
-            if np.equal(channelAvgs,None).all():
-                channelAvgs=np.array(regionAvgs)
-            else:
-                channelAvgs = channelAvgs + np.array(regionAvgs)
-        
-        #replace values btwn requested states with np.nan
-        #NaN time will be the same for each region, so just loop through the first axis of channelAvgs
-        """
-        loop through the requested states. For each state:
-            get the start and stop times with ds.getAttr('unixnano', state)[0 or -1]
-            find the start and stop indecies of 'energy' with np.searchsorted(unixnano, stateStartOrEndTime), make slices (ranges?) of t
-        if a values in t/channelAvgs lies outside of the state ranges, set channelAvgs to np.nan
-        """
-        unixnano = ds.getAttr('unixnano', states)
-        stateIndexRanges = []
-        for state in states:
-            stateUnixnano = ds.getAttr('unixnano', state)
-            stateIndexRanges.append(np.searchsorted(t, [stateUnixnano[0], stateUnixnano[-1]]))
-        stateIndexRanges = np.array(stateIndexRanges, dtype=int)  
-        currentIndex = 0
-        for iRange in stateIndexRanges:
-            for region in channelAvgs:
-                region[currentIndex:iRange[0]] = np.nan
-            currentIndex = iRange[1]
-        
-        fig=plt.figure(figure)
-        fig.clear()
-        ax=plt.gca()
-        customLegend=[]
-        colors=['#d8434e', '#f67a49', '#fdbf6f', '#feeda1', '#f1f9a9', '#bfe5a0', '#74c7a5', '#378ebb']
-        for i, region in enumerate(channelAvgs):
-            color = colors[i % len(colors)]
-            ax.plot(t, region*chunkTimeSec, color=color)
-            customLegend.append(f"{[k for k in ROIdict.keys()][i]} Counts in {lastState} :{lastStateCounts[i]}")
-        ax.legend(customLegend)
-        plt.xlabel('Time (unixnanos)')
-        plt.ylabel(f'Counts per {chunkTimeSec} seconds')
-        plt.title(f'{len(channums)} Channels\nStates: {",".join(states)}')
-        plt.grid(True)
-        x_bounds = ax.get_xlim()
-        y_bounds = ax.get_ylim()
-        for s in states:
-            stateStart = ds.getAttr('unixnano',s)[0]
-            plt.vlines(stateStart,0,y_bounds[1], linestyles='dashed',color='k', label=s) 
+                        lastChunkTime = abs((unixnano[-1] - chunkStartTime)*10**-9)
+                        print(f'{lastChunkTime=}')
+                        region[-1] = region[-1]*(chunkTimeSec/lastChunkTime)
+                currentIndex = iRange[1]
+            
+            plt.figure(self.fig)
+            self.fig.clear()
+            self.ax=plt.gca()
+            customLegend=[]
+            colors=['#d8434e', '#f67a49', '#fdbf6f', '#feeda1', '#f1f9a9', '#bfe5a0', '#74c7a5', '#378ebb']
+            for i, region in enumerate(channelAvgs):
+                color = colors[i % len(colors)]
+                self.ax.plot(t, region*chunkTimeSec, color=color)
+                customLegend.append(f"{[k for k in ROIdict.keys()][i]} Counts in {lastState} :{lastStateCounts[i]}")
+            self.ax.legend(customLegend)
+            plt.xlabel('Time (unixnanos)')
+            plt.ylabel(f'Counts per {chunkTimeSec} seconds')
+            plt.title(f'{len(channums)} Channels\nStates: {",".join(states)}')
+            plt.grid(True)
+            x_bounds = self.ax.get_xlim()
+            y_bounds = self.ax.get_ylim()
+            for s in states:
+                stateStart = ds.getAttr('unixnano',s)[0]
+                plt.vlines(stateStart,0,y_bounds[1], linestyles='dashed',color='k', label=s) 
+                self.ax.annotate(text=s, xy =(((stateStart-x_bounds[0])/(x_bounds[1]-x_bounds[0])),0.98), xycoords='axes fraction', verticalalignment='top', horizontalalignment='center' , rotation = 0)
+            plt.draw()
+        except Exception as exc: 
+            print("Failed to plot regions of interest!")
+            print(traceback.format_exc())
+            show_popup(self, "Failed to plot regions of interest!", traceback=traceback.format_exc())
 
-            ax.annotate(text=s, xy =(((stateStart-x_bounds[0])/(x_bounds[1]-x_bounds[0])),0.98), xycoords='axes fraction', verticalalignment='top', horizontalalignment='center' , rotation = 0)
-        [plt.close(f) for f in plt.get_fignums() if f != plt.get_fignums()[-1]]
-        plt.show()
+    def startRTP(self):
+        #make a timer
+        #every [interval] seconds, refresh from files. then, call (basically) the code above but on the same plot
+        self.fig.canvas.mpl_connect('close_event', self.on_close)
+        self.timer = QTimer()       #timer is used to loop the real-time plotting updates  
+        #self.timer.setSingleShot(True)
+        self.timer.timeout.connect(self.updateAndPlot)
+        
+        self.updateFreq_ms = int(self.intervalBox.value())*1000             #in ms after the multiplication
+        self.timer.start(self.updateFreq_ms)
+
+    def on_close(self, event):
+        self.timer.stop()
+        plt.ioff()
+
+    def updateFilesAndStates(self):
+        try:
+            self.timer.stop()
+            self.updateFreq_ms = int(self.intervalBox.value())*1000             #in ms after the multiplication
+            self.timer.start(self.updateFreq_ms)
+        except:
+            pass
+        oldStates = self.parent.ds.stateLabels
+        new_labels, new_pulses_dict = self.parent.data.refreshFromFiles()                #Mass function to refresh .off files as they are updated
+        #print(f'{new_labels=} {new_pulses_dict=}')
+        diff = set(self.parent.ds.stateLabels) - set(oldStates) #list(set(oldStates).symmetric_difference(set(self.parent.ds.stateLabels)))
+        newStates = [s for s in self.parent.ds.stateLabels if s in diff]
+        if len(newStates)>0:
+            print("New states found: ",newStates)
+            self.statesGrid.appendStates(newStates, self.parent.ds.stateLabels)
+    
+    def updateAndPlot(self):
+        self.updateFilesAndStates()
+        _colors, states = self.statesGrid.get_colors_and_states_list()
+        states = states[0] #get_colors_and_states_list returns a list of lists of states; we only use one row of states in the grid, so we only care about the first list of states.
+        if self.getChannum() == 'All':
+            self.channums = self.data.keys()
+        else:
+            self.channums = [int(self.getChannum())]
+
+        self.rollingAvgTimeSec = self.intervalBox.value()
+        self.numberOfChunks = self.chunksBox.value()
+        self.plotRollingAverages(self.data, self.channums, self.states, self.rollingAvgTimeSec, self.numberOfChunks, self.ROIdict, self.fig)

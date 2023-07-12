@@ -513,8 +513,9 @@ class MainWindow(QtWidgets.QWidget):
             self.AvsBsetup.show()
 
     def handleExternalTrigger(self):
-        if not os.path.isfile(os.path.join(f"{self.basename}_external_trigger.bin")): #todo: open file dialog instead
+        if not os.path.isfile(os.path.join(f"{self.basename}_external_trigger.bin")):
             print("Error: No external trigger file found in ",self.basename)
+            show_popup(self, f"Error: No external trigger file found in {self.basename}")
             return
 
         self.ETsetup = ExternalTriggerSetup(self) 

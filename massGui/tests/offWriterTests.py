@@ -22,12 +22,12 @@ def runOffWriterForTests():
     with open(basedir+r"\DataForTests\Source\20200107\0002\20200107_run0002_chan1.off", 'rb') as source_off_file:
         first = True
         """read the experiment state file to get a list of states/ignores and the times that they start"""
-        with open(basedir+r'\DataForTests\20200107_Realtime\full_states.txt', 'r') as expOld, open(basedir+r"\DataForTests\20200107_Realtime\20200107_run0002_experiment_state.txt", 'w') as expNew:
+        with open(basedir+r'\DataForTests\20200107_Realtime\full_states.txt', 'r') as expSource, open(basedir+r"\DataForTests\20200107_Realtime\20200107_run0002_experiment_state.txt", 'w') as expDest:
             offFile = getOffFileListFromOneFile(basedir+r"\DataForTests\Source\20200107\0002\20200107_run0002_chan1.off", maxChans=2)
             dataOld = ChannelGroup(offFile)
             dsOld = dataOld[1]
             times, states = dsOld.experimentStateFile.unixnanos, dsOld.experimentStateFile.allLabels
-            Lines = expOld.readlines()
+            Lines = expSource.readlines()
             
             
             while True:
@@ -36,11 +36,11 @@ def runOffWriterForTests():
                         
                         buf=source_off_file.read(80000)   #buffer and some records
                         n=destination_off_file.write(buf)
-                        expNew.write(Lines[0]) #header info about the file
-                        expNew.write(Lines[1]) #first label(state/ignore/start etc) and time
-                        expNew.write(Lines[2]) #first label(state/ignore/start etc) and time
-                        expNew.flush()
-                        os.fsync(expNew.fileno())
+                        expDest.write(Lines[0]) #header info about the file
+                        expDest.write(Lines[1]) #first label(state/ignore/start etc) and time
+                        expDest.write(Lines[2]) #first label(state/ignore/start etc) and time
+                        expDest.flush()
+                        os.fsync(expDest.fileno())
                         destination_off_file.flush()
                         os.fsync(destination_off_file.fileno())
                         first = False
@@ -65,9 +65,9 @@ def runOffWriterForTests():
                         #print("latest time = ",latestTime, "times[sInd] = ", times[sInd])
                         print("The next state is ",states[sInd])
                         if latestTime >= times[sInd]:
-                            expNew.write(Lines[sInd])
-                            expNew.flush()
-                            os.fsync(expNew.fileno())
+                            expDest.write(Lines[sInd])
+                            expDest.flush()
+                            os.fsync(expDest.fileno())
                             sInd+=1
                     """ if latestTime >= nextStateTime:
                             write one line to the experiment state file
@@ -76,4 +76,6 @@ def runOffWriterForTests():
                             """
                     
 def main():
+    runOffWriterForTests()
+if __name__ =="__main__":
     runOffWriterForTests()
