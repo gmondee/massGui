@@ -16,13 +16,14 @@ classifiers = [
 dependencies = [
   "numpy",
   "PyQt6",
+  "pytest",
   "pytest-qt",
   "matplotlib",
   "numpy",
   "h5py",
   "progress",
   "h5py",
-  "pytest"
+  "mass @ git+ssh://git@bitbucket.org/joe_fowler/mass"
 ]
 
 [project.scripts]
