@@ -8,6 +8,7 @@ on:
     branches: [ "main", "get_github_tests_working" ]
   pull_request:
     branches: [ "main", "get_github_tests_working" ]
+  workflow_dispatch :
 
 permissions:
   contents: read
