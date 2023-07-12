@@ -33,7 +33,7 @@ def app(qtbot):
 def test_open(app):
     assert app.selectFileButton.text()=="Select .OFF File"
 
-@pytest.mark.timeout(200)
+@pytest.mark.timeout(20)
 def test_cal(app, qtbot):
     offThread.start()
     time.sleep(1)
@@ -203,7 +203,6 @@ def test_cal(app, qtbot):
     qtbot.mouseClick(app.ROIRTPsetup.addButton, QtCore.Qt.MouseButton.LeftButton)
     qtbot.mouseClick(app.ROIRTPsetup.startRTPButton, QtCore.Qt.MouseButton.LeftButton)
     ax = plt.gca()
-    qtbot.stop()
     assert ax.has_data()
     assert 'Channels' in ax.title.get_text()
     plt.close()

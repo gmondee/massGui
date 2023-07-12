@@ -39,7 +39,6 @@ def show_popup(parent, text, traceback=None):
         msg.setIcon(QtWidgets.QMessageBox.Icon.Warning)
         if traceback is not None:
             msg.setDetailedText(traceback)
-        msg.resize(300,200) #doesn't work?
         ret = msg.exec()
 
 class MainWindow(QtWidgets.QWidget):

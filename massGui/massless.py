@@ -44,7 +44,6 @@ def show_popup(parent, text, traceback=None):
         msg.setIcon(QtWidgets.QMessageBox.Icon.Warning)
         if traceback is not None:
             msg.setDetailedText(traceback)
-        msg.resize(300,200)
         ret = msg.exec()
 
 class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable canvas for manual line ID
@@ -370,7 +369,7 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
             self.plotter = diagnoseViewer(self)
             self.plotter.setParams(self.parent, self.data, self.ds.channum, highestFV = self.highestFV)
             self.plotter.frame.setEnabled(False)
-            self.plotter.show()
+            self.plotter.exec()
         except Exception as exc:
             print("Failed to diagnose calibration!")
             print(traceback.format_exc())
@@ -1844,7 +1843,7 @@ class RoiRtpSetup(QtWidgets.QDialog): #real-time regions of interest todo: add r
 
                     else:
                         lastChunkTime = abs((unixnano[-1] - chunkStartTime)*10**-9)
-                        print(f'{lastChunkTime=}')
+                        #print(f'{lastChunkTime=}')
                         region[-1] = region[-1]*(chunkTimeSec/lastChunkTime)
                 currentIndex = iRange[1]
             
