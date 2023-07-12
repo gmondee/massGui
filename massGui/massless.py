@@ -1874,6 +1874,7 @@ class RoiRtpSetup(QtWidgets.QDialog): #real-time regions of interest todo: add r
             print(traceback.format_exc())
             show_popup(self, "Failed to plot regions of interest!", traceback=traceback.format_exc())
 
+<<<<<<< Updated upstream
     def startRTP(self):
         #make a timer
         #every [interval] seconds, refresh from files. then, call (basically) the code above but on the same plot
@@ -1917,3 +1918,27 @@ class RoiRtpSetup(QtWidgets.QDialog): #real-time regions of interest todo: add r
         self.rollingAvgTimeSec = self.intervalBox.value()
         self.numberOfChunks = self.chunksBox.value()
         self.plotRollingAverages(self.data, self.channums, self.states, self.rollingAvgTimeSec, self.numberOfChunks, self.ROIdict, self.fig)
+=======
+            ax.annotate(text=s, xy =(((stateStart-x_bounds[0])/(x_bounds[1]-x_bounds[0])),0.98), xycoords='axes fraction', verticalalignment='top', horizontalalignment='center' , rotation = 0)
+        [plt.close(f) for f in plt.get_fignums() if f != plt.get_fignums()[-1]]
+        plt.show()
+
+class progressPopup(QtWidgets.QDialog):
+    def __init__(self, parent=None):
+        super(progressPopup, self).__init__(parent)
+        QtWidgets.QDialog.__init__(self)
+
+    def setParams(self, steps):
+        self.build(steps)
+
+    def build(self, steps):
+        PyQt6.uic.loadUi(os.path.join(os.path.dirname(__file__), "ui/progressPopup.ui"), self)
+        self.progressBar.setMaximum(steps)
+
+    def addText(self, text):
+        self.textEdit.insertPlainText(text)
+
+    def nextValue(self):
+        self.progressBar.setValue(self.progressBar.value()+1)
+    
+>>>>>>> Stashed changes

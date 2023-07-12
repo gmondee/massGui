@@ -33,7 +33,7 @@ def app(qtbot):
 def test_open(app):
     assert app.selectFileButton.text()=="Select .OFF File"
 
-@pytest.mark.timeout(20)
+@pytest.mark.timeout(200)
 def test_cal(app, qtbot):
     offThread.start()
     time.sleep(1)

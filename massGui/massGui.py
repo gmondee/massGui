@@ -10,7 +10,7 @@ import os
 #import pytest
 #import pytestqt
 from matplotlib.lines import Line2D
-from .massless import HistCalibrator, HistPlotter, diagnoseViewer, rtpViewer, AvsBSetup, linefitSetup, hdf5Opener, qualityCheckLinefitSetup, ExternalTriggerSetup, RoiRtpSetup
+from .massless import HistCalibrator, HistPlotter, diagnoseViewer, rtpViewer, AvsBSetup, linefitSetup, hdf5Opener, qualityCheckLinefitSetup, ExternalTriggerSetup, RoiRtpSetup, progressPopup
 from .canvas import MplCanvas
 import progress
 import traceback
@@ -60,7 +60,6 @@ class MainWindow(QtWidgets.QWidget):
     def connect(self):
         self.selectFileButton.clicked.connect(self.handle_choose_file)
         self.lineIDButton.clicked.connect(self.handle_manual_cal)
-        self.oneChanCalButton.clicked.connect(self.singleChannelCalibration)
         self.resetCalButton.clicked.connect(self.resetCalibration)
         self.allChanCalButton.clicked.connect(self.allChannelCalibration)
         self.diagCalButton.clicked.connect(self.diagnoseCalibration)
@@ -204,7 +203,11 @@ class MainWindow(QtWidgets.QWidget):
         try:
             self.data = ChannelGroup(self.filenames, verbose=True)
             self.set_std_dev_threshold()
+            self.pb.addText("Learning standard deviation cut... \n")
+            QtWidgets.QApplication.instance().processEvents
             self.data.learnResidualStdDevCut()
+            self.pb.nextValue()
+            QtWidgets.QApplication.instance().processEvents
             self.ds = self.data[self.channum]
             self.ds.calibrationPlanInit("filtValue")
         
@@ -316,44 +319,33 @@ class MainWindow(QtWidgets.QWidget):
             #import mass.calibration._highly_charged_ion_lines
             self.common_models = mass.calibration.hci_models.models(has_linear_background=True)
 
-
-    def singleChannelCalibration(self):
-        dlo_dhi = self.getDloDhi()
-        binsize=self.getBinsizeCal()
-        if self._cal_stage != 1: #reset the calibration unless a single-channel calibration was done. doesn't allow user to enable/disable DC, PC, TC and redo without resetting completely...
-            self.initCal()
-            self._cal_stage = 1
-            #self.data.cutAdd("cutForLearnDC", lambda energyRough: np.logical_and(energyRough > 0, energyRough < 10000), setDefault=False) #ideally, user can set the bounds
-            try:    #crashes if user already calibrated (without resetting) and pressed it again. I want it to pull up the same plots again.
-                self.ds.alignToReferenceChannel(referenceChannel=self.ds, binEdges=np.arange(0,35000,10), attr="filtValue", states=self.ds.stateLabels)
-                self.newestName = "filtValue"
-                if self.PCcheckbox.isChecked():
-                    uncorr = self.newestName
-                    self.newestName+="PC"
-                    self.ds.learnPhaseCorrection(indicatorName="filtPhase", uncorrectedName=uncorr, correctedName = self.newestName, states=self.ds.stateLabels, overwriteRecipe=True)
-        
-                if self.DCcheckbox.isChecked():
-                    uncorr = self.newestName
-                    self.newestName+="DC"
-                    self.ds.learnDriftCorrection(indicatorName="pretriggerMean", uncorrectedName=uncorr, correctedName = self.newestName, states=self.ds.stateLabels, overwriteRecipe=True)#, cutRecipeName="cutForLearnDC")
-
-                if self.TDCcheckbox.isChecked():
-                    uncorr = self.newestName
-                    self.newestName+="TC"
-                    self.ds.learnTimeDriftCorrection(indicatorName="relTimeSec", uncorrectedName=uncorr, correctedName = self.newestName, states=self.ds.stateLabels, overwriteRecipe=True)#,cutRecipeName="cutForLearnDC", _rethrow=True) 
-                self.ds.calibrateFollowingPlan(self.newestName, dlo=dlo_dhi,dhi=dlo_dhi, binsize=binsize, overwriteRecipe=True, approximate=self.Acheckbox.isChecked())
-                print(f'Calibrated channel {self.ds.channum}')
-            except Exception as exc:
-                show_popup(self, "Failed single channel calibration!", traceback=traceback.format_exc())
-                print('exception in singleChannelCalibration')
-                print(traceback.format_exc())
-
     def allChannelCalibration(self):
         dlo_dhi = self.getDloDhi()
         binsize=self.getBinsizeCal()
+        steps = 3 # init, align, and calibrate are the only two steps that are always used
+        if self.PCcheckbox.isChecked():
+            steps+=1
+        if self.DCcheckbox.isChecked():
+            steps+=1
+        if self.TDCcheckbox.isChecked():
+            steps+=1
+
+
+        self.pb = progressPopup(self)
+        self.pb.setParams(steps)
+        self.pb.show()
+        app = QtWidgets.QApplication.instance()
+        app.processEvents()
+
         self.initCal()
+
+
         try:
+            self.pb.addText("Aligning channels... \n")
+            app.processEvents()
             self.data.alignToReferenceChannel(referenceChannel=self.ds, binEdges=np.arange(0,35000,10), attr="filtValue", states=self.ds.stateLabels)
+            self.pb.nextValue()
+            app.processEvents()
         except Exception as exc:
             print("Failed to align to reference channel!")
             print(traceback.format_exc())
@@ -364,18 +356,30 @@ class MainWindow(QtWidgets.QWidget):
             if self.PCcheckbox.isChecked():
                 uncorr = self.newestName
                 self.newestName+="PC"
+                self.pb.addText("Starting phase correction... \n")
+                app.processEvents()
                 self.data.learnPhaseCorrection(indicatorName="filtPhase", uncorrectedName=uncorr, correctedName = self.newestName, states=self.ds.stateLabels, overwriteRecipe=True)
+                self.pb.nextValue()
+                app.processEvents()
         
             if self.DCcheckbox.isChecked():
                 uncorr = self.newestName
                 self.newestName+="DC"
+                self.pb.addText("Starting drift correction... \n")
+                app.processEvents()
                 self.data.learnDriftCorrection(indicatorName="pretriggerMean", uncorrectedName=uncorr, correctedName = self.newestName, states=self.ds.stateLabels, overwriteRecipe=True)#, cutRecipeName="cutForLearnDC")
+                self.pb.nextValue()
+                app.processEvents()
 
             if self.TDCcheckbox.isChecked():
                 uncorr = self.newestName
                 self.newestName+="TC"
+                self.pb.addText("Starting time drift correction")
+                app.processEvents()
                 self.data.learnTimeDriftCorrection(indicatorName="relTimeSec", uncorrectedName=uncorr, correctedName = self.newestName, states=self.ds.stateLabels, overwriteRecipe=True)#,cutRecipeName="cutForLearnDC", _rethrow=True) 
-            print(f'Calibrated {len(self.data.values())} channels using reference channel {self.ds.channum}')
+                self.pb.nextValue()
+                app.processEvents()
+            
         except Exception as exc:
             print("exception in all channel calibration")
             print(traceback.format_exc())
@@ -383,16 +387,23 @@ class MainWindow(QtWidgets.QWidget):
             pass
         
         try:
+            self.pb.addText("Calibrating...")
+            app.processEvents()
             self.data.calibrateFollowingPlan(self.newestName, dlo=dlo_dhi,dhi=dlo_dhi, binsize=binsize, _rethrow=True, overwriteRecipe=True, approximate=self.Acheckbox.isChecked())
+            self.pb.nextValue()
+            app.processEvents()
+            # self.saveCalButton.setEnabled(True)
+            self.qualityButton.setEnabled(True)
+            self.calibratedChannels.update(self.data.keys())
+            print(f'Calibrated {len(self.data.values())} channels using reference channel {self.ds.channum}')
+            self.pb.close()
         except Exception as exc:
             print("Failed to calibrate following plan!")
             print(traceback.format_exc())
             show_popup(self, "Failed to calibrate following plan!", traceback=traceback.format_exc())
             return
 
-        self.saveCalButton.setEnabled(True)
-        self.qualityButton.setEnabled(True)
-        self.calibratedChannels.update(self.data.keys())
+
 
     def allChannelAutoCalibration(self):
         dlo_dhi = self.getDloDhi()
