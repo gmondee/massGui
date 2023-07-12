@@ -163,3 +163,4 @@ cython_debug/
 massGui/masslessLog.txt
 massGui/tests/DataForTests/20200107_Realtime/20200107_run0002_experiment_state.txt
 massGui/tests/DataForTests/20200107_Realtime/20200107_run0002_chan1.off
+massGui/tests/DataForTests/20200107_Realtime/20200107_run0002_experiment_state.txt
