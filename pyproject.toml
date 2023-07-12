@@ -23,7 +23,7 @@ dependencies = [
   "h5py",
   "progress",
   "h5py",
-  "mass @ git+ssh://git@bitbucket.org/joe_fowler/mass"
+  "mass @ git+git://git@bitbucket.org/joe_fowler/mass.git"
 ]
 
 [project.scripts]
