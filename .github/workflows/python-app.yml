@@ -27,6 +27,9 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    env:
+      DISPLAY: ':99.0'
+
 
     steps:
     - uses: actions/checkout@v3
@@ -41,6 +44,11 @@ jobs:
         pip install -e .
         sudo apt-get install libxcb*
         sudo apt-get install libegl1
+    - uses: tlambert03/setup-qt-libs@v1
+    - name: build "display"
+      run: |
+        /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -screen 0 1920x1200x24 -ac +extension GLX
+
         
     - name: Test with pytest
       run: |
