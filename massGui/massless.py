@@ -905,7 +905,7 @@ class rtpViewer(QtWidgets.QDialog): #window that hosts the real-time plotting ro
     def UpdatePlots(self):  #real-time plotting routine. refreshes data, adjust alphas, and replots graphs
         print(f"iteration {self.updateIndex}")
          
-        self.updateFreq_ms = self.intervalBox.value()*1000             #in ms after the multiplication
+        self.updateFreq_ms = int(self.intervalBox.value()*1000)           #in ms after the multiplication
         self.timer.start(self.updateFreq_ms)
 
         self.updateFilesAndStates()
