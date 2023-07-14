@@ -18,6 +18,7 @@ dependencies = [
   "PyQt6",
   "pytest",
   "pytest-qt",
+  "pytest-timeout",
   "matplotlib",
   "numpy",
   "h5py",
