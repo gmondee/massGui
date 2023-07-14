@@ -1,5 +1,6 @@
+print('line 1 here')
 import pytest
-
+print('line 3 here')
 # import PyQt6.QtWidgets as QtWidgets
 # import PyQt6.uic
 from PyQt6 import QtCore, QtGui, QtWidgets, QtTest
@@ -36,7 +37,7 @@ def test_open(app):
 @pytest.mark.timeout(20)
 def test_cal(app, qtbot):
     offThread.start()
-    time.sleep(1)
+    time.sleep(5)
     logging.basicConfig(filename='testLog.txt',
                         filemode='a',
                         format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
