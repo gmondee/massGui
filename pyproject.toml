@@ -38,6 +38,7 @@ massGui = "massGui:main"
 "Homepage" = "https://github.com/gmondee/massGui"
 
 [tool.pytest.ini_options]
+pythonpath = ["."]
 minversion = "6.0"
 addopts = ["-ra", "--showlocals", "--strict-markers", "--strict-config", "--import-mode=importlib"]
 testpaths = [
