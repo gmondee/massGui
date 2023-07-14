@@ -91,7 +91,7 @@ def test_cal(app, qtbot):
     assert app.maxChansSpinBox.value() == 2
 
     #manual bypass of file loading dialog
-    app.load_file(basedir+r"\DataForTests\20200107_Realtime\20200107_run0002_chan1.off")
+    app.load_file(os.path.join(basedir,r"DataForTests", r"20200107_Realtime", r"20200107_run0002_chan1.off"))
     app.set_std_dev_threshold()
     app.calibrationGroup.setEnabled(True)
     app.calButtonGroup.setEnabled(False)

@@ -17,13 +17,13 @@ Then, update the states file as the unixnanos time from the most recent ds.offFi
 """
 def runOffWriterForTests():
     basedir = os.path.dirname(os.path.abspath(__file__)) #r'C:\\Users\\Grant Mondeel\\Box\\my EUV\\tes\\realtime\\realtime\\Summer2023\\massGui\\massGui\\tests'
-    with open(basedir+r'\DataForTests\20200107_Realtime\20200107_run0002_chan1.off', 'wb'):
+    with open(os.path.join(basedir,'DataForTests', '20200107_Realtime', '20200107_run0002_chan1.off'), 'wb'):
         pass #clear the destination file
-    with open(basedir+r"\DataForTests\Source\20200107\0002\20200107_run0002_chan1.off", 'rb') as source_off_file:
+    with open(os.path.join(basedir,r"DataForTests", "Source", "20200107", "0002", "20200107_run0002_chan1.off"), 'rb') as source_off_file:
         first = True
         """read the experiment state file to get a list of states/ignores and the times that they start"""
-        with open(basedir+r'\DataForTests\20200107_Realtime\full_states.txt', 'r') as expSource, open(basedir+r"\DataForTests\20200107_Realtime\20200107_run0002_experiment_state.txt", 'w') as expDest:
-            offFile = getOffFileListFromOneFile(basedir+r"\DataForTests\Source\20200107\0002\20200107_run0002_chan1.off", maxChans=2)
+        with open(os.path.join(basedir,r'DataForTests', "20200107_Realtime", 'full_states.txt'), 'r') as expSource, open(os.path.join(basedir,r"DataForTests", "20200107_Realtime", "20200107_run0002_experiment_state.txt"), 'w') as expDest:
+            offFile = getOffFileListFromOneFile(os.path.join(basedir,r"DataForTests", "Source", "20200107", "0002", "20200107_run0002_chan1.off"), maxChans=2)
             dataOld = ChannelGroup(offFile)
             dsOld = dataOld[1]
             times, states = dsOld.experimentStateFile.unixnanos, dsOld.experimentStateFile.allLabels
@@ -31,7 +31,7 @@ def runOffWriterForTests():
             
             
             while True:
-                with open(basedir+r"\DataForTests\20200107_Realtime\20200107_run0002_chan1.off",'ab') as destination_off_file:
+                with open(os.path.join(basedir, r"DataForTests", "20200107_Realtime", "20200107_run0002_chan1.off"),'ab') as destination_off_file:
                     if first:
                         
                         buf=source_off_file.read(80000)   #buffer and some records
@@ -46,7 +46,7 @@ def runOffWriterForTests():
                         first = False
                         
                         sInd = 3
-                        offFile2 = getOffFileListFromOneFile(basedir+r"\DataForTests\20200107_Realtime\20200107_run0002_chan1.off", maxChans=1)
+                        offFile2 = getOffFileListFromOneFile(os.path.join(basedir,r"DataForTests", "20200107_Realtime", "20200107_run0002_chan1.off"), maxChans=1)
                         data = ChannelGroup(offFile2)
                         ds = data[1]
                         size = ds.offFile.dtype.itemsize

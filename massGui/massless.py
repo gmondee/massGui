@@ -23,7 +23,7 @@ from copy import copy
 import traceback
 import warnings 
 basedir = os.path.dirname(os.path.abspath(__file__))
-logging.basicConfig(filename=basedir+r'\masslessLog.txt',
+logging.basicConfig(filename=os.path.join(basedir, 'masslessLog.txt'),
                     filemode='w',
                     format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
                     datefmt='%H:%M:%S',
