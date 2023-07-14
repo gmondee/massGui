@@ -847,7 +847,7 @@ class rtpViewer(QtWidgets.QDialog): #window that hosts the real-time plotting ro
         self.canvas.fig.clear()
         self.energyAxis = self.canvas.fig.add_subplot(111)
         self.energyAxis.grid()
-        self.canvas.fig.set_tight_layout(True)
+        self.canvas.fig.set_layout_engine('tight')
         self.energyAxis.set_title('Real-time energy')
         self.energyAxis.set_xlabel('Energy (eV)')
         self.energyAxis.set_ylabel('Counts per'+str(self.parent.binSize)+'eV bin')
@@ -1507,7 +1507,7 @@ class ZoomPlotExternalTrigger(): #only works for external trigger plots.
                 sec = []
                 energy = []
                 for s in self.states:
-                    sec = np.concatenate([sec,ds.seconds_after_external_trigger[ds.getStatesIndicies(states=[s])][ds.getAttr("cutNone", [s], "cutNone")]]) #change the cut by swapping out the first "cutNone" with another cut.
+                    sec = np.concatenate([sec,ds.seconds_after_external_trigger[tuple(ds.getStatesIndicies(states=[s]))][ds.getAttr("cutNone", [s], "cutNone")]]) #change the cut by swapping out the first "cutNone" with another cut.
                     energy = np.concatenate([energy, ds.getAttr("energy", s, "cutNone")])
                 seconds_after_external_triggers = np.concatenate([seconds_after_external_triggers, sec])
                 energies = np.concatenate([energies, energy])
