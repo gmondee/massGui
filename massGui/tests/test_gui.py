@@ -1,6 +1,4 @@
-print('line 1 here')
 import pytest
-print('line 3 here')
 # import PyQt6.QtWidgets as QtWidgets
 # import PyQt6.uic
 from PyQt6 import QtCore, QtGui, QtWidgets, QtTest
@@ -11,7 +9,7 @@ import sys
 import os
 import massGui
 #import massGui.massGui
-import logging
+#import logging
 from .offWriterTests import main as offWriterTests
 import threading
 import time
@@ -31,6 +29,7 @@ def app(qtbot):
 
     return test_gui_app
 
+@pytest.mark.timeout(3)
 def test_open(app):
     assert app.selectFileButton.text()=="Select .OFF File"
 
@@ -38,15 +37,15 @@ def test_open(app):
 def test_cal(app, qtbot):
     offThread.start()
     time.sleep(5)
-    logging.basicConfig(filename='testLog.txt',
-                        filemode='a',
-                        format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
-                        datefmt='%H:%M:%S',
-                        level=logging.DEBUG)
+    # logging.basicConfig(filename='testLog.txt',
+    #                     filemode='a',
+    #                     format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
+    #                     datefmt='%H:%M:%S',
+    #                     level=logging.DEBUG)
 
-    logging.info("Test Log")
-    log = logging.getLogger("test_gui")
-    log.debug(f"made log")
+    # logging.info("Test Log")
+    # log = logging.getLogger("test_gui")
+    # log.debug(f"made log")
 
 
     def manual_cal():
