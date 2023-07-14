@@ -852,12 +852,9 @@ class rtpViewer(QtWidgets.QDialog): #window that hosts the real-time plotting ro
         self.energyAxis.set_xlabel('Energy (eV)')
         self.energyAxis.set_ylabel('Counts per'+str(self.parent.binSize)+'eV bin')
         self.energyAxis.autoscale(enable=True)
-        self.rate = 0.1                     #how much to lower the transparency of lines each update
         self.setAttribute(QtCore.Qt.WidgetAttribute.WA_DeleteOnClose)   #kills the timer when the RTP window is closed
         self.timer = QTimer(self)       #timer is used to loop the real-time plotting updates
-        #self.timer.setSingleShot(True)    
         self.timer.timeout.connect(self.UpdatePlots)        
-        #self.timer.start(self.updateFreq)
         self.UpdatePlots()
 
     def stopRTP(self): #never called right now, but this is how you might do it
@@ -907,14 +904,12 @@ class rtpViewer(QtWidgets.QDialog): #window that hosts the real-time plotting ro
 
     def UpdatePlots(self):  #real-time plotting routine. refreshes data, adjust alphas, and replots graphs
         print(f"iteration {self.updateIndex}")
-        
          
         self.updateFreq_ms = self.intervalBox.value()*1000             #in ms after the multiplication
         self.timer.start(self.updateFreq_ms)
 
         self.updateFilesAndStates()
         eLow, eHi = self.getEnergyBounds()
-        
         
         _colors, States = self.statesGrid.get_colors_and_states_list()
         try: #if the user has all states unchecked during a refresh, use the last set of states.
@@ -923,31 +918,20 @@ class rtpViewer(QtWidgets.QDialog): #window that hosts the real-time plotting ro
         except:
             States = self.oldStates
             print("No states checked, using last set of valid states:", States)
-
-        self.rtpline.append([])                     #stores every line that is plotted according to the updateIndex
         self.dataToPlot = self.getDataToPlot()
-        #print(f"Length of channel 1: {len(self.parent.data[1].offFile._mmap)}")
-
+        for line in self.energyAxis.get_lines():
+            line.remove()
+        self.plottedStates = []
         for s in range(len(States)):    #looping over each state passed in
             x,y = self.dataToPlot.hist(np.arange(eLow, eHi, float(self.parent.getBinsizeCal())), "energy", states=States[s])
             self.energyAxis.plot(x, y ,alpha=1, color=self.getColorfromState(States[s]))    #plots the [x,y] points and assigns color based on the state
-            #print(f'{s=},{np.sum(y)=}')
             if States[s] not in self.plottedStates:     #new states are added to the legend; old ones are already there                      
                 self.plottedStates.append(States[s])
-            self.rtpline[self.updateIndex].append(self.energyAxis.lines[-1])    #stores most recent line
 
-        self.alphas.append(1)   #lines in the same refresh cycle share an alpha (transparency) value. a new one is made for the newest lines.
         customLegend=[]         #temporary list to store the legend
         for s in self.plottedStates:    #loops over all states called during the current real-time plotting routine
             customLegend.append(Line2D([0], [0], color=self.getColorfromState(s)))      #each state is added to the legend with the state's respective color
         self.energyAxis.legend(customLegend, list(self.plottedStates))                  #makes the legend
-
-        ###change transparency of current elements, plot adjusted lines
-        for lineI in range(len(self.alphas)):   #loops over the number of refresh cycles, which is also the length of the alphas list
-            if self.alphas[lineI] > 0.1:        #alpha values cannot be below 0
-                self.alphas[lineI] = self.alphas[lineI] - self.rate
-            for setI in range(len(self.rtpline[lineI])):    #loops over the states within one refresh cycle
-                self.rtpline[lineI][setI].set_alpha(self.alphas[lineI])     #sets adjusted alpha values
         self.canvas.draw()
         self.updateIndex=self.updateIndex+1
 

@@ -122,9 +122,9 @@ class MainWindow(QtWidgets.QWidget):
             self.set_std_dev_threshold()
             #self.data_no_cal = self.data
         
-        self.calibrationGroup.setEnabled(True) #file is loaded, user should now do the line identification.
-        self.calButtonGroup.setEnabled(False) #don't let users run the calibration procedure yet. enabled in importTableRows()
-        self.loadCalButton.setEnabled(True) #once file is specified, a calibration can be loaded
+            self.calibrationGroup.setEnabled(True) #file is loaded, user should now do the line identification.
+            self.calButtonGroup.setEnabled(False) #don't let users run the calibration procedure yet. enabled in importTableRows()
+            self.loadCalButton.setEnabled(True) #once file is specified, a calibration can be loaded
 
     def set_std_dev_threshold(self):
         for ds in self.data.values():
