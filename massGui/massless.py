@@ -3,6 +3,9 @@
 import sys
 import os
 import logging  
+from copy import copy
+import traceback
+import warnings 
 
 #qt imports
 import PyQt6.uic
@@ -19,9 +22,7 @@ import matplotlib
 from matplotlib.lines import Line2D
 import massGui
 import h5py
-from copy import copy
-import traceback
-import warnings 
+
 basedir = os.path.dirname(os.path.abspath(__file__))
 logging.basicConfig(filename=os.path.join(basedir, 'masslessLog.txt'),
                     filemode='w',
