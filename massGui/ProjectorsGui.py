@@ -9,6 +9,7 @@ import h5py
 import gc
 import matplotlib.pyplot as plt
 from mass.core.projectors_script import make_projectors
+from .canvas import MplCanvas
 
 
 
@@ -36,11 +37,11 @@ class projectorsGui(QtWidgets.QDialog):  #handles linefit function call. lets us
 
     def build(self):
         PyQt6.uic.loadUi(os.path.join(os.path.dirname(__file__), "ui","ProjectorsGui.ui"), self) #,  s, attr, state_labels, colors)
-        
     def connect(self):
         self.pulsePathButton.clicked.connect(self.openPulseFile)
         self.noisePathButton.clicked.connect(self.openNoiseFile)
         self.startButton.clicked.connect(self.handle_make_projectors)
+        self.plotProjectorsButton.clicked.connect(self.plotProjectors)
         
     def openPulseFile(self):
         self.args.pulse_path = self.handle_choose_file(lookingForThis='pulses')
@@ -142,6 +143,9 @@ class projectorsGui(QtWidgets.QDialog):  #handles linefit function call. lets us
             with h5py.File(self.args.output_path, "r") as h5:
                 self.models = {int(ch) : mass.pulse_model.PulseModel.fromHDF5(h5[ch]) for ch in h5.keys()}
                 self.channels = [int(ch) for ch in h5.keys()]
+                for ch in self.channels:
+                    self.channelBox.addItem("{}".format(ch))
+                self.plotProjectorsGroup.setEnabled(True)
             #add channels to self.channelBox
             #enable plotProjectorsGroup
             #make the button do something
@@ -156,6 +160,16 @@ class projectorsGui(QtWidgets.QDialog):  #handles linefit function call. lets us
             print("Failed to make projectors!")
             print(traceback.format_exc())
             show_popup(self, "Failed to make projectors!", traceback=traceback.format_exc())
+
+    def plotProjectors(self):      
+        channum = int(self.channelBox.currentText())
+        canvas1 = MplCanvas()
+        canvas2 = MplCanvas()
+        self.models[channum].plot(canvas1.fig, canvas2.fig)
+        canvas1.show()
+        canvas2.show()
+
+
 
     def handle_choose_file(self, lookingForThis):
         #options = QFileDialog.options(QFileDialog)

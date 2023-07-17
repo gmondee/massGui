@@ -29,6 +29,7 @@ dependencies = [
 
 [project.scripts]
 massGui = "massGui:main"
+projectorsGui = "ProjectorsGui:main"
 
 
 [project.entry-points]
