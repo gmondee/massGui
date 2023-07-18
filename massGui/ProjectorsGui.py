@@ -192,9 +192,10 @@ class projectorsGui(QtWidgets.QDialog):  #handles linefit function call. lets us
 class ArgsDict(): #used like a dictionary for the arguments
     pass
     
-#show where output files are placed, popup?
-
-if __name__ == '__main__':
+def main():
     app = QtWidgets.QApplication(sys.argv)
     pg = projectorsGui()
     pg.exec()
+
+if __name__ == '__main__':
+    main()
