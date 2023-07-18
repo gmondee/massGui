@@ -25,11 +25,12 @@ dependencies = [
   "progress",
   "h5py",
   "mass @ git+https://joe_fowler@bitbucket.org/joe_fowler/mass.git"
+  #"mass @ git+https://bitbucket.org/joe_fowler/mass"
 ]
 
 [project.scripts]
 massGui = "massGui:main"
-projectorsGui = "ProjectorsGui:main"
+projectorsGui = "massGui.ProjectorsGui:main"
 
 
 [project.entry-points]

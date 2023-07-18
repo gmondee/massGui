@@ -146,15 +146,7 @@ class projectorsGui(QtWidgets.QDialog):  #handles linefit function call. lets us
                 for ch in self.channels:
                     self.channelBox.addItem("{}".format(ch))
                 self.plotProjectorsGroup.setEnabled(True)
-            #add channels to self.channelBox
-            #enable plotProjectorsGroup
-            #make the button do something
-            #plot with qt canvases instead of plt b/c of blocking?
-            # for ch in self.channels:
-            #     self.models[ch].plot()
-            # plt.show()
-
-            
+           
             
         except Exception as exc:
             print("Failed to make projectors!")
@@ -163,11 +155,17 @@ class projectorsGui(QtWidgets.QDialog):  #handles linefit function call. lets us
 
     def plotProjectors(self):      
         channum = int(self.channelBox.currentText())
-        canvas1 = MplCanvas()
-        canvas2 = MplCanvas()
-        self.models[channum].plot(canvas1.fig, canvas2.fig)
-        canvas1.show()
-        canvas2.show()
+        self.canvas1 = MplCanvasPlot()
+        fig1 = plt.get_fignums()[-1]#canvas1.canvas.fig
+        self.canvas2 = MplCanvasPlot()
+        fig2 = plt.get_fignums()[-1]#canvas2.canvas.fig
+        #fig1 = plt.figure()
+        #canvas1 = MplCanvas(fig1.number)
+        #fig2 = plt.figure()
+        #canvas2 = MplCanvas(fig2.number)
+        self.models[channum].plot(fig1, fig2)
+        self.canvas1.show()
+        self.canvas2.show()
 
 
 
@@ -187,6 +185,20 @@ class projectorsGui(QtWidgets.QDialog):  #handles linefit function call. lets us
 
         
 
+class MplCanvasPlot(QtWidgets.QDialog):
+    def __init__(self, parent=None):
+        super(MplCanvasPlot, self).__init__(parent)
+        QtWidgets.QDialog.__init__(self)
+        self.setParams()
+    def setParams(self):
+        self.build()
+        self.connect()
+
+    def build(self):
+        PyQt6.uic.loadUi(os.path.join(os.path.dirname(__file__), "ui","mplCanvasPlot.ui"), self)
+    def connect(self):
+        ...
+
 
 
 class ArgsDict(): #used like a dictionary for the arguments
@@ -195,7 +207,8 @@ class ArgsDict(): #used like a dictionary for the arguments
 def main():
     app = QtWidgets.QApplication(sys.argv)
     pg = projectorsGui()
-    pg.exec()
+    pg.show()
+    app.exec()
 
 if __name__ == '__main__':
     main()

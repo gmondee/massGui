@@ -12,6 +12,7 @@ import os
 from matplotlib.lines import Line2D
 from .massless import HistCalibrator, HistPlotter, diagnoseViewer, rtpViewer, AvsBSetup, linefitSetup, hdf5Opener, qualityCheckLinefitSetup, ExternalTriggerSetup, RoiRtpSetup, progressPopup
 from .canvas import MplCanvas
+from .ProjectorsGui import projectorsGui
 import progress
 import traceback
 from mass.calibration import algorithms
