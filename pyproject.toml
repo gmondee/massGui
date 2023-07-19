@@ -23,10 +23,13 @@ dependencies = [
   "numpy",
   "h5py",
   "progress",
-  "h5py",
-  "mass @ git+https://joe_fowler@bitbucket.org/joe_fowler/mass.git"
-  #"mass @ git+https://bitbucket.org/joe_fowler/mass"
+  "h5py"
+  #"mass @ git+https://joe_fowler@bitbucket.org/joe_fowler/mass.git"
+  #above works on the github venvs but not my pc??
 ]
+
+[project.optional-dependencies]
+mass = ["mass @ git+https://joe_fowler@bitbucket.org/joe_fowler/mass.git"] #mass isn't optional, but maybe you already have it
 
 [project.scripts]
 massGui = "massGui:main"
