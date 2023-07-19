@@ -9,5 +9,10 @@ If you do not want an editable installation, you can use:
 
 and it should appear with the rest of your installed packages. 
 
+To get PyQt to work with matplotlib, you might need to run ```pip install matplotlib --upgrade``` after installing massGui.
+
+On Linux, you may have to run this command as well:
+
+```sudo apt-get install libxcb*```
 
 Once massGui is installed, you can run the GUI anywhere by running `massGui` in the terminal.
