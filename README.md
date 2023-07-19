@@ -11,7 +11,7 @@ and it should appear with the rest of your installed packages.
 
 To get PyQt to work with matplotlib, you might need to run ```pip install matplotlib --upgrade``` after installing massGui.
 
-On Linux, you may have to run this command as well:
+On Ubuntu, you may have to run this command as well:
 
 ```sudo apt-get install libxcb*```
 
