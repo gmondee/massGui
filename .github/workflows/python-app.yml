@@ -42,7 +42,7 @@ jobs:
         python -m pip install pip==21.1.2
         pip install pytest pytest-qt
         pip install git+https://bitbucket.org/joe_fowler/mass
-        pip install -e .
+        pip install .
         sudo apt-get install libxcb*
         sudo apt-get install libegl1
     - uses: tlambert03/setup-qt-libs@v1
