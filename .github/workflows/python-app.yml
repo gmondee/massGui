@@ -41,7 +41,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install pytest pytest-qt
-        pip install git+ssh://git@bitbucket.org/joe_fowler/mass.git
+        pip install git+https://bitbucket.org/joe_fowler/mass
         pip install -e .
         sudo apt-get install libxcb*
         sudo apt-get install libegl1
