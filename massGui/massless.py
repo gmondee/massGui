@@ -54,9 +54,9 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
         QtWidgets.QDialog.__init__(self)
         self.lines = list(mass.spectra.keys())
 
-    def setParams(self, parent, data, channum, attr, state_labels, binSize, colors=MPL_DEFAULT_COLORS[:6], 
+    def setParams(self, parent, data, channum, state_labels, binSize, colors=MPL_DEFAULT_COLORS[:6], 
                   lines=DEFAULT_LINES, statesConfig=None, markers=None, artistMarkers=None,markersIndex=None, linesNames=None, 
-                  autoFWHM=None, maxacc=None):
+                  autoFWHM=None, maxacc=None, enable5lag=False):
         self.parent=parent
         self.binSize=binSize
         self.linesNames = linesNames
@@ -72,8 +72,15 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
             self.markerIndex = 0
         else:
             self.markerIndex = markersIndex
-
-        self.build(data, channum, attr, state_labels, colors, statesConfig, self.linesNames, autoFWHM, maxacc)
+        if enable5lag:
+            self.fvAttr = 'filtValue5Lag'
+            self.ptmAttr = 'pretriggerMeanCorrected'
+            
+        else:
+            self.fvAttr = 'filtValue'
+            self.ptmAttr = 'pretriggerMean'
+        
+        self.build(data, channum, self.fvAttr, state_labels, colors, statesConfig, self.linesNames, autoFWHM, maxacc)
         self.connect()
 
     def build(self, data, channum, attr, state_labels, colors, statesConfig, linesNames, autoFWHM, maxacc):
@@ -297,7 +304,7 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
         try:
             self.ds = self.data[int(self.getChannum())]
             #print(self.linesNames)
-            names, filtValues = self.ds.learnCalibrationPlanFromEnergiesAndPeaks('filtValue', states=states_list, ph_fwhm=autoFWHM, line_names=self.linesNames, maxacc=maxacc)
+            names, filtValues = self.ds.learnCalibrationPlanFromEnergiesAndPeaks(self.fvAttr, states=states_list, ph_fwhm=autoFWHM, line_names=self.linesNames, maxacc=maxacc)
             #todo: import the cal stuff into the table.
             self.highestFV=max(filtValues)
             self.diagnoseCalibration(auto=True)
@@ -318,7 +325,7 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
                     print("Assign energies to all lines and try again")
                     return
             self.ds = self.data[int(self.getChannum())]
-            self.ds.calibrationPlanInit("filtValue")
+            self.ds.calibrationPlanInit(self.fvAttr)
             
             self.highestFV = 0. #used to set better bounds in the diagnose plot
             for (states, fv, line, energy) in lines: 
@@ -346,8 +353,7 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
         
         try:
             #self.data.cutAdd("cutForLearnDC", lambda energyRough: np.logical_and(energyRough > 0, energyRough < 10000), setDefault=False) #ideally, user can set the bounds
-            #self.ds.alignToReferenceChannel(referenceChannel=self.ds, binEdges=np.arange(float(self.eRangeLow.text()),float(self.eRangeHi.text()),binsize), attr="filtValue", states=self.ds.stateLabels)
-            self.newestName = "filtValue"
+            self.newestName = self.fvAttr
             if self.PCcheckbox.isChecked():
                 uncorr = self.newestName
                 self.newestName+="PC"
@@ -356,7 +362,7 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
             if self.DCcheckbox.isChecked():
                 uncorr = self.newestName
                 self.newestName+="DC"
-                self.ds.learnDriftCorrection(indicatorName="pretriggerMean", uncorrectedName=uncorr, correctedName = self.newestName, states=self.ds.stateLabels, overwriteRecipe=True)#, cutRecipeName="cutForLearnDC")
+                self.ds.learnDriftCorrection(indicatorName=self.ptmAttr, uncorrectedName=uncorr, correctedName = self.newestName, states=self.ds.stateLabels, overwriteRecipe=True)#, cutRecipeName="cutForLearnDC")
 
             if self.TDCcheckbox.isChecked():
                 uncorr = self.newestName
@@ -366,7 +372,6 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
             print(f'Calibrated channel {self.ds.channum}')
             self.parent.calibratedChannels = set([self.ds.channum])
 
-            #self.ds.calibrateFollowingPlan("filtValue", dlo=50,dhi=50, binsize=1, overwriteRecipe=True)
             self.plotter = diagnoseViewer(self)
             self.plotter.setParams(self.parent, self.data, self.ds.channum, highestFV = self.highestFV)
             self.plotter.frame.setEnabled(False)

@@ -55,6 +55,7 @@ class MainWindow(QtWidgets.QWidget):
         PyQt6.uic.loadUi(os.path.join(os.path.dirname(__file__), "ui/massGuiW.ui"), self)
         self.calibratedChannels = set()
         self.calibrationGroup.setEnabled(False)
+        self.enable5lag = False
         progress.Infinite.file = sys.stderr 
 
     def connect(self):
@@ -77,6 +78,8 @@ class MainWindow(QtWidgets.QWidget):
         self.readNewButton.clicked.connect(self.readNewFilesAndStates)
         self.startROIRTPButton.clicked.connect(self.startROIRTP)
         self.launchProjectorsButton.clicked.connect(self.startProjectorsGui)
+        self.lagSelectButton.clicked.connect(self.handle_choose_file_5lag)
+        self.lagClearButton.clicked.connect(self.clear_5lag)
 
     def load_file(self, filename, maxChans = None):
         self._choose_file_lastdir = os.path.dirname(filename)
@@ -128,6 +131,41 @@ class MainWindow(QtWidgets.QWidget):
             self.calButtonGroup.setEnabled(False) #don't let users run the calibration procedure yet. enabled in importTableRows()
             self.loadCalButton.setEnabled(True) #once file is specified, a calibration can be loaded
 
+    def handle_choose_file_5lag(self):
+        if not hasattr(self, "_choose_file_lastdir"):
+            dir = os.path.expanduser("~")
+        else:
+            dir = self._choose_file_lastdir
+        fileName, _ = QFileDialog.getOpenFileName(
+            self, "Find Pulse Model hdf5 file", dir,
+            "hdf5 Files (*.hdf5);;All Files (*)")#, options=options)
+        if fileName:
+            try:
+                self.lagFile = fileName
+                self.lagTextBox.setText(self.lagFile) 
+                with h5py.File(self.lagFile,"r") as h5:
+                    models = {int(ch) : mass.pulse_model.PulseModel.fromHDF5(h5[ch]) for ch in h5.keys()}
+                for channum, ds in self.data.items():
+                    # define recipes for "filtValue5Lag", "peakX5Lag" and "cba5Lag"
+                    # where cba refers to the coefficiencts of a polynomial fit to the 5 lags of the filter
+                    filter_5lag = models[channum].f_5lag
+                    ds.add5LagRecipes(filter_5lag)
+                    # this data has artificial offsets of n*2**12 added to pretriggerMean by the phase unwrap algorithm used
+                    # define a "pretriggerMeanCorrected" to remove these offsets
+                    ds.recipes.add("pretriggerMeanCorrected", lambda pretriggerMean: pretriggerMean%2**12)
+                self.fileSelectionGroup.setEnabled(False)
+                self.enable5lag = True
+            except Exception as exc:
+                show_popup(self, "Failed to make 5lag filters!", traceback=traceback.format_exc())
+                print("Failed to make 5lag filters!")
+                print(traceback.format_exc())
+                self.lagTextBox.setText('')
+                self.enable5lag = False
+                return
+    def clear_5lag(self):
+        self.lagTextBox.setText('')
+        self.enable5lag = False
+
     def set_std_dev_threshold(self):
         for ds in self.data.values():
             ds.stdDevResThreshold = 1000
@@ -142,9 +180,9 @@ class MainWindow(QtWidgets.QWidget):
         self.plotsGroup.setEnabled(False)
         self.fileSelectionGroup.setEnabled(False)
         self.hc = HistCalibrator(self) 
-        self.hc.setParams(self, data, channum, "filtValue", data[channum].stateLabels, binSize=50, 
+        self.hc.setParams(self, data, channum, data[channum].stateLabels, binSize=50, 
                           statesConfig=self.launch_channel_states, markers=self.markersDict, artistMarkers=self.artistMarkersDict, 
-                          markersIndex=self.markerIndex, linesNames=self.linesNames, autoFWHM=self.autoFWHM, maxacc=self.maxacc)
+                          markersIndex=self.markerIndex, linesNames=self.linesNames, autoFWHM=self.autoFWHM, maxacc=self.maxacc, enable5lag=self.enable5lag)
         tableData = self.getcalTableRows()
         self.hc.importTableRows(tableData)
         self.hc.PCcheckbox.setChecked(self.PCcheckbox.isChecked())

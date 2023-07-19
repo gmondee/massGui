@@ -244,109 +244,121 @@
               <property name="title">
                <string>Calibration Steps</string>
               </property>
-              <layout class="QHBoxLayout" name="horizontalLayout_5">
+              <layout class="QVBoxLayout" name="verticalLayout_9">
                <item>
-                <widget class="QFrame" name="frame_8">
-                 <property name="minimumSize">
-                  <size>
-                   <width>0</width>
-                   <height>100</height>
-                  </size>
-                 </property>
+                <widget class="QFrame" name="frame_14">
                  <property name="frameShape">
                   <enum>QFrame::StyledPanel</enum>
                  </property>
                  <property name="frameShadow">
                   <enum>QFrame::Raised</enum>
                  </property>
-                 <layout class="QVBoxLayout" name="verticalLayout">
+                 <layout class="QHBoxLayout" name="horizontalLayout_6">
                   <item>
-                   <widget class="QCheckBox" name="DCcheckbox">
-                    <property name="text">
-                     <string>Drift Correction</string>
+                   <widget class="QFrame" name="frame_8">
+                    <property name="minimumSize">
+                     <size>
+                      <width>0</width>
+                      <height>100</height>
+                     </size>
                     </property>
-                    <property name="checked">
-                     <bool>true</bool>
+                    <property name="frameShape">
+                     <enum>QFrame::StyledPanel</enum>
                     </property>
+                    <property name="frameShadow">
+                     <enum>QFrame::Raised</enum>
+                    </property>
+                    <layout class="QVBoxLayout" name="verticalLayout">
+                     <item>
+                      <widget class="QCheckBox" name="DCcheckbox">
+                       <property name="text">
+                        <string>Drift Correction</string>
+                       </property>
+                       <property name="checked">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QCheckBox" name="PCcheckbox">
+                       <property name="text">
+                        <string>Phase Correction</string>
+                       </property>
+                       <property name="checked">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QCheckBox" name="TDCcheckbox">
+                       <property name="text">
+                        <string>Time Drift Correction</string>
+                       </property>
+                       <property name="checked">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QCheckBox" name="Acheckbox">
+                       <property name="text">
+                        <string>Approximate Calibration</string>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
                    </widget>
                   </item>
                   <item>
-                   <widget class="QCheckBox" name="PCcheckbox">
-                    <property name="text">
-                     <string>Phase Correction</string>
+                   <widget class="QFrame" name="frame_9">
+                    <property name="frameShape">
+                     <enum>QFrame::StyledPanel</enum>
                     </property>
-                    <property name="checked">
-                     <bool>true</bool>
+                    <property name="frameShadow">
+                     <enum>QFrame::Raised</enum>
                     </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="TDCcheckbox">
-                    <property name="text">
-                     <string>Time Drift Correction</string>
-                    </property>
-                    <property name="checked">
-                     <bool>true</bool>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="Acheckbox">
-                    <property name="text">
-                     <string>Approximate Calibration</string>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
-                </widget>
-               </item>
-               <item>
-                <widget class="QFrame" name="frame_9">
-                 <property name="frameShape">
-                  <enum>QFrame::StyledPanel</enum>
-                 </property>
-                 <property name="frameShadow">
-                  <enum>QFrame::Raised</enum>
-                 </property>
-                 <layout class="QGridLayout" name="gridLayout">
-                  <item row="0" column="2">
-                   <widget class="QDoubleSpinBox" name="dlo_dhiBox">
-                    <property name="buttonSymbols">
-                     <enum>QAbstractSpinBox::NoButtons</enum>
-                    </property>
-                    <property name="decimals">
-                     <number>2</number>
-                    </property>
-                    <property name="maximum">
-                     <double>10000000.000000000000000</double>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="1" column="2">
-                   <widget class="QDoubleSpinBox" name="calBinBox">
-                    <property name="buttonSymbols">
-                     <enum>QAbstractSpinBox::NoButtons</enum>
-                    </property>
-                    <property name="decimals">
-                     <number>2</number>
-                    </property>
-                    <property name="maximum">
-                     <double>10000000.000000000000000</double>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="0" column="0">
-                   <widget class="QLabel" name="label_8">
-                    <property name="text">
-                     <string>Default Fit Range (eV)</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="1" column="0">
-                   <widget class="QLabel" name="label_9">
-                    <property name="text">
-                     <string>Bin Size (eV)</string>
-                    </property>
+                    <layout class="QGridLayout" name="gridLayout">
+                     <item row="0" column="2">
+                      <widget class="QDoubleSpinBox" name="dlo_dhiBox">
+                       <property name="buttonSymbols">
+                        <enum>QAbstractSpinBox::NoButtons</enum>
+                       </property>
+                       <property name="decimals">
+                        <number>2</number>
+                       </property>
+                       <property name="maximum">
+                        <double>10000000.000000000000000</double>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="1" column="2">
+                      <widget class="QDoubleSpinBox" name="calBinBox">
+                       <property name="buttonSymbols">
+                        <enum>QAbstractSpinBox::NoButtons</enum>
+                       </property>
+                       <property name="decimals">
+                        <number>2</number>
+                       </property>
+                       <property name="maximum">
+                        <double>10000000.000000000000000</double>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="0">
+                      <widget class="QLabel" name="label_8">
+                       <property name="text">
+                        <string>Default Fit Range (eV)</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="1" column="0">
+                      <widget class="QLabel" name="label_9">
+                       <property name="text">
+                        <string>Bin Size (eV)</string>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
                    </widget>
                   </item>
                  </layout>
