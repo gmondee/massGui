@@ -76,6 +76,7 @@ class MainWindow(QtWidgets.QWidget):
         self.extTrigButton.clicked.connect(self.handleExternalTrigger)
         self.readNewButton.clicked.connect(self.readNewFilesAndStates)
         self.startROIRTPButton.clicked.connect(self.startROIRTP)
+        self.launchProjectorsButton.clicked.connect(self.startProjectorsGui)
 
     def load_file(self, filename, maxChans = None):
         self._choose_file_lastdir = os.path.dirname(filename)
@@ -569,6 +570,11 @@ class MainWindow(QtWidgets.QWidget):
         except:
             self.data.markAllGood() #if all channels somehow get marked bad, refresh will fail
             self.data.refreshFromFiles()
+
+    def startProjectorsGui(self):
+        self.pj = projectorsGui()
+        self.pj.show()
+
 
     def save_to_hdf5(self, name=None):
         with  h5py.File('saves.h5', 'a') as hf:
