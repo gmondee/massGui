@@ -449,6 +449,7 @@ class HistViewer(QtWidgets.QWidget): #widget for hist calibrator and others. plo
                 self.plot(states_list, np.arange(self.binLo,self.binHi, self.binSize), self.attr, colors)
             else:
                 self.plotAll(states_list, np.arange(self.binLo,self.binHi, self.binSize), self.attr, colors)
+            self.min_marker_ind_diff = self.binSize/4
 
 
     def plot(self, states_list, bin_edges, attr, colors):
