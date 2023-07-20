@@ -57,6 +57,7 @@ class MainWindow(QtWidgets.QWidget):
         self.calibrationGroup.setEnabled(False)
         self.enable5lag = False
         progress.Infinite.file = sys.stderr 
+        self.excludeStates = ['STOP', 'END', 'IGNORE']
 
     def connect(self):
         self.selectFileButton.clicked.connect(self.handle_choose_file)
@@ -89,7 +90,7 @@ class MainWindow(QtWidgets.QWidget):
         self.basename, _ = mass.ljh_util.ljh_basename_channum(filename) #basename used later for external trigger
         self.filenames = filenames
         self.filename=filename
-        self.data = ChannelGroup(filenames, verbose=True)
+        self.data = ChannelGroup(filenames, verbose=True, excludeStates = self.excludeStates)
         #self.label_loadedChans.setText("loaded {} chans".format(len(self.data)))
         print("loaded {} chans".format(len(self.data)))
 
@@ -239,7 +240,7 @@ class MainWindow(QtWidgets.QWidget):
     def initCal(self):
         #self.data = self.data_no_cal
         try:
-            self.data = ChannelGroup(self.filenames, verbose=True)
+            self.data = ChannelGroup(self.filenames, verbose=True, excludeStates = self.excludeStates)
             self.set_std_dev_threshold()
             self.pb.addText("Learning standard deviation cut... \n")
             QtWidgets.QApplication.instance().processEvents
@@ -307,7 +308,7 @@ class MainWindow(QtWidgets.QWidget):
         self.markerIndex = 0
         self.linesNames = None
         self.clear_table()
-        self.data = ChannelGroup(self.filenames, verbose=True) #marks channels good, removes recipes
+        self.data = ChannelGroup(self.filenames, verbose=True, excludeStates = self.excludeStates) #marks channels good, removes recipes
 
     def get_line_names(self):
         if self.self.HCIonCheckbox.isChecked()==True:       #optional import of highly charged ions to the dropdown. Does not work now.
@@ -476,7 +477,7 @@ class MainWindow(QtWidgets.QWidget):
         except:
             print("failed to get Max Acc")  
             return 
-        self.data = ChannelGroup(self.filenames, verbose=True)
+        self.data = ChannelGroup(self.filenames, verbose=True, excludeStates = self.excludeStates)
         self.set_std_dev_threshold()
         self.data.learnResidualStdDevCut()
         self.ds = self.data[self.channum]

@@ -463,6 +463,7 @@ class HistViewer(QtWidgets.QWidget): #widget for hist calibrator and others. plo
             self.photonCount += sum(line.get_ydata())
             self.line2marker[line] = []
             self.line2states[line] = states_list[i]
+            line.set_color(colors[i])
         self.parent.photonCountBox.setText(str(self.photonCount))
         self.canvas.legend([",".join(states) for states in states_list])
         self.canvas.draw()
@@ -480,6 +481,7 @@ class HistViewer(QtWidgets.QWidget): #widget for hist calibrator and others. plo
             self.photonCount += sum(line.get_ydata())
             self.line2marker[line] = []
             self.line2states[line] = states_list[i]
+            line.set_color(colors[i])
         self.parent.photonCountBox.setText(str(self.photonCount))
         self.canvas.legend([",".join(states) for states in states_list])
         plt.tight_layout()
