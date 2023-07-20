@@ -614,7 +614,7 @@ class StatesGrid(QtWidgets.QWidget): #widget that makes a grid of checkboxes. al
         for (j, color) in enumerate(self.colors):
             for (i, state) in enumerate(self.state_labels):
                 box = self.boxes[i][j] 
-                box.setChecked(i==j)    
+                box.setChecked(i==j+1)   #j+1 because we probably don't want to see START very often. 
 
     def handle_state_change(self, state, i, j_):
         if state == 2 and self.one_state_per_line: # checked
