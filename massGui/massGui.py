@@ -86,7 +86,7 @@ class MainWindow(QtWidgets.QWidget):
         if maxChans is None:
             maxChans = self.maxChansSpinBox.value()
         filenames = getOffFileListFromOneFile(filename, maxChans)
-        self.basename, _ = mass.ljh_util.ljh_basename_channum(filename) #basename used later for experiment state file
+        self.basename, _ = mass.ljh_util.ljh_basename_channum(filename) #basename used later for external trigger
         self.filenames = filenames
         self.filename=filename
         self.data = ChannelGroup(filenames, verbose=True)
@@ -153,7 +153,6 @@ class MainWindow(QtWidgets.QWidget):
                     # this data has artificial offsets of n*2**12 added to pretriggerMean by the phase unwrap algorithm used
                     # define a "pretriggerMeanCorrected" to remove these offsets
                     ds.recipes.add("pretriggerMeanCorrected", lambda pretriggerMean: pretriggerMean%2**12)
-                self.fileSelectionGroup.setEnabled(False)
                 self.enable5lag = True
             except Exception as exc:
                 show_popup(self, "Failed to make 5lag filters!", traceback=traceback.format_exc())
@@ -248,7 +247,14 @@ class MainWindow(QtWidgets.QWidget):
             self.pb.nextValue()
             QtWidgets.QApplication.instance().processEvents
             self.ds = self.data[self.channum]
-            self.ds.calibrationPlanInit("filtValue")
+            if self.enable5lag:
+                self.init5lag()
+                self.fvAttr = 'filtValue5Lag'
+                self.ptmAttr = 'pretriggerMeanCorrected'
+            else:
+                self.fvAttr = 'filtValue'
+                self.ptmAttr = 'pretriggerMean'   
+            self.ds.calibrationPlanInit(self.fvAttr)
         
             for (states, fv, line, energy) in self.cal_info: 
                 # # log.debug(f"states {states}, fv {fv}, line {line}, energy {energy}")
@@ -266,6 +272,18 @@ class MainWindow(QtWidgets.QWidget):
         self.data.referenceDs = self.ds
         # log.debug(f"{ds.calibrationPlan}")
         self.plotsGroup.setEnabled(True) 
+
+    def init5lag(self):
+        with h5py.File(self.lagFile,"r") as h5:
+            models = {int(ch) : mass.pulse_model.PulseModel.fromHDF5(h5[ch]) for ch in h5.keys()}
+        for channum, ds in self.data.items():
+            # define recipes for "filtValue5Lag", "peakX5Lag" and "cba5Lag"
+            # where cba refers to the coefficiencts of a polynomial fit to the 5 lags of the filter
+            filter_5lag = models[channum].f_5lag
+            ds.add5LagRecipes(filter_5lag)
+            # this data has artificial offsets of n*2**12 added to pretriggerMean by the phase unwrap algorithm used
+            # define a "pretriggerMeanCorrected" to remove these offsets
+            ds.recipes.add("pretriggerMeanCorrected", lambda pretriggerMean: pretriggerMean%2**12)
 
     def getcalTableRows(self):
         rows = []
@@ -369,7 +387,6 @@ class MainWindow(QtWidgets.QWidget):
         if self.TDCcheckbox.isChecked():
             steps+=1
 
-
         self.pb = progressPopup(self)
         self.pb.setParams(steps)
         self.pb.show()
@@ -378,11 +395,10 @@ class MainWindow(QtWidgets.QWidget):
 
         self.initCal()
 
-
         try:
             self.pb.addText("Aligning channels... \n")
             app.processEvents()
-            self.data.alignToReferenceChannel(referenceChannel=self.ds, binEdges=np.arange(0,35000,10), attr="filtValue", states=self.ds.stateLabels)
+            self.data.alignToReferenceChannel(referenceChannel=self.ds, binEdges=np.arange(0,35000,10), attr=self.fvAttr, states=self.ds.stateLabels)
             self.pb.nextValue()
             app.processEvents()
         except Exception as exc:
@@ -390,7 +406,7 @@ class MainWindow(QtWidgets.QWidget):
             print(traceback.format_exc())
             show_popup(self, "Failed to align to reference channel!", traceback=traceback.format_exc())
             return
-        self.newestName = "filtValue"
+        self.newestName = self.fvAttr
         try:
             if self.PCcheckbox.isChecked():
                 uncorr = self.newestName
@@ -406,7 +422,7 @@ class MainWindow(QtWidgets.QWidget):
                 self.newestName+="DC"
                 self.pb.addText("Starting drift correction... \n")
                 app.processEvents()
-                self.data.learnDriftCorrection(indicatorName="pretriggerMean", uncorrectedName=uncorr, correctedName = self.newestName, states=self.ds.stateLabels, overwriteRecipe=True)#, cutRecipeName="cutForLearnDC")
+                self.data.learnDriftCorrection(indicatorName=self.ptmAttr, uncorrectedName=uncorr, correctedName = self.newestName, states=self.ds.stateLabels, overwriteRecipe=True)#, cutRecipeName="cutForLearnDC")
                 self.pb.nextValue()
                 app.processEvents()
 
@@ -469,10 +485,19 @@ class MainWindow(QtWidgets.QWidget):
         self.plotsGroup.setEnabled(True) 
         # print(states, autoFWHM, linesNames, maxacc)
         # print(type(linesNames))
+        if self.enable5lag:
+            self.init5lag()
+            self.fvAttr = 'filtValue5Lag'
+            self.ptmAttr = 'pretriggerMeanCorrected'
+        else:
+            self.fvAttr = 'filtValue'
+            self.ptmAttr = 'pretriggerMean'   
+        self.ds.calibrationPlanInit(self.fvAttr)
+
         try:
-            self.ds.learnCalibrationPlanFromEnergiesAndPeaks('filtValue', states=states, ph_fwhm=autoFWHM, line_names=linesNames, maxacc=maxacc)
-            self.data.alignToReferenceChannel(referenceChannel=self.ds, binEdges=np.arange(0,35000,10), attr="filtValue", states=self.ds.stateLabels)
-            self.newestName = "filtValue"
+            self.ds.learnCalibrationPlanFromEnergiesAndPeaks(self.fvAttr, states=states, ph_fwhm=autoFWHM, line_names=linesNames, maxacc=maxacc)
+            self.data.alignToReferenceChannel(referenceChannel=self.ds, binEdges=np.arange(0,35000,10), attr=self.fvAttr, states=self.ds.stateLabels)
+            self.newestName = self.fvAttr
         except Exception as exc:
             print(traceback.format_exc())
             print("failed to learn autocal")
