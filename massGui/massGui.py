@@ -450,6 +450,7 @@ class MainWindow(QtWidgets.QWidget):
             app.processEvents()
             # self.saveCalButton.setEnabled(True)
             self.qualityButton.setEnabled(True)
+            self.ds = self.data.firstGoodChannel()
             self.calibratedChannels.update(self.data.keys())
             print(f'Calibrated {len(self.data.values())} channels using reference channel {self.ds.channum}')
             self.pb.close()
@@ -535,6 +536,7 @@ class MainWindow(QtWidgets.QWidget):
             return
         self.saveCalButton.setEnabled(True)
         self.qualityButton.setEnabled(True)
+        self.ds = self.data.firstGoodChannel()
         self.calibratedChannels.update(self.data.keys())
 
 

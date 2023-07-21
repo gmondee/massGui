@@ -165,33 +165,33 @@ class projectorsGui(QtWidgets.QDialog):  #handles linefit function call. lets us
         self.canvas1.show()
         self.canvas2.show()
 
-    def ljh2off(self):
-# parser.add_argument(
-#     "ljh_path", help="path a a single ljh file, other channel numbers will be found automatically")
-        self.args.output_dir = self.offOutputLineEdit.text()
-        if self.args.output_dir == '':
-            self.args.output_dir = os.path.dirname(self.args.pulse_path)
-        elif not os.path.isdir(self.args.output_dir):
-            os.mkdir(self.args.output_dir)
-        elif not self.args.replace_output:
-            print("dir {} exists, check the \"Replace existing output files\" box to overwrite".format(self.args.output_dir))
-            show_popup(self, "dir {} exists, check the \"Replace existing output files\" box to overwrite".format(self.args.output_dir))
-            return
-# parser.add_argument("h5_path", help="path to a hdf5 file with projectors and bases")
-# parser.add_argument(
-#     "output_dir", help="path to output dir (will be created if it doesn't exist)")
-# parser.add_argument("-r", "--replace_output",
-#                     help="pass this to overwrite off files with the same path", action="store_true")
-# parser.add_argument("-m", "--max_channels",
-#                     help="stop after processing this many channels", default=2**31, type=int)
-# parser.add_argument("--n_ignore_presamples",
-#                     help="ignore this many presample before the rising edge when calculating pretrigger_mean", default=0, type=int)
+#     def ljh2off(self):
+# # parser.add_argument(
+# #     "ljh_path", help="path a a single ljh file, other channel numbers will be found automatically")
+#         self.args.output_dir = self.offOutputLineEdit.text()
+#         if self.args.output_dir == '':
+#             self.args.output_dir = os.path.dirname(self.args.pulse_path)
+#         elif not os.path.isdir(self.args.output_dir):
+#             os.mkdir(self.args.output_dir)
+#         elif not self.args.replace_output:
+#             print("dir {} exists, check the \"Replace existing output files\" box to overwrite".format(self.args.output_dir))
+#             show_popup(self, "dir {} exists, check the \"Replace existing output files\" box to overwrite".format(self.args.output_dir))
+#             return
+# # parser.add_argument("h5_path", help="path to a hdf5 file with projectors and bases")
+# # parser.add_argument(
+# #     "output_dir", help="path to output dir (will be created if it doesn't exist)")
+# # parser.add_argument("-r", "--replace_output",
+# #                     help="pass this to overwrite off files with the same path", action="store_true")
+# # parser.add_argument("-m", "--max_channels",
+# #                     help="stop after processing this many channels", default=2**31, type=int)
+# # parser.add_argument("--n_ignore_presamples",
+# #                     help="ignore this many presample before the rising edge when calculating pretrigger_mean", default=0, type=int)
 
 
-        ljh_filenames, off_filenames = mass.ljh2off.ljh2off_loop(
-            self.args.ljh_path, self.args.h5_path, self.args.output_dir, self.args.max_channels, self.args.n_ignore_presamples)
-        print("full path to first off file:")
-        print(os.path.abspath(off_filenames[0]))
+#         ljh_filenames, off_filenames = mass.ljh2off.ljh2off_loop(
+#             self.args.ljh_path, self.args.h5_path, self.args.output_dir, self.args.max_channels, self.args.n_ignore_presamples)
+#         print("full path to first off file:")
+#         print(os.path.abspath(off_filenames[0]))
 
     def handle_choose_file(self, lookingForThis):
         #options = QFileDialog.options(QFileDialog)
