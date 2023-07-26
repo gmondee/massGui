@@ -15,4 +15,6 @@ On Ubuntu, you may have to run this command as well:
 
 ```sudo apt-get install libxcb*```
 
-Once massGui is installed, you can run the GUI anywhere by running `massGui` in the terminal.
+Once massGui is installed, you can run the GUI anywhere by running `massGui` in the terminal. 
+
+This also includes a GUI to make projectors from .ljh files. Either click on the projectors gui button from massGui or launch it directly by running 'projectorsGui' from the terminal.
