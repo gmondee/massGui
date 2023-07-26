@@ -10,7 +10,8 @@ import os
 #import pytest
 #import pytestqt
 from matplotlib.lines import Line2D
-from .massless import HistCalibrator, HistPlotter, diagnoseViewer, rtpViewer, AvsBSetup, linefitSetup, hdf5Opener, qualityCheckLinefitSetup, ExternalTriggerSetup, RoiRtpSetup, progressPopup
+from .massless import HistCalibrator, HistPlotter, diagnoseViewer, rtpViewer, AvsBSetup, linefitSetup, exportList
+from .massless import hdf5Opener, qualityCheckLinefitSetup, ExternalTriggerSetup, RoiRtpSetup, progressPopup
 from .canvas import MplCanvas
 from .ProjectorsGui import projectorsGui
 import progress
@@ -81,6 +82,7 @@ class MainWindow(QtWidgets.QWidget):
         self.launchProjectorsButton.clicked.connect(self.startProjectorsGui)
         self.lagSelectButton.clicked.connect(self.handle_choose_file_5lag)
         self.lagClearButton.clicked.connect(self.clear_5lag)
+        self.exportButton.clicked.connect(self.showExportList)
 
     def load_file(self, filename, maxChans = None):
         self._choose_file_lastdir = os.path.dirname(filename)
@@ -440,7 +442,7 @@ class MainWindow(QtWidgets.QWidget):
             print("exception in all channel calibration")
             print(traceback.format_exc())
             show_popup(self, "Failed all-channel calibration!", traceback=traceback.format_exc())
-            pass
+            return
         
         try:
             self.pb.addText("Calibrating...")
@@ -525,7 +527,7 @@ class MainWindow(QtWidgets.QWidget):
             print("exception in all channel calibration")
             print(traceback.format_exc())
             show_popup(self, "Exception in all-channel calibration", traceback.format_exc())
-            pass
+            return
 
         try:
             self.data.calibrateFollowingPlan(self.newestName, dlo=dlo_dhi,dhi=dlo_dhi, binsize=binsize, _rethrow=True, overwriteRecipe=True, approximate=self.Acheckbox.isChecked())
@@ -641,6 +643,10 @@ class MainWindow(QtWidgets.QWidget):
         self.pj = projectorsGui()
         self.pj.show()
 
+    def showExportList(self):
+        self.exportlist = exportList()
+        self.exportlist.setParams(self)
+        self.exportlist.show()
 
     def save_to_hdf5(self, name=None):
         with  h5py.File('saves.h5', 'a') as hf:

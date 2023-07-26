@@ -22,6 +22,7 @@ import matplotlib
 from matplotlib.lines import Line2D
 import massGui
 import h5py
+import pandas as pd
 
 basedir = os.path.dirname(os.path.abspath(__file__))
 logging.basicConfig(filename=os.path.join(basedir, 'masslessLog.txt'),
@@ -1039,6 +1040,7 @@ class AvsBSetup(QtWidgets.QDialog): #for plotAvsB and plotAvsB2D functions. Allo
 
                     if self.mode == "1D":
                         channel.plotAvsB(A, B, axis=None, states=states)
+                        plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
                         [plt.close(f) for f in plt.get_fignums() if f != plt.get_fignums()[-1]]
                         plt.show()
                     if self.mode == "2D":
@@ -1931,4 +1933,106 @@ class progressPopup(QtWidgets.QDialog):
 
     def nextValue(self):
         self.progressBar.setValue(self.progressBar.value()+1)
+
+class exportList(QtWidgets.QDialog):
+    def __init__(self, parent=None):
+        super(exportList, self).__init__(parent)
+        QtWidgets.QDialog.__init__(self)
+
+    def setParams(self, parent):
+        self.parent = parent
+        self.build()
+        self.connect()
+
+    def build(self):
+        PyQt6.uic.loadUi(os.path.join(os.path.dirname(__file__), "ui/exportList.ui"), self)
+
+    def connect(self):    
+        self.energyHistButton.clicked.connect(self.exportEnergyHist)
     
+    def exportEnergyHist(self):
+        self.exporter = energyHistExport()
+        self.exporter.setParams(self.parent)
+        self.exporter.show()
+
+class energyHistExport(QtWidgets.QDialog):
+    def __init__(self, parent=None):
+        super(energyHistExport, self).__init__(parent)
+        QtWidgets.QDialog.__init__(self)
+
+    def setParams(self, parent):
+        self.parent = parent #parent is the massGui main window
+        self.stateLabels = self.parent.ds.stateLabels
+        self.build()
+        self.connect()
+
+    def build(self):
+        PyQt6.uic.loadUi(os.path.join(os.path.dirname(__file__), "ui/energyHistExport.ui"), self)
+        self.statesGrid.setParams(state_labels=self.parent.ds.stateLabels, colors=MPL_DEFAULT_COLORS[:1], one_state_per_line=False)
+        self.statesGrid.fill_simple()
+        if len(self.parent.calibratedChannels)==len(self.parent.data.keys()):
+            self.channelBox.addItem("All")
+        for channum in self.parent.calibratedChannels:#.data.keys():
+            self.channelBox.addItem("{}".format(channum))
+
+    def connect(self):
+        self.exportButton.clicked.connect(self.handleExportClicked)
+        self.checkAllButton.clicked.connect(self.checkAll)
+        self.uncheckAllButton.clicked.connect(self.uncheckAll)
+        self.outputPathButton.clicked.connect(self.handle_choose_file)
+
+    def uncheckAll(self):
+        self.statesGrid.unfill_all()
+
+    def checkAll(self):
+        self.statesGrid.fill_all()
+
+    def exportToCsv(self, filepath, statesList, channel):
+        if channel == 'All':
+            dataToExport = self.parent.data
+        else:
+            dataToExport = self.parent.data[int(channel)]
+
+        for sta in statesList:
+            histall = np.array(dataToExport.hist(np.arange(self.eRangeLo.value(), self.eRangeHi.value(), self.binSizeBox.value()), "energy", states=sta))
+            histall = histall.T
+            stadat = pd.DataFrame(data=histall)
+            exportName = os.path.join(filepath,self.parent.basename+'_export_'+''.join(sta)+'.csv')
+            stadat.to_csv(exportName, index=False)
+        show_popup(self, f"Successfully exported to {filepath}!")
+
+    def handleExportClicked(self):
+        try:
+            fmt = self.exportFormatBox.currentText()
+            filepath = self.outputPathLineEdit.text()
+            colors, states = self.statesGrid.get_colors_and_states_list()
+            channel = self.channelBox.currentText()
+
+            #statesList is always a list. For coadded, it is like [['A','B','C',...]] and for non-coadded it is like ['A','B','C',...] 
+            if not self.coAddCheckBox.isChecked():
+                #separate states into separate list elements
+                statesList = []
+                for s in states[0]:
+                    statesList.append(s)
+            else:
+                statesList = states
+            if fmt == '.csv':
+                self.exportToCsv(filepath, statesList, channel)
+        except Exception as exc:
+            print("Failed to export!")
+            print(traceback.format_exc())
+            show_popup(self, "Failed to export!", traceback=traceback.format_exc())
+
+    def handle_choose_file(self):
+        if not hasattr(self, "_choose_file_lastdir"):
+            dir = os.path.expanduser("~")
+        else:
+            dir = self._choose_file_lastdir
+        folderpath = str(QtWidgets.QFileDialog.getExistingDirectory(self, 'Select Folder'))
+        if folderpath:
+            self._choose_file_lastdir = folderpath
+            self.outputPathLineEdit.setText(folderpath)
+            self.exportButton.setEnabled(True)
+            return folderpath
+        else:
+            self.exportButton.setEnabled(False)
