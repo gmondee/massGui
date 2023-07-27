@@ -93,9 +93,14 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
             self.channelBox.addItem("{}".format(channel))
         self.channelBox.setCurrentText(str(channum))
         self.eRangeLow.setValue(0)
-        self.eRangeHi.setValue(20000)
+        try:
+            binHi = np.percentile(self.data[channum].getAttr('filtValue', state_labels), 98) #get the value of the filtValue at the 98th percentile (98th meaning close to the maximum)
+        except:
+            print('Unable to automatically set bounds')
+            binHi = 20000
+        self.eRangeHi.setValue(binHi)
         self.binSizeBox.setValue(50)
-        self.histHistViewer.setParams(self, data, channum, attr, state_labels, colors, self.binSize, statesConfig=statesConfig)
+        self.histHistViewer.setParams(self, data, channum, attr, state_labels, colors, self.binSize, statesConfig=statesConfig, binHi = binHi)
         if autoFWHM == None:
             self.autoFWHMBox.setValue(25)
         else:
@@ -673,9 +678,6 @@ class StatesGrid(QtWidgets.QWidget): #widget that makes a grid of checkboxes. al
                     label.setStyleSheet("color:{}".format(color))                
                     self.grid.addWidget(label, j+1, 0)
                 box = QtWidgets.QCheckBox()
-                # bpalette = box.palette()
-                # bpalette.setColor(QtGui.QPalette.WindowText, QtGui.QColor(color))
-                # label.setPalette(bpalette) 
                 box.setStyleSheet("background-color: {}".format(color))
                 self.grid.addWidget(box, j+1, i+1)
                 boxes.append(box)
@@ -1073,7 +1075,7 @@ class AvsBSetup(QtWidgets.QDialog): #for plotAvsB and plotAvsB2D functions. Allo
         channel = self.data[int(self.channelBox.currentText())]
         if (A in channel.recipes.baseIngredients) or (A in channel.recipes.craftedIngredients.keys()):
             if (B in channel.recipes.baseIngredients) or ((B in channel.recipes.craftedIngredients.keys())):
-                ... #get some value near the upper percentile of each attr to suggest
+                #get some value near the upper percentile of each attr to suggest
                 try:
                     Abound = np.percentile(channel.getAttr(A, self.states_list), 95) #get the value of the record at the 95th percentile (95th meaning close to the maximum)
                     self.aRangeHi.setValue(Abound)
