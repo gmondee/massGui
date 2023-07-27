@@ -147,7 +147,6 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
                 item[0].setSelected(True)
                 self.linesList.setCurrentItem(item[0])
 
-
     def listChanged(self):
         self.autoListOfLines.clear()
         self.autoListOfLines.setText(str([item.text() for item in self.linesList.selectedItems()]))
@@ -172,7 +171,6 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
                     elif widget.currentText() == "Manual Energy":
                         self.table.setItem(r, c+1, QtWidgets.QTableWidgetItem(""))
                         self.table.item(r, c+1).setFlags(self.table.item(r, c+1).flags() | QtCore.Qt.ItemFlag.ItemIsEditable)
-
 
     def clear_table(self):
         self.table.setRowCount(0)
@@ -253,7 +251,6 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
             row.append(self.table.item(i, 3).text())
             rows.append(row)
         return rows
-
     
     def importTableRows(self, cal_info):
         n = None
@@ -279,7 +276,6 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
             self.table.resizeColumnsToContents()
             cbox.currentTextChanged.connect(self.updateTable)
 
-    
     def getChannum(self):
         self.channum = self.channelBox.currentText()
         return self.channum
@@ -319,7 +315,6 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
             print(traceback.format_exc())
             show_popup(self, "Failed to autocalibrate!", traceback=traceback.format_exc())
 
-
     def diagnoseCalibration(self, auto=False):
         if auto == False:
             lines = self.getTableRows()
@@ -332,7 +327,6 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
                     return
             self.ds = self.data[int(self.getChannum())]
             self.ds.calibrationPlanInit(self.fvAttr)
-            
             self.highestFV = 0. #used to set better bounds in the diagnose plot
             for (states, fv, line, energy) in lines: 
                 # # log.debug(f"states {states}, fv {fv}, line {line}, energy {energy}")
@@ -352,11 +346,8 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
                     print(traceback.format_exc())
                     show_popup(self, f"Failed to add {line} to calibration plan!", traceback=traceback.format_exc())
                     return
-
-
         dlo_dhi = float(self.dlo_dhiBox.value()/2.)
         binsize=float(self.calBinBox.value())
-        
         try:
             #self.data.cutAdd("cutForLearnDC", lambda energyRough: np.logical_and(energyRough > 0, energyRough < 10000), setDefault=False) #ideally, user can set the bounds
             self.newestName = self.fvAttr
@@ -377,7 +368,6 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
             self.ds.calibrateFollowingPlan(self.newestName, dlo=dlo_dhi,dhi=dlo_dhi, binsize=binsize, overwriteRecipe=True, approximate=self.Acheckbox.isChecked())
             print(f'Calibrated channel {self.ds.channum}')
             self.parent.calibratedChannels = set([self.ds.channum])
-
             self.plotter = diagnoseViewer(self)
             self.plotter.setParams(self.parent, self.data, self.ds.channum, highestFV = self.highestFV)
             self.plotter.frame.setEnabled(False)
@@ -438,7 +428,6 @@ class HistViewer(QtWidgets.QWidget): #widget for hist calibrator and others. plo
         layout.addWidget(self.statesGrid)
         self.setLayout(layout)
         
-
     def connect(self):
         self.plotButton.clicked.connect(self.handle_plot)
  
@@ -496,7 +485,6 @@ class HistViewer(QtWidgets.QWidget): #widget for hist calibrator and others. plo
         self.canvas.mpl_connect('pick_event', self.mpl_click_event)
         self.plotted.emit()
 
-    
     def mpl_click_event(self, event):
         if self.clickable == True:
             x = event.mouseevent.xdata
@@ -518,7 +506,6 @@ class HistViewer(QtWidgets.QWidget): #widget for hist calibrator and others. plo
                 pass
         else:
             pass
-
 
     def add_marker(self, artist, i, emit=True):
         artist_markers = self.line2marker[artist]
@@ -552,7 +539,6 @@ class HistViewer(QtWidgets.QWidget): #widget for hist calibrator and others. plo
         elif ys[i0+1]>ys[i0]:
             im = 1
         else: # i0 is local max
-
             return i0
 
         i=i0
@@ -689,8 +675,6 @@ class StatesGrid(QtWidgets.QWidget): #widget that makes a grid of checkboxes. al
         self.connect()
     
 
-
-
 class HistPlotter(QtWidgets.QDialog):   #general-purpose histogram plotter. features a canvas, states grid, and energy range/# of counts information
     def __init__(self, parent=None, colors=MPL_DEFAULT_COLORS[:6]):
         super(HistPlotter, self).__init__(parent)
@@ -719,7 +703,6 @@ class HistPlotter(QtWidgets.QDialog):   #general-purpose histogram plotter. feat
         self.updateChild()
         self.pHistViewer.handle_plot()
 
-
     def connect(self):
         self.channelBox.currentTextChanged.connect(self.updateChild)
         self.eRangeLow.valueChanged.connect(self.updateChild)
@@ -747,7 +730,6 @@ class HistPlotter(QtWidgets.QDialog):   #general-purpose histogram plotter. feat
         ##energy range updating
 
 
-
 class diagnoseViewer(QtWidgets.QDialog):    #displays the plots from the Mass diagnoseCalibration function
     def __init__(self, parent=None):
         super(diagnoseViewer, self).__init__(parent)
@@ -773,10 +755,6 @@ class diagnoseViewer(QtWidgets.QDialog):    #displays the plots from the Mass di
             self.channelBox.addItem("{}".format(channum))
         self.channelBox.setCurrentText(str(self.channum))
         self.plotDiagnosis()
-        # self.eRangeLow.insert(str(0))
-        # self.eRangeHi.insert(str(20000))
-        #self.canvas.setParams(self, data, int(self.channum), state_labels, colors, clickable=False)
-
 
     def connect(self):
         #self.channelBox.currentTextChanged.connect(self.updateChild)
@@ -810,6 +788,7 @@ class rtpViewer(QtWidgets.QDialog): #window that hosts the real-time plotting ro
     def __init__(self, parent=None):
         super(rtpViewer, self).__init__(parent)
         QtWidgets.QDialog.__init__(self)
+
     def setParams(self, parent):
         self.colors =MPL_DEFAULT_COLORS[1]
         
@@ -818,7 +797,6 @@ class rtpViewer(QtWidgets.QDialog): #window that hosts the real-time plotting ro
         self.dataToPlot = self.parent.data
         self.build()
         self.connect()
-
 
     def build(self):
         PyQt6.uic.loadUi(os.path.join(os.path.dirname(__file__), "ui/realtimeviewer.ui"), self)
@@ -849,16 +827,12 @@ class rtpViewer(QtWidgets.QDialog): #window that hosts the real-time plotting ro
     def checkAll(self):
         self.statesGrid.fill_all()
 
-
     #####################################| Real-time plotting routine|#####################################
     def initRTP(self): #creates axes, clears variables, and starts real-time plotting routine
-
         self.updateIndex=0                  #tracks how many updates have happened
         self.alphas=[]                      #transparencies of lines
         self.rtpline=[]                     #list of all plotted lines
         self.plottedStates=[]               #used for the RTP legend
-        
-        #self.energyPlot=plt.figure()        #everything is plotted onto this figure
         self.canvas.fig.clear()
         self.energyAxis = self.canvas.fig.add_subplot(111)
         self.energyAxis.grid()
@@ -910,7 +884,6 @@ class rtpViewer(QtWidgets.QDialog): #window that hosts the real-time plotting ro
 
     def getEnergyBounds(self):
         binLo = self.eRangeLow.value()
-
         if self.eRangeHi.value() > binLo:
             binHi = self.eRangeHi.value()
         else:
@@ -919,13 +892,10 @@ class rtpViewer(QtWidgets.QDialog): #window that hosts the real-time plotting ro
 
     def UpdatePlots(self):  #real-time plotting routine. refreshes data, adjust alphas, and replots graphs
         print(f"iteration {self.updateIndex}")
-         
         self.updateFreq_ms = int(self.intervalBox.value()*1000)           #in ms after the multiplication
         self.timer.start(self.updateFreq_ms)
-
         self.updateFilesAndStates()
         eLow, eHi = self.getEnergyBounds()
-        
         _colors, States = self.statesGrid.get_colors_and_states_list()
         try: #if the user has all states unchecked during a refresh, use the last set of states.
             States = States[0]
@@ -954,7 +924,6 @@ class rtpViewer(QtWidgets.QDialog): #window that hosts the real-time plotting ro
     def getColorfromState(self, s): #pass in a state label string like 'A' or 'AC' (for states past Z) and get a color index using plt.colormaps() 
         c=['#d8434e', '#f67a49', '#fdbf6f', '#feeda1', '#f1f9a9', '#bfe5a0', '#74c7a5', '#378ebb'] #8 colors from seaborn's Spectral_r colormap
         maxColors = len(c)
-
         cIndex =  ord(s[-1])-ord('A')
         if len(s)!=1:   #for states like AA, AB, etc., 27 is added to the value of the ones place
             cIndex=cIndex+26+ord(s[0])-ord('A')+1 #26 + value of first letter (making A=1 so AA != Z)
@@ -1101,12 +1070,10 @@ class AvsBSetup(QtWidgets.QDialog): #for plotAvsB and plotAvsB2D functions. Allo
         
 
 class ZoomPlotAvsB(): #only works for 2D plots.
-
     def __init__(self, channel, states, A, B, mins, maxes, resolution):
         matplotlib.use("QtAgg")
         self.mins = mins
         self.maxes = maxes
-
         self.fig = plt.figure()
         self.ax = self.fig.add_subplot(111)
         fm = plt.get_current_fig_manager() #figure manager, for the toolbar
@@ -1128,7 +1095,6 @@ class ZoomPlotAvsB(): #only works for 2D plots.
         self.plot_fixed_resolution(self.xmin, self.xmax,
                                    self.ymin, self.ymax)
         plt.colorbar()
-
         [plt.close(f) for f in plt.get_fignums() if f != plt.get_fignums()[-1]]
         plt.show()
 
@@ -1172,6 +1138,7 @@ class linefitSetup(QtWidgets.QDialog):  #handles linefit function call. lets use
     def __init__(self, parent=None):
         super(linefitSetup, self).__init__(parent)
         QtWidgets.QDialog.__init__(self)
+
     def setParams(self, parent, lines, states_list, channels, data):
         self.colors = MPL_DEFAULT_COLORS[0]
         self.parent = parent
@@ -1181,7 +1148,6 @@ class linefitSetup(QtWidgets.QDialog):  #handles linefit function call. lets use
         self.data = data
         self.build()
         self.connect()
-
 
     def build(self):
         PyQt6.uic.loadUi(os.path.join(os.path.dirname(__file__), "ui/linefitSetup.ui"), self) 
@@ -1249,12 +1215,11 @@ class linefitSetup(QtWidgets.QDialog):  #handles linefit function call. lets use
         plt.show()
 
 
-
-
 class hdf5Opener(QtWidgets.QDialog): #dialog with a combobox which lists all of the saved calibraitions.
     def __init__(self, parent=None):
         super(hdf5Opener, self).__init__(parent)
         QtWidgets.QDialog.__init__(self)
+
     def setParams(self, parent):
         self.parent = parent
         self.build()
@@ -1279,12 +1244,12 @@ class hdf5Opener(QtWidgets.QDialog): #dialog with a combobox which lists all of 
         return calList
 
 
-
 class qualityCheckLinefitSetup(QtWidgets.QDialog):  #handles linefit function call. lets user choose line, states, channel
     def __init__(self, parent=None):
         super(qualityCheckLinefitSetup, self).__init__(parent)
         QtWidgets.QDialog.__init__(self)
         plt.ion()
+
     def setParams(self, parent, lines, states_list, data):
         self.colors = MPL_DEFAULT_COLORS[0]
         self.parent = parent
@@ -1294,12 +1259,10 @@ class qualityCheckLinefitSetup(QtWidgets.QDialog):  #handles linefit function ca
         self.build()
         self.connect()
 
-
     def build(self):
         PyQt6.uic.loadUi(os.path.join(os.path.dirname(__file__), "ui/qualityCheckLinefit.ui"), self) 
         self.statesGrid.setParams(state_labels=self.states_list, colors=MPL_DEFAULT_COLORS[:1], one_state_per_line=False)
         self.statesGrid.fill_simple()
-
         for line in self.lines:
             self.lineBox.addItem("{}".format(line))
         self.lineBox.setCurrentIndex(0)     
@@ -1372,6 +1335,7 @@ class ExternalTriggerSetup(QtWidgets.QDialog):
     def __init__(self, parent=None):
         super(ExternalTriggerSetup, self).__init__(parent)
         QtWidgets.QDialog.__init__(self)
+
     def setParams(self, parent, states_list, channels, data, basename):
         self.colors = MPL_DEFAULT_COLORS[0]
         self.parent = parent
@@ -1382,7 +1346,6 @@ class ExternalTriggerSetup(QtWidgets.QDialog):
         self.build()
         self.connect()
 
-
     def build(self):
         PyQt6.uic.loadUi(os.path.join(os.path.dirname(__file__), "ui/externalTriggerSetup.ui"), self) 
         self.statesGrid.setParams(state_labels=self.states_list, colors=MPL_DEFAULT_COLORS[:1], one_state_per_line=False)
@@ -1391,7 +1354,6 @@ class ExternalTriggerSetup(QtWidgets.QDialog):
             self.channelBox.addItem("All")
         for channum in self.parent.calibratedChannels:
             self.channelBox.addItem("{}".format(channum))
-
 
     def connect(self):
         self.plotButton.clicked.connect(self.handlePlot)
@@ -1448,9 +1410,9 @@ class ExternalTriggerSetup(QtWidgets.QDialog):
     def checkAll(self):
         self.statesGrid.fill_all()
 
+
 class ZoomPlotExternalTrigger(): #only works for external trigger plots.
     def __init__(self, parent, states, basename, mins, maxes, resolution, channels, good_only):
-
         matplotlib.use("QtAgg")
         self.mins = mins
         self.maxes = maxes
@@ -1458,8 +1420,6 @@ class ZoomPlotExternalTrigger(): #only works for external trigger plots.
         self.basename=basename
 
         self.fig = plt.figure()
-
-        
         self.ax = self.fig.add_subplot(111)
         self.ax.cla()
         self.fig.clear()
@@ -1678,7 +1638,6 @@ class RoiRtpSetup(QtWidgets.QDialog): #real-time regions of interest todo: add r
         self.table.setCellWidget(n, 4, delButton)
         self.table.resizeColumnsToContents()
        
-
     def addDelButton(self, row, col): #if you want to add a delete button manually
         delButton = QtWidgets.QPushButton()
         delButton.setText("Delete")
@@ -1738,7 +1697,6 @@ class RoiRtpSetup(QtWidgets.QDialog): #real-time regions of interest todo: add r
             Width = float(row[3])
             ROIdict[Name]=[Energy-Width/2, Energy+Width/2]
         self.plotRollingAverages(self.data, channums, states, rollingAvgTimeSec, numberOfChunks, ROIdict, self.fig)
-
         self.startRTP()
 
     def getAvgs(self, arr, windowSize, chunkTimeSec):
@@ -1882,9 +1840,7 @@ class RoiRtpSetup(QtWidgets.QDialog): #real-time regions of interest todo: add r
         #every [interval] seconds, refresh from files. then, call (basically) the code above but on the same plot
         self.fig.canvas.mpl_connect('close_event', self.on_close)
         self.timer = QTimer()       #timer is used to loop the real-time plotting updates  
-        #self.timer.setSingleShot(True)
         self.timer.timeout.connect(self.updateAndPlot)
-        
         self.updateFreq_ms = int(self.intervalBox.value())*1000             #in ms after the multiplication
         self.timer.start(self.updateFreq_ms)
 
@@ -1921,6 +1877,7 @@ class RoiRtpSetup(QtWidgets.QDialog): #real-time regions of interest todo: add r
         self.numberOfChunks = self.chunksBox.value()
         self.plotRollingAverages(self.data, self.channums, self.states, self.rollingAvgTimeSec, self.numberOfChunks, self.ROIdict, self.fig)
 
+
 class progressPopup(QtWidgets.QDialog):
     def __init__(self, parent=None):
         super(progressPopup, self).__init__(parent)
@@ -1938,6 +1895,7 @@ class progressPopup(QtWidgets.QDialog):
 
     def nextValue(self):
         self.progressBar.setValue(self.progressBar.value()+1)
+
 
 class exportList(QtWidgets.QDialog):
     def __init__(self, parent=None):
@@ -1959,6 +1917,7 @@ class exportList(QtWidgets.QDialog):
         self.exporter = energyHistExport()
         self.exporter.setParams(self.parent)
         self.exporter.show()
+
 
 class energyHistExport(QtWidgets.QDialog):
     def __init__(self, parent=None):
