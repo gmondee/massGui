@@ -113,8 +113,9 @@ class MainWindow(QtWidgets.QWidget):
         self.maxacc = None
         self.channum = self.channels[0] #reference channel
         self.launch_channel_colors, self.launch_channel_states = None, None #info for the states grid
+        self.calEBinLo = 0      #gets changed by the histCalibrator, for alignToReferenceChannel bin edges
+        self.calEBinHi = None   #gets changed by the histCalibrator, for alignToReferenceChannel bin edges
         
-
     def handle_choose_file(self):
         #options = QFileDialog.options(QFileDialog)
         if not hasattr(self, "_choose_file_lastdir"):
@@ -170,7 +171,7 @@ class MainWindow(QtWidgets.QWidget):
 
     def set_std_dev_threshold(self):
         for ds in self.data.values():
-            ds.stdDevResThreshold = 1000
+            ds.stdDevResThreshold = 1000 #todo: make this not hardcoded
 
     def handle_manual_cal(self):
         # log.debug("handle_manual_cal")
@@ -184,7 +185,8 @@ class MainWindow(QtWidgets.QWidget):
         self.hc = HistCalibrator(self) 
         self.hc.setParams(self, data, channum, data[channum].stateLabels, binSize=50, 
                           statesConfig=self.launch_channel_states, markers=self.markersDict, artistMarkers=self.artistMarkersDict, 
-                          markersIndex=self.markerIndex, linesNames=self.linesNames, autoFWHM=self.autoFWHM, maxacc=self.maxacc, enable5lag=self.enable5lag)
+                          markersIndex=self.markerIndex, linesNames=self.linesNames, autoFWHM=self.autoFWHM, maxacc=self.maxacc, 
+                          enable5lag=self.enable5lag, binLo=self.calEBinLo, binHi=self.calEBinHi)
         tableData = self.getcalTableRows()
         self.hc.importTableRows(tableData)
         self.hc.PCcheckbox.setChecked(self.PCcheckbox.isChecked())
@@ -214,6 +216,8 @@ class MainWindow(QtWidgets.QWidget):
         self.linesNames = self.hc.linesNames
         self.autoFWHM = self.hc.autoFWHMBox.value()
         self.maxacc = self.hc.autoMaxAccBox.value()
+        self.calEBinLo = self.hc.eRangeLow.value()
+        self.calEBinHi = self.hc.eRangeHi.value()
         self.PCcheckbox.setChecked(self.hc.PCcheckbox.isChecked())
         self.DCcheckbox.setChecked(self.hc.DCcheckbox.isChecked())
         self.TDCcheckbox.setChecked(self.hc.TDCcheckbox.isChecked())
@@ -382,14 +386,9 @@ class MainWindow(QtWidgets.QWidget):
     def allChannelCalibration(self):
         dlo_dhi = self.getDloDhi()
         binsize=self.getBinsizeCal()
-        steps = 3 # init, align, and calibrate are the only two steps that are always used
-        if self.PCcheckbox.isChecked():
-            steps+=1
-        if self.DCcheckbox.isChecked():
-            steps+=1
-        if self.TDCcheckbox.isChecked():
-            steps+=1
 
+        # init, align, and calibrate are the only two steps that are always used
+        steps = 3 + self.PCcheckbox.isChecked() + self.DCcheckbox.isChecked() + self.TDCcheckbox.isChecked()
         self.pb = progressPopup(self)
         self.pb.setParams(steps)
         self.pb.show()
@@ -401,7 +400,8 @@ class MainWindow(QtWidgets.QWidget):
         try:
             self.pb.addText("Aligning channels... \n")
             app.processEvents()
-            self.data.alignToReferenceChannel(referenceChannel=self.ds, binEdges=np.arange(0,35000,10), attr=self.fvAttr, states=self.ds.stateLabels)
+            self.data.alignToReferenceChannel(referenceChannel=self.ds, binEdges=np.arange(self.calEBinLo, self.calEBinHi, 10), attr=self.fvAttr, states=self.ds.stateLabels) #todo: set a better step size than 10
+            
             self.pb.nextValue()
             app.processEvents()
         except Exception as exc:
@@ -461,6 +461,7 @@ class MainWindow(QtWidgets.QWidget):
             print(traceback.format_exc())
             show_popup(self, "Failed to calibrate following plan!", traceback=traceback.format_exc())
             return
+        #todo: handle errors better. histogram has no contents will stop the cal completely. mark it bad instead.
 
 
 

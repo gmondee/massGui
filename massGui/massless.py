@@ -57,7 +57,7 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
 
     def setParams(self, parent, data, channum, state_labels, binSize, colors=MPL_DEFAULT_COLORS[:6], 
                   lines=DEFAULT_LINES, statesConfig=None, markers=None, artistMarkers=None,markersIndex=None, linesNames=None, 
-                  autoFWHM=None, maxacc=None, enable5lag=False):
+                  autoFWHM=None, maxacc=None, enable5lag=False, binLo=0, binHi=None):
         self.parent=parent
         self.binSize=binSize
         self.linesNames = linesNames
@@ -81,10 +81,10 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
             self.fvAttr = 'filtValue'
             self.ptmAttr = 'pretriggerMean'
         
-        self.build(data, channum, self.fvAttr, state_labels, colors, statesConfig, self.linesNames, autoFWHM, maxacc)
+        self.build(data, channum, self.fvAttr, state_labels, colors, statesConfig, self.linesNames, autoFWHM, maxacc, binLo, binHi)
         self.connect()
 
-    def build(self, data, channum, attr, state_labels, colors, statesConfig, linesNames, autoFWHM, maxacc):
+    def build(self, data, channum, attr, state_labels, colors, statesConfig, linesNames, autoFWHM, maxacc, binLo=0, binHi=None):
         PyQt6.uic.loadUi(os.path.join(os.path.dirname(__file__), "ui/ChannelBrowser.ui"), self) #,  s, attr, state_labels, colors)
         #self.histHistViewer = HistViewer(self, s, attr, state_labels, colors) #histHistViewer is the name of the widget that plots.
         self.data = data
@@ -92,12 +92,14 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
         for channel in self.data.keys():
             self.channelBox.addItem("{}".format(channel))
         self.channelBox.setCurrentText(str(channum))
-        self.eRangeLow.setValue(0)
-        try:
-            binHi = np.percentile(self.data[channum].getAttr('filtValue', state_labels), 98) #get the value of the filtValue at the 98th percentile (98th meaning close to the maximum)
-        except:
-            print('Unable to automatically set bounds')
-            binHi = 20000
+        self.eRangeLow.setValue(binLo)
+        if binHi == None:
+            try:
+                binHi = np.percentile(self.data[channum].getAttr('filtValue', state_labels), 98) #get the value of the filtValue at the 98th percentile (98th meaning close to the maximum)
+            except:
+                print('Unable to automatically set bounds')
+                binHi = 20000
+        
         self.eRangeHi.setValue(binHi)
         self.binSizeBox.setValue(50)
         self.histHistViewer.setParams(self, data, channum, attr, state_labels, colors, self.binSize, statesConfig=statesConfig, binHi = binHi)
