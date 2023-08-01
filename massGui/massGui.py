@@ -447,7 +447,7 @@ class MainWindow(QtWidgets.QWidget):
         try:
             self.pb.addText("Calibrating...")
             app.processEvents()
-            self.data.calibrateFollowingPlan(self.newestName, dlo=dlo_dhi,dhi=dlo_dhi, binsize=binsize, _rethrow=True, overwriteRecipe=True, approximate=self.Acheckbox.isChecked())
+            self.data.calibrateFollowingPlan(self.newestName, dlo=dlo_dhi,dhi=dlo_dhi, binsize=binsize, _rethrow=False, overwriteRecipe=True, approximate=self.Acheckbox.isChecked())
             self.pb.nextValue()
             app.processEvents()
             # self.saveCalButton.setEnabled(True)
@@ -461,9 +461,6 @@ class MainWindow(QtWidgets.QWidget):
             print(traceback.format_exc())
             show_popup(self, "Failed to calibrate following plan!", traceback=traceback.format_exc())
             return
-        #todo: handle errors better. histogram has no contents will stop the cal completely. mark it bad instead.
-
-
 
     def allChannelAutoCalibration(self):
         dlo_dhi = self.getDloDhi()
@@ -531,7 +528,7 @@ class MainWindow(QtWidgets.QWidget):
             return
 
         try:
-            self.data.calibrateFollowingPlan(self.newestName, dlo=dlo_dhi,dhi=dlo_dhi, binsize=binsize, _rethrow=True, overwriteRecipe=True, approximate=self.Acheckbox.isChecked())
+            self.data.calibrateFollowingPlan(self.newestName, dlo=dlo_dhi,dhi=dlo_dhi, binsize=binsize, _rethrow=False, overwriteRecipe=True, approximate=self.Acheckbox.isChecked())
         except Exception as exc:
             print("Failed to calibrate following plan!")
             print(traceback.format_exc())

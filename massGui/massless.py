@@ -40,10 +40,10 @@ MPL_DEFAULT_COLORS = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728',
 
 DEFAULT_LINES = list(mass.spectra.keys())
 
-def show_popup(parent, text, traceback=None):
+def show_popup(parent, text, traceback=None, icon=QtWidgets.QMessageBox.Icon.Warning):
         msg = QtWidgets.QMessageBox(text=text, parent=parent)
         msg.setWindowTitle("Error")
-        msg.setIcon(QtWidgets.QMessageBox.Icon.Warning)
+        msg.setIcon(icon)
         if traceback is not None:
             msg.setDetailedText(traceback)
         ret = msg.exec()
@@ -1963,9 +1963,11 @@ class energyHistExport(QtWidgets.QDialog):
             histall = np.array(dataToExport.hist(np.arange(self.eRangeLo.value(), self.eRangeHi.value(), self.binSizeBox.value()), "energy", states=sta))
             histall = histall.T
             stadat = pd.DataFrame(data=histall)
-            exportName = os.path.join(filepath,self.parent.basename+'_export_'+''.join(sta)+'.csv')
+            print(f'{filepath=}, {os.path.basename(self.parent.basename)=}')
+            exportName = os.path.join(filepath,os.path.basename(self.parent.basename)+'_export_'+''.join(sta)+'.csv')
             stadat.to_csv(exportName, index=False)
-        show_popup(self, f"Successfully exported to {filepath}!")
+            print(f'{exportName=}')
+        show_popup(self, f"Successfully exported to {os.path.dirname(exportName)}!", icon=QtWidgets.QMessageBox.Icon.Information)
 
     def handleExportClicked(self):
         try:
@@ -1983,6 +1985,7 @@ class energyHistExport(QtWidgets.QDialog):
             else:
                 statesList = states
             if fmt == '.csv':
+                print(f'{filepath=}')
                 self.exportToCsv(filepath, statesList, channel)
         except Exception as exc:
             print("Failed to export!")
@@ -1991,10 +1994,10 @@ class energyHistExport(QtWidgets.QDialog):
 
     def handle_choose_file(self):
         if not hasattr(self, "_choose_file_lastdir"):
-            dir = os.path.expanduser("~")
+            basedir = os.path.expanduser("~")
         else:
-            dir = self._choose_file_lastdir
-        folderpath = str(QtWidgets.QFileDialog.getExistingDirectory(self, 'Select Folder'))
+            basedir = self._choose_file_lastdir
+        folderpath = str(QtWidgets.QFileDialog.getExistingDirectory(self, 'Select Folder', basedir))
         if folderpath:
             self._choose_file_lastdir = folderpath
             self.outputPathLineEdit.setText(folderpath)
