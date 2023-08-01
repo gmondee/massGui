@@ -107,7 +107,8 @@ class projectorsGui(QtWidgets.QDialog):  #handles linefit function call. lets us
             pulse_basename, _ = mass.ljh_util.ljh_basename_channum(self.args.pulse_path)
             noise_basename, _ = mass.ljh_util.ljh_basename_channum(self.args.noise_path)
             pulse_files = [pulse_basename+"_chan{}.ljh".format(channum) for channum in channums]
-            noise_files = [noise_basename+"_chan{}.ljh".format(channum) for channum in channums]
+            noi_ext = os.path.splitext(self.args.noise_path)[-1]
+            noise_files = [noise_basename+"_chan{}".format(channum)+noi_ext for channum in channums]
             # handle output filename
             if self.args.output_path is None:
                 self.args.output_path = os.path.normpath(pulse_basename+"_model.hdf5")
@@ -144,6 +145,7 @@ class projectorsGui(QtWidgets.QDialog):  #handles linefit function call. lets us
             with h5py.File(self.args.output_path, "r") as h5:
                 self.models = {int(ch) : mass.pulse_model.PulseModel.fromHDF5(h5[ch]) for ch in h5.keys()}
                 self.channels = [int(ch) for ch in h5.keys()]
+                self.channelBox.clear()
                 for ch in self.channels:
                     self.channelBox.addItem("{}".format(ch))
                 self.plotProjectorsGroup.setEnabled(True)
@@ -173,8 +175,8 @@ class projectorsGui(QtWidgets.QDialog):  #handles linefit function call. lets us
         else:
             dir = self._choose_file_lastdir
         fileName, _ = QtWidgets.QFileDialog.getOpenFileName(
-            self, f"Select an ljh file with {lookingForThis}", dir,
-            "ljh Files (*.ljh);;All Files (*)")#, options=options)
+            self, f"Select an ljh/noi file with {lookingForThis}", dir,
+            "ljh Files (*.ljh);noi Files (*.noi);All Files (*)")#, options=options)
         if fileName:
             self._choose_file_lastdir = os.path.dirname(fileName)
             return fileName
