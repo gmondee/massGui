@@ -18,3 +18,5 @@ On Ubuntu, you may have to run this command as well:
 Once massGui is installed, you can run the GUI anywhere by running `massGui` in the terminal. 
 
 This also includes a GUI to make projectors from .ljh files. Either click on the projectors gui button from massGui or launch it directly by running `projectorsGui` from the terminal.
+
+[Overview video](https://drive.google.com/file/d/1H3M8ON5Ni1A7ef0eLiWU-HRj-oOciqp7/preview)
