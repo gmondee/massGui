@@ -366,7 +366,8 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
             if self.TDCcheckbox.isChecked():
                 uncorr = self.newestName
                 self.newestName+="TC"
-                self.ds.learnTimeDriftCorrection(indicatorName="relTimeSec", uncorrectedName=uncorr, correctedName = self.newestName, states=self.ds.stateLabels, overwriteRecipe=True)#,cutRecipeName="cutForLearnDC", _rethrow=True) 
+                self.ds.learnTimeDriftCorrection(indicatorName="relTimeSec", uncorrectedName=uncorr, correctedName = self.newestName, 
+                                                 states=self.ds.stateLabels, overwriteRecipe=True) 
             self.ds.calibrateFollowingPlan(self.newestName, dlo=dlo_dhi,dhi=dlo_dhi, binsize=binsize, overwriteRecipe=True, approximate=self.Acheckbox.isChecked())
             print(f'Calibrated channel {self.ds.channum}')
             self.parent.calibratedChannels = set([self.ds.channum])
@@ -1489,7 +1490,7 @@ class ZoomPlotExternalTrigger(): #only works for external trigger plots.
         self.plot_fixed_resolution(self.mins[0], self.maxes[0],
                                    self.mins[1], self.maxes[1])
 
-    def plotExtTrigger(self, ts, es): #plots the external trigger plot
+    def plotExtTrigger(self, ts, es): #plots the external trigger plot. ts is a np array of time bins, es is a np array of energy bins
         with warnings.catch_warnings():
             warnings.simplefilter(action='ignore', category=FutureWarning) #ignore the FutureWarning when using the cuts array in sec = np.concatenate([sec, [array][cuts array]])
             seconds_after_external_triggers = []
