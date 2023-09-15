@@ -434,7 +434,7 @@ class MainWindow(QtWidgets.QWidget):
                 self.newestName+="TC"
                 self.pb.addText("Starting time drift correction")
                 app.processEvents()
-                self.data.learnTimeDriftCorrection(indicatorName="relTimeSec", uncorrectedName=uncorr, correctedName = self.newestName, states=self.ds.stateLabels, overwriteRecipe=True)#,cutRecipeName="cutForLearnDC", _rethrow=True) 
+                self.data.learnTimeDriftCorrection(indicatorName="relTimeSec", uncorrectedName=uncorr, correctedName = self.newestName, states=self.ds.stateLabels, overwriteRecipe=True)
                 self.pb.nextValue()
                 app.processEvents()
             
@@ -519,7 +519,7 @@ class MainWindow(QtWidgets.QWidget):
             if self.TDCcheckbox.isChecked():
                 uncorr = self.newestName
                 self.newestName+="TC"
-                self.data.learnTimeDriftCorrection(indicatorName="relTimeSec", uncorrectedName=uncorr, correctedName = self.newestName, states=self.ds.stateLabels, overwriteRecipe=True)#,cutRecipeName="cutForLearnDC", _rethrow=True) 
+                self.data.learnTimeDriftCorrection(indicatorName="relTimeSec", uncorrectedName=uncorr, correctedName = self.newestName, states=self.ds.stateLabels, overwriteRecipe=True)#,cutRecipeName="cutForLearnDC") 
             print(f'Calibrated {len(self.data.values())} channels using reference channel {self.ds.channum}')
         except Exception as exc:
             print("exception in all channel calibration")
