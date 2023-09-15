@@ -732,6 +732,7 @@ class MainWindow(QtWidgets.QWidget):
 
 def main(test=False):
     app = QtWidgets.QApplication(sys.argv)
+    app.setStyle(QtWidgets.QStyleFactory.create("Fusion"))
     mw = MainWindow()
     mw.show()
     # if test:
