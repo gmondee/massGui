@@ -176,7 +176,7 @@ class projectorsGui(QtWidgets.QDialog):  #handles linefit function call. lets us
             dir = self._choose_file_lastdir
         fileName, _ = QtWidgets.QFileDialog.getOpenFileName(
             self, f"Select an ljh/noi file with {lookingForThis}", dir,
-            "ljh Files (*.ljh);noi Files (*.noi);All Files (*)")#, options=options)
+            "ljh Files (*.ljh);;noi Files (*.noi);;All Files (*)")#, options=options)
         if fileName:
             self._choose_file_lastdir = os.path.dirname(fileName)
             return fileName
