@@ -1428,6 +1428,7 @@ class ZoomPlotExternalTrigger(): #only works for external trigger plots.
         plt.xlabel("time since external trigger (s)")
         plt.ylabel("energy(eV)")
         plt.title(f"{len(channels)} channels,\n states={states}")
+        self.stdLabel = self.fig.text(.05,.95, '', transform = self.ax.transAxes, fontsize=10, bbox=dict(boxstyle='round', facecolor='lime', alpha=0.5))
         fm = plt.get_current_fig_manager() #figure manager, for the toolbar
         fm.toolbar.actions()[0].triggered.connect(self.home_callback)   #when "home" is pressed on the toolbar, do self.home_callback()
         self.tmin = mins[0]; self.tmax = maxes[0] #time min and max
@@ -1445,6 +1446,12 @@ class ZoomPlotExternalTrigger(): #only works for external trigger plots.
         self.external_trigger_rowcount = self.get_external_triggers(self.external_trigger_filename, good_only=good_only)
         for ds in channels:
             self.calc_external_trigger_timing(ds, self.external_trigger_rowcount)
+
+        #calculate the timing differences between triggers and the standard deviation
+        times_of_ext_triggers = np.array(self.external_trigger_rowcount*ds.rowPeriodSeconds)
+        times_of_ext_triggers_shifted = np.concatenate([[0], times_of_ext_triggers[0:-1]]) #move times one index to the right, add a filler value at the beginning
+        deltaT = (times_of_ext_triggers - times_of_ext_triggers_shifted)[1:]    #subtract the neighboring trigger timings
+        self.stdT = np.std(deltaT)   #standard deviation of the time differences
 
         self.fig.canvas.mpl_connect('button_press_event', self.onpress)
         self.fig.canvas.mpl_connect('button_release_event', self.onrelease)
@@ -1469,6 +1476,12 @@ class ZoomPlotExternalTrigger(): #only works for external trigger plots.
         for ds in self.channels:
             self.calc_external_trigger_timing(ds, self.external_trigger_rowcount)
         
+        #calculate the timing differences between triggers and the standard deviation
+        times_of_ext_triggers = np.array(self.external_trigger_rowcount*ds.rowPeriodSeconds)
+        times_of_ext_triggers_shifted = np.concatenate([[0], times_of_ext_triggers[0:-1]]) #move times one index to the right, add a filler value at the beginning
+        deltaT = (times_of_ext_triggers - times_of_ext_triggers_shifted)[1:]    #subtract the neighboring trigger timings
+        self.stdT = np.std(deltaT)   #standard deviation of the time differences
+
         self.plot_fixed_resolution(self.tmin, self.tmax,
                                 self.emin, self.emax)
 
@@ -1495,6 +1508,14 @@ class ZoomPlotExternalTrigger(): #only works for external trigger plots.
             plt.hist2d(seconds_after_external_triggers, energies, bins=(ts, es))
 
             [plt.close(f) for f in plt.get_fignums() if f != plt.get_fignums()[-1]]
+            stdev = round(self.stdT, 8)
+            if stdev >= 5e-6:
+                stdColor = 'orangered'
+            else:
+                stdColor = 'lime'
+            self.stdLabel.set_text(f'Trigger timing STDEV: {stdev} sec')
+            self.stdLabel.set_bbox(dict(boxstyle='round', facecolor=stdColor, alpha=0.5))
+            #self.stdLabel(.05,.95,f'Trigger timing STDEV: {stdev} sec', transform = self.ax.transAxes, fontsize=10, bbox=dict(boxstyle='round', facecolor=stdColor, alpha=0.5))
             plt.show()
 
     def plot_fixed_resolution(self, x1, x2, y1, y2):

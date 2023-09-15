@@ -49,7 +49,6 @@ def test_cal(app, qtbot):
 
 
     def manual_cal():
-        #assert 1 == 0
         #qtbot.waitUntil(lambda: isinstance(app._selected_window, massGui.massless.HistCalibrator))
         hc = app._selected_window#QtWidgets.QApplication.activeWindow()#app.hc
         qtbot.addWidget(hc)
