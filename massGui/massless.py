@@ -423,7 +423,7 @@ class HistViewer(QtWidgets.QWidget): #widget for hist calibrator and others. plo
         layout = QtWidgets.QVBoxLayout()
         self.canvas = MplCanvas()   ### this line makes an extra plot
         self.statesGrid = StatesGrid(self)
-        self.statesGrid.setParams(state_labels, colors)
+        self.statesGrid.setParams(state_labels, colors, one_state_per_line=False)
         self.plotButton = QtWidgets.QPushButton("Plot/Reset", self)
         layout.addWidget(self.canvas)
         layout.addWidget(self.plotButton)
@@ -560,6 +560,7 @@ class StatesGrid(QtWidgets.QWidget): #widget that makes a grid of checkboxes. al
         self.one_state_per_line = one_state_per_line
 
     def setParams(self, state_labels=None, colors=None, one_state_per_line=True):
+        self.one_state_per_line = one_state_per_line
         self.build(state_labels, colors)
         self.connect()
 
