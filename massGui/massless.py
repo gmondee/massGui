@@ -926,7 +926,8 @@ class rtpViewer(QtWidgets.QDialog): #window that hosts the real-time plotting ro
 
 
     def getColorfromState(self, s): #pass in a state label string like 'A' or 'AC' (for states past Z) and get a color index using plt.colormaps() 
-        c=['#d8434e', '#f67a49', '#fdbf6f', '#feeda1', '#f1f9a9', '#bfe5a0', '#74c7a5', '#378ebb'] #8 colors from seaborn's Spectral_r colormap
+        #c=['#d8434e', '#f67a49', '#fdbf6f', '#feeda1', '#f1f9a9', '#bfe5a0', '#74c7a5', '#378ebb'] #8 colors from seaborn's Spectral_r colormap
+        c = ['#332288','#88ccee','#44aa99','#117733','#999933','#ddcc77','#cc6677','#882255','#aa4499'] # better colors from Paul Tol's notes
         maxColors = len(c)
         cIndex =  ord(s[-1])-ord('A')
         if len(s)!=1:   #for states like AA, AB, etc., 27 is added to the value of the ones place
@@ -1569,7 +1570,6 @@ class ZoomPlotExternalTrigger(): #only works for external trigger plots.
         rowcount = ds.offFile["framecount"] * nRows
         rows_after_last_external_trigger, rows_until_next_external_trigger = \
             mass.core.analysis_algorithms.nearest_arrivals(rowcount, external_trigger_rowcount)
-        ds.rowPeriodSeconds = ds.offFile.framePeriodSeconds/float(nRows)
         ds.rows_after_last_external_trigger = rows_after_last_external_trigger
         ds.rows_until_next_external_trigger = rows_until_next_external_trigger
         ds.seconds_after_external_trigger = rows_after_last_external_trigger*ds.rowPeriodSeconds

@@ -642,9 +642,15 @@ class MainWindow(QtWidgets.QWidget):
         self.pj.show()
 
     def showExportList(self):
-        self.exportlist = exportList()
-        self.exportlist.setParams(self)
-        self.exportlist.show()
+        print("export start")
+        self.data.calcExternalTriggerTiming(after_last=True)
+        try:    
+            with h5py.File("/home/pcuser/massgui_export.h5","w") as h5:
+                self.data.energyTimestampLabelToHDF5(h5)
+            print("export done")
+        except :
+            print("export fail")
+            traceback.print_exc()
 
     def save_to_hdf5(self, name=None):
         with  h5py.File('saves.h5', 'a') as hf:
