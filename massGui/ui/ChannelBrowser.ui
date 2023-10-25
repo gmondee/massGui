@@ -196,13 +196,6 @@
                <enum>QFrame::Raised</enum>
               </property>
               <layout class="QGridLayout" name="gridLayout_2">
-               <item row="0" column="0">
-                <widget class="QLabel" name="label_6">
-                 <property name="text">
-                  <string>filtValue bin size (arbs):</string>
-                 </property>
-                </widget>
-               </item>
                <item row="3" column="0">
                 <widget class="QLabel" name="label_2">
                  <property name="text">
@@ -214,6 +207,13 @@
                 <widget class="QLineEdit" name="photonCountBox">
                  <property name="enabled">
                   <bool>false</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="0">
+                <widget class="QLabel" name="label_6">
+                 <property name="text">
+                  <string>filtValue bin size (arbs):</string>
                  </property>
                 </widget>
                </item>
@@ -380,221 +380,51 @@
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_4">
             <item>
-             <widget class="QTabWidget" name="tabWidget">
-              <property name="currentIndex">
-               <number>0</number>
+             <widget class="QTableWidget" name="table">
+              <property name="minimumSize">
+               <size>
+                <width>600</width>
+                <height>100</height>
+               </size>
               </property>
-              <widget class="QWidget" name="manualTab">
-               <attribute name="title">
-                <string>Manual Peak Identification</string>
-               </attribute>
-               <layout class="QVBoxLayout" name="verticalLayout_5">
-                <item>
-                 <widget class="QTableWidget" name="table">
-                  <property name="minimumSize">
-                   <size>
-                    <width>600</width>
-                    <height>100</height>
-                   </size>
-                  </property>
-                  <property name="maximumSize">
-                   <size>
-                    <width>16777215</width>
-                    <height>999999</height>
-                   </size>
-                  </property>
-                  <column>
-                   <property name="text">
-                    <string>States</string>
-                   </property>
-                  </column>
-                  <column>
-                   <property name="text">
-                    <string>filtValue</string>
-                   </property>
-                  </column>
-                  <column>
-                   <property name="text">
-                    <string>Line</string>
-                   </property>
-                  </column>
-                  <column>
-                   <property name="text">
-                    <string>Energy (eV)</string>
-                   </property>
-                  </column>
-                  <column>
-                   <property name="text">
-                    <string>Delete</string>
-                   </property>
-                  </column>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QPushButton" name="diagCalButton">
-                  <property name="text">
-                   <string>Calibrate Channel and Diagnose Calibration</string>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </widget>
-              <widget class="QWidget" name="autoTab">
-               <attribute name="title">
-                <string>Automatic Peak Identificaition</string>
-               </attribute>
-               <layout class="QVBoxLayout" name="verticalLayout_6">
-                <item>
-                 <widget class="QFrame" name="frame_11">
-                  <property name="frameShape">
-                   <enum>QFrame::StyledPanel</enum>
-                  </property>
-                  <property name="frameShadow">
-                   <enum>QFrame::Raised</enum>
-                  </property>
-                  <layout class="QHBoxLayout" name="horizontalLayout_2">
-                   <item>
-                    <widget class="QFrame" name="frame_10">
-                     <property name="frameShape">
-                      <enum>QFrame::StyledPanel</enum>
-                     </property>
-                     <property name="frameShadow">
-                      <enum>QFrame::Raised</enum>
-                     </property>
-                     <layout class="QVBoxLayout" name="verticalLayout_7">
-                      <item>
-                       <widget class="QLabel" name="label_12">
-                        <property name="font">
-                         <font>
-                          <weight>75</weight>
-                          <italic>true</italic>
-                          <bold>true</bold>
-                         </font>
-                        </property>
-                        <property name="text">
-                         <string>Note: Experimental! Only uses states from the top row of the states grid</string>
-                        </property>
-                        <property name="alignment">
-                         <set>Qt::AlignCenter</set>
-                        </property>
-                       </widget>
-                      </item>
-                      <item>
-                       <widget class="QLabel" name="label_11">
-                        <property name="text">
-                         <string>Selected lines</string>
-                        </property>
-                       </widget>
-                      </item>
-                      <item>
-                       <widget class="QTextEdit" name="autoListOfLines">
-                        <property name="enabled">
-                         <bool>false</bool>
-                        </property>
-                       </widget>
-                      </item>
-                      <item>
-                       <widget class="QFrame" name="frame_12">
-                        <property name="frameShape">
-                         <enum>QFrame::StyledPanel</enum>
-                        </property>
-                        <property name="frameShadow">
-                         <enum>QFrame::Raised</enum>
-                        </property>
-                        <layout class="QGridLayout" name="gridLayout_4">
-                         <item row="0" column="0">
-                          <widget class="QLabel" name="label_5">
-                           <property name="text">
-                            <string>Smear for Peak Finding FWHM</string>
-                           </property>
-                          </widget>
-                         </item>
-                         <item row="1" column="0">
-                          <widget class="QLabel" name="label_10">
-                           <property name="text">
-                            <string>Max Acc</string>
-                           </property>
-                          </widget>
-                         </item>
-                         <item row="1" column="1">
-                          <widget class="QDoubleSpinBox" name="autoMaxAccBox">
-                           <property name="buttonSymbols">
-                            <enum>QAbstractSpinBox::NoButtons</enum>
-                           </property>
-                           <property name="decimals">
-                            <number>4</number>
-                           </property>
-                           <property name="maximum">
-                            <double>10000000.000000000000000</double>
-                           </property>
-                           <property name="value">
-                            <double>0.015000000000000</double>
-                           </property>
-                          </widget>
-                         </item>
-                         <item row="0" column="1">
-                          <widget class="QDoubleSpinBox" name="autoFWHMBox">
-                           <property name="buttonSymbols">
-                            <enum>QAbstractSpinBox::NoButtons</enum>
-                           </property>
-                           <property name="decimals">
-                            <number>2</number>
-                           </property>
-                           <property name="maximum">
-                            <double>10000000.000000000000000</double>
-                           </property>
-                           <property name="value">
-                            <double>25.000000000000000</double>
-                           </property>
-                          </widget>
-                         </item>
-                        </layout>
-                       </widget>
-                      </item>
-                     </layout>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QFrame" name="frame_13">
-                     <property name="frameShape">
-                      <enum>QFrame::StyledPanel</enum>
-                     </property>
-                     <property name="frameShadow">
-                      <enum>QFrame::Raised</enum>
-                     </property>
-                     <layout class="QVBoxLayout" name="verticalLayout_8">
-                      <item>
-                       <widget class="QLineEdit" name="listSearchBox">
-                        <property name="placeholderText">
-                         <string>Search lines here, e.g. AlKAlpha</string>
-                        </property>
-                       </widget>
-                      </item>
-                      <item>
-                       <widget class="QListWidget" name="linesList">
-                        <property name="alternatingRowColors">
-                         <bool>true</bool>
-                        </property>
-                        <property name="selectionMode">
-                         <enum>QAbstractItemView::MultiSelection</enum>
-                        </property>
-                       </widget>
-                      </item>
-                     </layout>
-                    </widget>
-                   </item>
-                  </layout>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QPushButton" name="autocalButton">
-                  <property name="text">
-                   <string>Attempt Automatic Calibration</string>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </widget>
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>999999</height>
+               </size>
+              </property>
+              <column>
+               <property name="text">
+                <string>States</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>filtValue</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>Line</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>Energy (eV)</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>Delete</string>
+               </property>
+              </column>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="diagCalButton">
+              <property name="text">
+               <string>Calibrate Channel and Diagnose Calibration</string>
+              </property>
              </widget>
             </item>
            </layout>

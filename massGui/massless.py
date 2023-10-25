@@ -57,7 +57,7 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
 
     def setParams(self, parent, data, channum, state_labels, binSize, colors=MPL_DEFAULT_COLORS[:6], 
                   lines=DEFAULT_LINES, statesConfig=None, markers=None, artistMarkers=None,markersIndex=None, linesNames=None, 
-                  autoFWHM=None, maxacc=None, enable5lag=False, binLo=0, binHi=None):
+                  maxacc=None, enable5lag=False, binLo=0, binHi=None):
         self.parent=parent
         self.binSize=binSize
         self.linesNames = linesNames
@@ -81,10 +81,10 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
             self.fvAttr = 'filtValue'
             self.ptmAttr = 'pretriggerMean'
         
-        self.build(data, channum, self.fvAttr, state_labels, colors, statesConfig, self.linesNames, autoFWHM, maxacc, binLo, binHi)
+        self.build(data, channum, self.fvAttr, state_labels, colors, statesConfig, self.linesNames, maxacc, binLo, binHi)
         self.connect()
 
-    def build(self, data, channum, attr, state_labels, colors, statesConfig, linesNames, autoFWHM, maxacc, binLo=0, binHi=None):
+    def build(self, data, channum, attr, state_labels, colors, statesConfig, linesNames, maxacc, binLo=0, binHi=None):
         PyQt6.uic.loadUi(os.path.join(os.path.dirname(__file__), "ui/ChannelBrowser.ui"), self) #,  s, attr, state_labels, colors)
         #self.histHistViewer = HistViewer(self, s, attr, state_labels, colors) #histHistViewer is the name of the widget that plots.
         self.data = data
@@ -103,16 +103,19 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
         self.eRangeHi.setValue(binHi)
         self.binSizeBox.setValue(50)
         self.histHistViewer.setParams(self, data, channum, attr, state_labels, colors, self.binSize, statesConfig=statesConfig, binHi = binHi)
-        if autoFWHM == None:
-            self.autoFWHMBox.setValue(25)
-        else:
-            self.autoFWHMBox.setValue(autoFWHM)
-        if maxacc == None:
-            self.autoMaxAccBox.setValue(0.015)
-        else:
-            self.autoMaxAccBox.setValue(maxacc)
+
+        ###Below is for the auto cal
+        # if autoFWHM == None:
+        #     self.autoFWHMBox.setValue(25)
+        # else:
+        #     self.autoFWHMBox.setValue(autoFWHM)
+        # if maxacc == None:
+        #     self.autoMaxAccBox.setValue(0.015)
+        # else:
+        #     self.autoMaxAccBox.setValue(maxacc)
+
         self.importMarkers()
-        self.importList()
+        #self.importList()
 
 
     def connect(self):
@@ -124,9 +127,10 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
         self.binSizeBox.valueChanged.connect(self.updateChild)
 
         self.diagCalButton.clicked.connect(self.diagnoseCalibration)
-        self.autocalButton.clicked.connect(self.autoCalibration)
-        self.linesList.itemSelectionChanged.connect(self.listChanged)
-        self.listSearchBox.textChanged.connect(self.searchItem)
+        ###auto cal stuff, taken out
+        #self.autocalButton.clicked.connect(self.autoCalibration)
+        # self.linesList.itemSelectionChanged.connect(self.listChanged)
+        # self.listSearchBox.textChanged.connect(self.searchItem)
 
         #self.closeButton.clicked.connect(self.close) #removed
         #self.table.itemChanged.connect(self.updateTable)
@@ -141,25 +145,25 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
             artist.set_transform(new_ax.transData)
             new_ax.add_artist(artist)
 
-    def importList(self):
-        self.linesList.addItems(self.lines)
-        if self.linesNames != None:
-            for line in self.linesNames:
-                item = self.linesList.findItems(line, QtCore.Qt.MatchFlag.MatchExactly)
-                item[0].setSelected(True)
-                self.linesList.setCurrentItem(item[0])
+    # def importList(self):
+    #     self.linesList.addItems(self.lines)
+    #     if self.linesNames != None:
+    #         for line in self.linesNames:
+    #             item = self.linesList.findItems(line, QtCore.Qt.MatchFlag.MatchExactly)
+    #             item[0].setSelected(True)
+    #             self.linesList.setCurrentItem(item[0])
 
-    def listChanged(self):
-        self.autoListOfLines.clear()
-        self.autoListOfLines.setText(str([item.text() for item in self.linesList.selectedItems()]))
-        self.linesNames = [item.text() for item in self.linesList.selectedItems()]
+    # def listChanged(self): #used for auto cal
+    #     self.autoListOfLines.clear()
+    #     self.autoListOfLines.setText(str([item.text() for item in self.linesList.selectedItems()]))
+    #     self.linesNames = [item.text() for item in self.linesList.selectedItems()]
 
-    def searchItem(self):
-        search_string = self.listSearchBox.text()
-        match_items = self.linesList.findItems(search_string, QtCore.Qt.MatchFlag.MatchContains)
-        for i in range(self.linesList.count()):
-            it = self.linesList.item(i)
-            it.setHidden(it not in match_items)
+    # def searchItem(self): #used for auto cal
+    #     search_string = self.listSearchBox.text()
+    #     match_items = self.linesList.findItems(search_string, QtCore.Qt.MatchFlag.MatchContains)
+    #     for i in range(self.linesList.count()):
+    #         it = self.linesList.item(i)
+    #         it.setHidden(it not in match_items)
 
     def updateTable(self, line): #bad way to do this, but it works. see deleteRow for a better way using slots.
         for r in range(self.table.rowCount()):  #searches for comboboxes with the clicked line and updates the first one's energy. 
@@ -299,23 +303,23 @@ class HistCalibrator(QtWidgets.QDialog):    #plots filtValues on a clickable can
         self.histHistViewer.channum = self.getChannum()
         self.getBins()
 
-    def autoCalibration(self):
-        self.linesNames = [item.text() for item in self.linesList.selectedItems()]
-        colors, states_list = self.histHistViewer.statesGrid.get_colors_and_states_list()
-        states_list = states_list[0] 
-        autoFWHM = float(self.autoFWHMBox.value())
-        maxacc = float(self.autoMaxAccBox.value())
-        try:
-            self.ds = self.data[int(self.getChannum())]
-            #print(self.linesNames)
-            names, filtValues = self.ds.learnCalibrationPlanFromEnergiesAndPeaks(self.fvAttr, states=states_list, ph_fwhm=autoFWHM, line_names=self.linesNames, maxacc=maxacc)
-            #todo: import the cal stuff into the table.
-            self.highestFV=max(filtValues)
-            self.diagnoseCalibration(auto=True)
-        except Exception as exc:
-            print("Failed to autocalibrate!")
-            print(traceback.format_exc())
-            show_popup(self, "Failed to autocalibrate!", traceback=traceback.format_exc())
+    # def autoCalibration(self):    #used for auto cal, removed
+    #     self.linesNames = [item.text() for item in self.linesList.selectedItems()]
+    #     colors, states_list = self.histHistViewer.statesGrid.get_colors_and_states_list()
+    #     states_list = states_list[0] 
+    #     autoFWHM = float(self.autoFWHMBox.value())
+    #     maxacc = float(self.autoMaxAccBox.value())
+    #     try:
+    #         self.ds = self.data[int(self.getChannum())]
+    #         #print(self.linesNames)
+    #         names, filtValues = self.ds.learnCalibrationPlanFromEnergiesAndPeaks(self.fvAttr, states=states_list, ph_fwhm=autoFWHM, line_names=self.linesNames, maxacc=maxacc)
+    #         #todo: import the cal stuff into the table.
+    #         self.highestFV=max(filtValues)
+    #         self.diagnoseCalibration(auto=True)
+    #     except Exception as exc:
+    #         print("Failed to autocalibrate!")
+    #         print(traceback.format_exc())
+    #         show_popup(self, "Failed to autocalibrate!", traceback=traceback.format_exc())
 
     def diagnoseCalibration(self, auto=False):
         if auto == False:
