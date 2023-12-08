@@ -5,9 +5,9 @@ name: Python application
 
 on:
   push:
-    branches: [ "main", "get_github_tests_working" ]
+    branches: [ "main", "get_github_tests_working", "pytest-editable-install" ]
   pull_request:
-    branches: [ "main", "get_github_tests_working" ]
+    branches: [ "main", "get_github_tests_working", "pytest-editable-install" ]
   workflow_dispatch:
     inputs:
       logLevel:
