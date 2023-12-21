@@ -205,7 +205,7 @@ def test_cal(app, qtbot):
     assert ax.has_data()
     assert 'Channels' in ax.title.get_text()
     plt.close()
-    app.ROIRTPsetup.close()
+    #app.ROIRTPsetup.close() 
 
 
 
