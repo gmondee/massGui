@@ -1569,7 +1569,6 @@ class ZoomPlotExternalTrigger(): #only works for external trigger plots.
         rowcount = ds.offFile["framecount"] * nRows
         rows_after_last_external_trigger, rows_until_next_external_trigger = \
             mass.core.analysis_algorithms.nearest_arrivals(rowcount, external_trigger_rowcount)
-        ds.rowPeriodSeconds = ds.offFile.framePeriodSeconds/float(nRows)
         ds.rows_after_last_external_trigger = rows_after_last_external_trigger
         ds.rows_until_next_external_trigger = rows_until_next_external_trigger
         ds.seconds_after_external_trigger = rows_after_last_external_trigger*ds.rowPeriodSeconds
