@@ -9,6 +9,8 @@ If you do not want an editable installation, you can use:
 
 and it should appear with the rest of your installed packages. 
 
+This GUI works with Mass version 0.8.1. You can install it like massGui (see above) with ```pip install -e git+https://bitbucket.org/joe_fowler/mass.git@640211d2e497d4c57bb1c0586a995161c66b0202#egg=mass```.
+
 To get PyQt to work with matplotlib, you might need to run ```pip install matplotlib --upgrade``` after installing massGui.
 
 On Ubuntu, you may have to run this command as well:
