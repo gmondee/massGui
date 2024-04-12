@@ -1240,7 +1240,7 @@ class hdf5Opener(QtWidgets.QDialog): #dialog with a combobox which lists all of 
 
     def getFileList(self):
         calList = []
-        with h5py.File('saves.h5', 'r') as file:
+        with h5py.File(os.path.join(os.path.dirname(__file__), 'saves.h5'), 'r') as file:
             runs = list(file.keys())
             for run in runs:    #individual calibrations are grouped by the run information, so we loop through the nested folders.
                 for cal in list(file[run].keys()):

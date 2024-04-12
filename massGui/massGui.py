@@ -647,7 +647,7 @@ class MainWindow(QtWidgets.QWidget):
         self.exportlist.show()
 
     def save_to_hdf5(self, name=None):
-        with  h5py.File('saves.h5', 'a') as hf:
+        with h5py.File(os.path.join(os.path.dirname(__file__), 'saves.h5'), 'r') as hf:
 
             str.split(self.ds.shortName)
             run_filename = str.split(self.ds.shortName)[0] +" "+ str(self.ds.channum) +" "+ str(len(self.data.values())) #filename is date_run + referenceChannel + numberOfChannels
@@ -681,7 +681,7 @@ class MainWindow(QtWidgets.QWidget):
         self.hdf5Opener.exec()
         cal_name = str.split(self.hdf5Opener.fileBox.currentText(), " ")
         group_name = f'{cal_name[0]} {cal_name[1]} {cal_name[2]}' #filename is date_run + referenceChannel + numberOfChannels
-        with h5py.File('saves.h5', 'r') as hf:
+        with h5py.File(os.path.join(os.path.dirname(__file__), 'saves.h5'), 'r') as hf:
             group = hf[group_name]
             self.load_from_hdf5(group, name = cal_name[3], channum = int(cal_name[1]), maxChans = int(cal_name[2]))
         self.plotsGroup.setEnabled(True)
