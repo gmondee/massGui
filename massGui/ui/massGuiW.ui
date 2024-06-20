@@ -357,126 +357,33 @@
           </widget>
          </item>
          <item>
-          <widget class="QTabWidget" name="tabWidget">
-           <property name="currentIndex">
-            <number>0</number>
+          <widget class="QTableWidget" name="calTable">
+           <property name="enabled">
+            <bool>true</bool>
            </property>
-           <widget class="QWidget" name="tab_3">
-            <attribute name="title">
-             <string>Manual Peak Identification</string>
-            </attribute>
-            <layout class="QVBoxLayout" name="verticalLayout_4">
-             <item>
-              <widget class="QTableWidget" name="calTable">
-               <property name="enabled">
-                <bool>true</bool>
-               </property>
-               <property name="editTriggers">
-                <set>QAbstractItemView::NoEditTriggers</set>
-               </property>
-               <column>
-                <property name="text">
-                 <string>Line Name</string>
-                </property>
-               </column>
-               <column>
-                <property name="text">
-                 <string>filtValue</string>
-                </property>
-               </column>
-               <column>
-                <property name="text">
-                 <string>State</string>
-                </property>
-               </column>
-               <column>
-                <property name="text">
-                 <string>Energy (eV)</string>
-                </property>
-               </column>
-              </widget>
-             </item>
-            </layout>
-           </widget>
-           <widget class="QWidget" name="tab_4">
-            <attribute name="title">
-             <string>Automatic Peak Identificaition</string>
-            </attribute>
-            <layout class="QVBoxLayout" name="verticalLayout_3">
-             <item>
-              <widget class="QLabel" name="label_11">
-               <property name="text">
-                <string>Selected lines</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QTextEdit" name="autoListOfLines">
-               <property name="enabled">
-                <bool>false</bool>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QFrame" name="frame_12">
-               <property name="frameShape">
-                <enum>QFrame::StyledPanel</enum>
-               </property>
-               <property name="frameShadow">
-                <enum>QFrame::Raised</enum>
-               </property>
-               <layout class="QGridLayout" name="gridLayout_4">
-                <item row="1" column="0">
-                 <widget class="QLabel" name="label_10">
-                  <property name="text">
-                   <string>Max Acc</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="0">
-                 <widget class="QLabel" name="label_5">
-                  <property name="text">
-                   <string>Smear for Peak Finding FWHM</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="1">
-                 <widget class="QDoubleSpinBox" name="autoFWHMBox">
-                  <property name="buttonSymbols">
-                   <enum>QAbstractSpinBox::NoButtons</enum>
-                  </property>
-                  <property name="decimals">
-                   <number>2</number>
-                  </property>
-                  <property name="maximum">
-                   <double>10000000.000000000000000</double>
-                  </property>
-                  <property name="value">
-                   <double>25.000000000000000</double>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="1">
-                 <widget class="QDoubleSpinBox" name="autoMaxAccBox">
-                  <property name="buttonSymbols">
-                   <enum>QAbstractSpinBox::NoButtons</enum>
-                  </property>
-                  <property name="decimals">
-                   <number>4</number>
-                  </property>
-                  <property name="maximum">
-                   <double>10000000.000000000000000</double>
-                  </property>
-                  <property name="value">
-                   <double>0.015000000000000</double>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </widget>
-             </item>
-            </layout>
-           </widget>
+           <property name="editTriggers">
+            <set>QAbstractItemView::NoEditTriggers</set>
+           </property>
+           <column>
+            <property name="text">
+             <string>Line Name</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>filtValue</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>State</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Energy (eV)</string>
+            </property>
+           </column>
           </widget>
          </item>
         </layout>
@@ -658,23 +565,7 @@
                   </size>
                  </property>
                  <property name="text">
-                  <string>Calibrate all channels (Manual)</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QPushButton" name="allChanAutoCalButton">
-                 <property name="enabled">
-                  <bool>false</bool>
-                 </property>
-                 <property name="minimumSize">
-                  <size>
-                   <width>0</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                 <property name="text">
-                  <string>Calibrate all channels (Automatic)</string>
+                  <string>Calibrate all channels</string>
                  </property>
                 </widget>
                </item>
