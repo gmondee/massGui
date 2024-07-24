@@ -650,6 +650,7 @@ class StatesGrid(QtWidgets.QWidget): #widget that makes a grid of checkboxes. al
             for (i, state) in enumerate(self.state_labels):
                 box = self.boxes[i][j] 
                 box.setChecked(True) 
+        self.boxes[0][0].setChecked(False) #uncheck START
 
     def unfill_all(self): #same as fill_all, but unchecks boxes
         for (j, color) in enumerate(self.colors):
@@ -782,6 +783,7 @@ class diagnoseViewer(QtWidgets.QDialog):    #displays the plots from the Mass di
             except:
                 filtValuePlotBinEdges=np.arange(0, 16000.0*1.5, 4)
             ds.diagnoseCalibration(filtValuePlotBinEdges = filtValuePlotBinEdges, fig=plt.get_fignums()[-1])
+
         except Exception as exc:
             print("Failed to diagnose calibration!")
             print(traceback.format_exc())
@@ -1241,7 +1243,7 @@ class hdf5Opener(QtWidgets.QDialog): #dialog with a combobox which lists all of 
 
     def getFileList(self):
         calList = []
-        with h5py.File('saves.h5', 'r') as file:
+        with h5py.File(os.path.join(os.path.dirname(__file__), "saves.h5"), 'r') as file:
             runs = list(file.keys())
             for run in runs:    #individual calibrations are grouped by the run information, so we loop through the nested folders.
                 for cal in list(file[run].keys()):
